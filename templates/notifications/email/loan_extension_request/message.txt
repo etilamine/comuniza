@@ -1,0 +1,16 @@
+{% translate "EXTENSION REQUEST" %}
+
+{{ borrower.get_display_name }} {% translate "is requesting an extension of" %} {{ extension_days }} {% translate "days for the loan of" %} {{ item.title }}.
+
+{% translate "Current Due Date" %}: {{ current_due_date|date:"F j, Y" }}
+{% translate "New Due Date" %}: {{ new_due_date|date:"F j, Y" }}
+
+{% if extension_reason %}
+{% translate "Reason" %}:
+{{ extension_reason }}
+{% endif %}
+
+{% translate "The lender will review this request and either approve or reject the extension.
+
+View Loan Details" %}: {{ loan_url }}
+{% translate "Message Lender" %}: {{ messages_url }}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{% translate "Not Found" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container container-sm">
+    <div class="py-2xl">
+        <div class="text-center">
+
+            <!-- Error Message -->
+            <h1 class="mb-lg" style="font-size: 3rem; font-weight: 700;">404</h1>
+            <h2 class="mb-md text-secondary">{% translate "Page Not Found" %}</h2>
+            <p class="mb-xl text-muted" style="max-width: 500px; margin: 0 auto; line-height: 1.6;">
+                {% blocktranslate %}The page you're looking for doesn't exist or may have been moved. <br>
+                Let's get you back on track!{% endblocktranslate %}
+            </p>
+
+            <!-- Actions -->
+            <div class="flex justify-center gap-md mb-xl">
+                <a href="{% url 'home' %}" class="btn btn-primary btn-lg">
+                    {% translate "Go Home" %}
+                </a>
+                <button onclick="history.back()" class="btn btn-outline btn-lg">
+                    ← {% translate "Go Back" %}
+                </button>
+                <a href="{% url 'bug_report_page' %}" class="btn btn-outline btn-lg">
+                    {% translate "Report a Bug" %}
+                </a>
+            </div>
+
+            <!-- Additional Help -->
+            <div class="card" style="max-width: 600px; margin: 0 auto;">
+                <div class="card-body">
+                    <h3 class="mb-md">{% translate "What can you try" %}?</h3>
+                    <ul class="text-left space-y-sm" style="padding-left: 1.5rem;">
+                        <li>{% translate "Check the URL for typos" %}</li>
+                        <li>{% translate "Go back to the previous page" %}</li>
+                        <li>{% translate "Visit our" %} <a href="{% url 'home' %}">{% translate "homepage" %}</a> {% translate "to find what you need" %}</li>
+                        <li>{% translate "Search for content using the navigation menu" %}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Add some interactive elements if needed
+document.addEventListener('DOMContentLoaded', function() {
+    // Could add search functionality or other features here
+});
+</script>
+{% endblock %}

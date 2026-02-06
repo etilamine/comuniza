@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load socialaccount %}
+{% load i18n %}
+{% block title %}{% translate "Google Login" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container container-sm">
+    <div class="py-xl">
+        <!-- Header -->
+        <div class="text-center mb-2xl">
+            <h1 class="mb-sm">[{% translate "GOOGLE LOGIN" %} ]</h1>
+            <p class="text-secondary">{% translate "CONNECT WITH GOOGLE ACCOUNT" %}</p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-lg" style="max-width: 500px; margin: 0 auto;">
+            <!-- Google Login Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0 text-sm">▸ {% translate "OAUTH AUTHENTICATION" %}</h3>
+                </div>
+                    {% if user.is_authenticated %}
+                        <!-- Already logged in state -->
+                        <div class="alert alert-info">
+                            <p class="mb-sm">{% translate "YOU ARE ALREADY LOGGED IN AS" %}:</p>
+                            <p class="font-bold mb-0">@{{ user.username }}</p>
+                        </div>
+                        <div class="flex flex-col gap-sm">
+                            <a href="{% url 'items:list' %}" class="btn btn-primary btn-block">
+                                [ → ] {% translate "GO TO DASHBOARD" %}
+                            </a>
+                            <a href="{% url 'account_logout' %}" class="btn btn-outline btn-block">
+                                [ × ] {% translate "LOGOUT FIRST" %}
+                            </a>
+                        </div>
+                    {% else %}
+                        <!-- Google login button -->
+                        <form method="post" action="{% url 'google_login' %}">
+                                {% csrf_token %}
+                                {% if redirect_field_value %}
+                                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                                {% endif %}
+                        <button type="submit" class="btn btn-primary btn-block btn-lg mb-md">
+                            <span>[{% translate "G" %}]</span>
+                            <span>{% translate "CONTINUE WITH GOOGLE" %}</span>
+                        </button>
+                        </form>
+
+                        <div class="text-center">
+                            <a href="{% url 'account_login' %}" class="text-sm">
+                                ← {% translate "BACK TO EMAIL LOGIN" %}
+                            </a>
+                        </div>
+
+                        {% if messages %}
+                            <div class="mt-lg">
+                                {% for message in messages %}
+                                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+            <!-- Information Card -->
+            <div class="card" style="background: var(--bg-secondary);">
+                <div class="card-header">
+                    <h4 class="mb-0 text-sm">▸ {% translate "PRIVACY & SECURITY" %}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="grid grid-cols-1 gap-md">
+                        <div class="flex items-start gap-sm">
+                            <span style="color: var(--primary); font-weight: bold;">▸</span>
+                            <div class="text-sm">
+                                <strong>{% translate "NO PASSWORD STORAGE" %}:</strong> {% translate "We never store your Google password" %}
+                    </div>
+                        </div>
+                        <div class="flex items-start gap-sm">
+                            <span style="color: var(--primary); font-weight: bold;">▸</span>
+                            <div class="text-sm">
+                                <strong>{% translate "LIMITED ACCESS" %}:</strong> {% translate "We only request basic profile information" %}
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-sm">
+                            <span style="color: var(--primary); font-weight: bold;">▸</span>
+                            <div class="text-sm">
+                                <strong>{% translate "SECURE CONNECTION" %}:</strong> {% translate "All authentication is encrypted and secure" %}
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-sm">
+                            <span style="color: var(--primary); font-weight: bold;">▸</span>
+                            <div class="text-sm">
+                                <strong>{% translate "EASY DISCONNECT" %}:</strong> {% translate "Revoke access anytime from your Google account" %}
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Google login specific styles */
+    .card:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: var(--shadow-brutal-sm);
+    }
+
+    .btn-block + .btn-block {
+        margin-top: var(--space-sm);
+    }
+
+    /* Special Google button styling */
+    .btn-primary[href*="google"] {
+        background: #4285f4;
+        color: white;
+        border-color: #4285f4;
+    }
+
+    .btn-primary[href*="google"]:hover:not(:disabled) {
+        background: #357ae8;
+        border-color: #357ae8;
+    }
+
+    /* Animated Google icon */
+    .btn-primary[href*="google"]:hover span:first-child {
+        animation: bounce 0.5s ease;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-3px); }
+    }
+
+    /* Privacy points animation */
+    .flex.items-start:hover span:first-child {
+        transform: scale(1.2);
+        transition: transform 0.2s ease;
+    }
+
+    /* Alert styling for already logged in state */
+    .alert-info {
+        background: var(--bg-secondary);
+        border-left-color: var(--primary);
+        border-left-width: 6px;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,684 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load thumbnail %}
+
+{% block title %}{% translate "Browse Items" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Page Header -->
+    <div class="flex items-center justify-between mb-xl">
+        <div>
+            <h1 class="mb-sm">{% translate "Browse Items" %}</h1>
+            <p class="text-secondary">{% translate "Discover what your community has to share" %}</p>
+        </div>
+        <div class="flex items-center gap-md">
+            <!-- View Toggle -->
+            <div class="view-toggle">
+                <button type="button" class="view-btn active" data-view="grid">
+                    <span>⊞</span> {% translate "Grid" %}
+                </button>
+                <button type="button" class="view-btn" data-view="list">
+                    <span>☰</span> {% translate "List" %}
+                </button>
+            </div>
+            {% if user.is_authenticated %}
+                <a href="{% url 'items:create' %}" class="btn btn-primary">
+                    <span>+</span>
+                    <span>{% translate "Add Item" %}</span>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Filters & Search -->
+    <div class="card mb-xl">
+        <div class="card-body">
+            <form method="get">
+                <!-- Always visible filters -->
+                <div class="flex flex-wrap gap-md items-end mb-md">
+                    <div class="form-group m-0" style="flex: 1; min-width: 250px;">
+                        <label class="form-label">{% translate "Search" %}</label>
+                        <input type="search" name="q" class="form-control" placeholder="{% translate "Search items..." %}" value="{{ request.GET.q }}">
+                    </div>
+
+                    <div class="form-group m-0" style="min-width: 180px;">
+                        <label class="form-label">{% translate "Category" %}</label>
+                        <select name="category" class="form-control form-select">
+                            <option value="">{% translate "All Categories" %}</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}{% translate "selected" %}{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group m-0">
+                        <button type="submit" class="btn btn-primary">{% translate "Search" %}</button>
+                        {% if request.GET %}
+                            <a href="{% url 'items:list' %}" class="btn btn-ghost">{% translate "Clear" %}</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Expandable filters (desktop) / collapsible (mobile) -->
+                <div class="additional-filters filters-hidden">
+                    <div class="flex flex-wrap gap-md items-end">
+                        <div class="form-group m-0" style="min-width: 150px;">
+                            <label class="form-label">{% translate "Status" %}</label>
+                            <select name="status" class="form-control form-select">
+                                <option value="">{% translate "All" %}</option>
+                                <option value="available" {% if request.GET.status == "available" %}{% translate "selected" %}{% endif %}>{% translate "Available" %}</option>
+                                <option value="borrowed" {% if request.GET.status == "borrowed" %}{% translate "selected" %}{% endif %}>{% translate "Borrowed" %}</option>
+                            </select>
+                        </div>
+
+                        {% if user.is_authenticated and user_groups %}
+                            <div class="form-group m-0" style="min-width: 180px;">
+                                <label class="form-label">{% translate "Group" %}</label>
+                                <select name="group" class="form-control form-select">
+                                    <option value="">{% translate "All Groups" %}</option>
+                                    {% for group in user_groups %}
+                                        <option value="{{ group.id }}" {% if request.GET.group == group.id|stringformat:"s" %}{% translate "selected" %}{% endif %}>
+                                            {{ group.name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        {% endif %}
+
+                        <div class="form-group m-0">
+                            <button type="submit" class="btn btn-outline">{% translate "Apply Filters" %}</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile filters toggle -->
+                <div class="filters-toggle d-md-none">
+                    <button type="button" class="btn btn-ghost btn-sm" onclick="toggleFilters()">
+                        <span class="filters-toggle-text">{% translate "More Filters" %}</span>
+                        <i class="fas fa-chevron-down filters-toggle-icon"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Results Count -->
+    {% if items %}
+        <div class="mb-md">
+            <p class="text-secondary">
+                <span class="font-semibold text-primary">{{ items|length }}</span>
+                {% translate "item" %}{{ items|length|pluralize }} {% translate "found" %}
+            </p>
+        </div>
+    {% endif %}
+
+    <!-- Items Container -->
+    {% if items %}
+        <div class="items-container grid-view grid grid-cols-2 grid-md-3 grid-lg-5 gap-lg mb-2xl">
+            {% for item in items %}
+                <div class="item-card-wrapper">
+                    <a href="{% url 'item_detail' item.identifier %}" class="item-card book-card card">
+                    <!-- Item Details -->
+                    <div class="item-card-body">
+                        <!-- Item Image -->
+                        <div class="item-card-img-wrapper">
+                            {% if item.images.exists %}
+                                {% with item.images.first as primary_image %}
+                                    <img
+                                        class="item-card-img"
+                                        src="{{ primary_image.image.item_detail.url }}"
+                                        alt="{{ item.title }}"
+                                        loading="lazy"
+                                    />
+                                {% endwith %}
+                            {% else %}
+                                <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: var(--gray-100); color: var(--gray-400); font-size: 3rem;">
+                                    [   ]
+                                </div>
+                            {% endif %}
+                        </div>
+                        {% if item.author %}
+                            <p class="item-card-author">{{ item.author }}</p>
+                        {% endif %}
+
+                        <h3 class="item-card-title">{{ item.title }}</h3>
+
+                        <!-- Status Badge -->
+                        <div class="item-card-status-info">
+                            <span class="badge-status badge-{{ item.status }}">
+                                {% if item.status == 'available' %}
+                                    ▸ {% translate "Available" %}
+                                {% elif item.status == 'borrowed' %}
+                                    ◼ {% translate "Borrowed" %}
+                                {% else %}
+                                    □ {{ item.get_status_display }}
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        <div class="item-card-book-meta">
+                            {% if item.year %}
+                                <span>{{ item.year }}</span>
+                            {% endif %}
+                            {% if item.publisher %}
+                                <span>{{ item.publisher }}</span>
+                            {% endif %}
+                            {% if item.isbn %}
+                                <span>{% translate "ISBN" %}: {{ item.isbn|truncatechars:15 }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="item-card-meta">
+                            {% if item.condition %}
+                                <span class="text-xs">{{ item.get_condition_display }}</span>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                    </a>
+
+                    <div class="item-card-owner-info">
+                        <div class="avatar avatar-sm">
+                            {% if item.owner.avatar %}
+                                <img src="{{ item.owner.avatar.avatar_small.url }}" alt="{{ item.owner.username }}" loading="lazy">
+                            {% else %}
+                                <div class="avatar-placeholder">
+                                    {{ item.owner.username|first|upper }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div style="flex: 1; overflow: hidden;">
+                            <p class="text-xs text-secondary m-0" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                {% if item.owner == user %}
+                                    {% translate "You" %}
+                                {% else %}
+                                    {{ item.owner.username|default:item.owner.username|truncatechars:15 }}
+                                {% endif %}
+                            </p>
+                            {% if item.borrow_count > 0 %}
+                                <p class="text-xs text-muted m-0">{{ item.borrow_count }}{% translate "x" %}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- List View -->
+        <div class="items-container list-view hidden">
+            {% for item in items %}
+                <div class="list-view-item card">
+                    <a href="{% url 'item_detail' item.identifier %}" class="list-view-card-link">
+                        <div class="list-view-content">
+                            <div class="list-view-image">
+                                {% if item.images.exists %}
+                                    {% with item.images.first as primary_image %}
+                                        <img
+                                            src="{{ primary_image.image.item_detail.url }}"
+                                            alt="{{ item.title }}"
+                                            loading="lazy"
+                                        >
+                                    {% endwith %}
+                                {% else %}
+                                    <div class="list-view-image-placeholder">
+                                        <span>[   ]</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="list-view-details">
+                                <div class="list-view-header">
+                                    <div class="list-view-title-section">
+                                        {% if item.author %}
+                                            <p class="list-view-author">{{ item.author }}</p>
+                                        {% endif %}
+                                        <h3 class="list-view-title">{{ item.title }}</h3>
+                                    </div>
+                                    <span class="badge badge-status badge-{{ item.status }}">
+                                        {% if item.status == 'available' %}
+                                            {% translate "Available" %}
+                                        {% elif item.status == 'borrowed' %}
+                                            ◼ {% translate "Borrowed" %}
+                                        {% else %}
+                                            □ {{ item.get_status_display }}
+                                        {% endif %}
+                                    </span>
+                                </div>
+
+                                <div class="list-view-meta">
+                                    <!-- Category Badge -->
+                                    {% if item.category %}
+                                        <span class="badge badge-primary">{{ item.category.name }}</span>
+                                    {% endif %}
+
+                                    <!-- Owner/Location/Visibility Badge -->
+                                    <span class="badge badge-secondary">
+                                        {% if item.owner == user %}
+                                            {% translate "You" %}
+                                        {% else %}
+                                            {{ item.owner.username|default:item.owner.username|truncatechars:20 }}
+                                        {% endif %}
+                                        {% if item.location %}
+                                            • {{ item.location|truncatechars:20 }}
+                                        {% endif %}
+                                        {% if item.visibility == 'open' %}
+                                            • {% translate "Open" %}
+                                        {% elif item.shared_with_groups.exists %}
+                                            • {{ item.shared_with_groups.first.name }}
+                                        {% endif %}
+                                    </span>
+
+                                    <!-- Condition Badge -->
+                                    <span class="badge badge-secondary">{{ item.get_condition_display }}</span>
+
+                                    <!-- Loan Term Badge -->
+                                    <span class="badge badge-secondary">
+                                        ⏱
+                                        {% if item.max_loan_days == 1 %}
+                                            {% translate "1 day" %}
+                                        {% elif item.max_loan_days <= 6 %}
+                                            {{ item.max_loan_days }} {% translate "days" %}
+                                        {% elif item.max_loan_days == 7 %}
+                                            {% translate "1 week" %}
+                                        {% elif item.max_loan_days == 14 %}
+                                            {% translate "2 weeks" %}
+                                        {% elif item.max_loan_days == 21 %}
+                                            {% translate "3 weeks" %}
+                                        {% elif item.max_loan_days == 30 %}
+                                            {% translate "1 month" %}
+                                        {% elif item.max_loan_days == 60 %}
+                                            {% translate "2 months" %}
+                                        {% elif item.max_loan_days == 90 %}
+                                            {% translate "3 months" %}
+                                        {% else %}
+                                            {{ item.max_loan_days }} days" %}
+                                        {% endif %}
+                                    </span>
+                                </div>
+
+                                {% if item.description %}
+                                    <p class="list-view-description">
+                                        {{ item.description|truncatechars:200 }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination (if needed) -->
+        {% if is_paginated %}
+            <div class="flex justify-center gap-sm mt-xl">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn btn-ghost">{% translate "First" %}</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn btn-ghost">{% translate "Previous" %}</a>
+                {% endif %}
+
+                <span class="flex items-center px-md text-secondary">
+                    {% translate "Page" %} {{ page_obj.number }} {% translate "of" %} {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn btn-ghost">{% translate "Next" %}</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn btn-ghost">{% translate "Last" %}</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-state-icon">[   ]</div>
+            <h3 class="mb-sm">{% translate "No items found" %}</h3>
+            <p class="text-secondary mb-lg">
+                {% if request.GET %}
+                    {% translate "Try adjusting your filters or search terms" %}.
+                {% else %}
+                    {% translate "Be the first to share something with your community" %}!
+                {% endif %}
+            </p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'items:create' %}" class="btn btn-primary">{% translate "Add Your First Item" %}</a>
+            {% else %}
+                <a href="{% url 'account_login' %}" class="btn btn-primary">{% translate "Login to Add Items" %}</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const viewButtons = document.querySelectorAll('.view-btn');
+    const gridView = document.querySelector('.items-container.grid-view');
+    const listView = document.querySelector('.items-container.list-view');
+
+    // Check for saved preference
+    const savedView = localStorage.getItem('browseItemsView') || 'grid';
+    setActiveView(savedView);
+
+    viewButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const view = this.dataset.view;
+            setActiveView(view);
+            localStorage.setItem('browseItemsView', view);
+        });
+    });
+
+    function setActiveView(view) {
+        // Update button states
+        viewButtons.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.view === view);
+        });
+
+        // Update view visibility
+        if (view === 'grid') {
+            gridView.classList.remove('hidden');
+            listView.classList.add('hidden');
+        } else {
+            gridView.classList.add('hidden');
+            listView.classList.remove('hidden');
+        }
+    }
+});
+</script>
+{% endblock %}
+
+
+{% block extra_css %}
+<style>
+    .view-toggle {
+        display: inline-flex;
+        gap: 0;
+        border: 2px solid var(--border-color);
+        background: var(--bg-main);
+    }
+
+    .view-btn {
+        padding: var(--space-sm) var(--space-md);
+        border: none;
+        background: var(--bg-main);
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: var(--space-xs);
+        font-size: var(--font-size-sm);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-family: var(--font-mono);
+        border-right: 2px solid var(--border-color);
+    }
+
+    .view-btn:last-child {
+        border-right: none;
+    }
+
+    .view-btn:hover {
+        background: var(--bg-secondary);
+        transform: translate(-1px, -1px);
+        box-shadow: 1px 1px 0 var(--border-color);
+    }
+
+    .view-btn.active {
+        background: var(--text-primary);
+        color: var(--bg-main);
+    }
+
+    .view-btn.active:hover {
+        background: var(--text-primary);
+        transform: none;
+        box-shadow: none;
+    }
+
+    .items-container.hidden {
+        display: none;
+    }
+
+    .item-card-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .items-container.grid-view .item-card {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .items-container.grid-view .item-card-img-wrapper {
+        height: auto;
+        min-height: 200px;
+        aspect-ratio: 2/3;
+        border-bottom: none;
+        flex-shrink: 0;
+    }
+
+    .items-container.grid-view .item-card-body {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .item-card-owner-info {
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+        margin-top: var(--space-sm);
+        padding-top: var(--space-sm);
+        border-top: 2px solid var(--border-color);
+    }
+
+    .list-view-item {
+        margin-bottom: var(--space-lg);
+        word-break: break-word;
+    }
+
+    .list-view-card-link {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        padding: var(--space-lg);
+    }
+
+    .list-view-content {
+        display: flex;
+        gap: var(--space-lg);
+    }
+
+    .list-view-image {
+        flex-shrink: 0;
+        width: 140px;
+        height: 210px;
+        overflow: hidden;
+        background: var(--bg-secondary);
+        border: 2px solid var(--border-color);
+    }
+
+    .list-view-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: var(--transition);
+    }
+
+    .list-view-card-link:hover .list-view-image img {
+        filter: grayscale(100%) contrast(1.1);
+    }
+
+    .list-view-image-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-secondary);
+        color: var(--text-muted);
+        font-size: 3rem;
+    }
+
+    .list-view-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-sm);
+        min-width: 0;
+    }
+
+    .list-view-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: var(--space-md);
+    }
+
+    .list-view-title-section {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .list-view-author {
+        font-size: var(--font-size-xs);
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 600;
+        margin-bottom: var(--space-xs);
+    }
+
+    .list-view-title {
+        font-size: var(--font-size-xl);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    .list-view-card-link:hover .list-view-title {
+        color: var(--primary);
+    }
+
+    .list-view-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-xs);
+    }
+
+    .list-view-description {
+        font-size: var(--font-size-sm);
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* Filters toggle */
+    .filters-toggle {
+        text-align: center;
+        margin-top: var(--space-md);
+    }
+
+    .filters-toggle-icon {
+        transition: transform 0.3s ease;
+    }
+
+    .filters-toggle-icon.rotated {
+        transform: rotate(180deg);
+    }
+
+    /* Additional filters */
+    .additional-filters {
+        border-top: 1px solid var(--gray-200);
+        padding-top: var(--space-md);
+        margin-top: var(--space-md);
+        display:none;
+    }
+
+    /* Hide when filters-hidden class is applied */
+    .additional-filters.expanded {
+        display: block;
+    }
+
+    }
+
+    @media (max-width: 768px) {
+        .filters-toggle {
+            border-top: 1px solid var(--gray-200);
+            padding-top: var(--space-md);
+            display:block !important;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .list-view-description {
+            display: none;
+        }
+        .view-toggle {
+            display: none;
+        }
+        .list-view {
+            display: block !important;
+        }
+        .grid-view {
+            display: none !important;
+        }
+
+        .list-view-content {
+            flex-direction: flex;
+        }
+
+        .list-view-image {
+            height: auto;
+        }
+        .list-view-card-link {
+            padding: 16px 32px 16px 8px;
+        }
+        .list-view-item {
+        margin-bottom:8px;
+        }
+        .badge-status {
+        position: absolute;
+            top: 0;
+            left: auto;
+            width: 24px;
+            right: 0;
+            bottom: 0;
+            align-items: center;
+            writing-mode: vertical-lr;
+            display: flex;
+            justify-content: center;
+            border-bottom:none;
+            border-right:none;
+            border-top:none;
+        }
+        .badge-available::before {
+            content: "";
+        }
+    }
+</style>
+<script>
+function toggleFilters() {
+    const filters = document.querySelector('.additional-filters');
+    const icon = document.querySelector('.filters-toggle-icon');
+    const text = document.querySelector('.filters-toggle-text');
+
+    if (filters.classList.contains('expanded')) {
+        filters.classList.remove('expanded');
+        icon.classList.add('rotated');
+        text.textContent = 'More Filters';
+    } else {
+        filters.classList.add('expanded');
+        icon.classList.remove('rotated');
+        text.textContent = 'Fewer Filters';
+    }
+}
+</script>
+{% endblock %}

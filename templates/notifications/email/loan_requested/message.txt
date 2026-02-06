@@ -1,0 +1,17 @@
+{% translate "LOAN REQUEST" %}
+
+{{ borrower.get_display_name }} {% translate "wants to borrow your item" %}: {{ item.title }}
+
+{% translate "Borrower" %}: {{ borrower.get_display_name }} ({{ borrower.email }})
+{% translate "Requested" %}: {{ requested_at|date:"F j, Y, H:i" }}
+{% if group %}
+{% translate "Group" %}: {{ group.name }}
+{% endif %}
+
+{% if request_message %}
+{% translate "Message from borrower" %}:
+{{ request_message }}
+{% endif %}
+
+{% translate "Manage Loan" %}: {{ loan_url }}
+{% translate "View Item Details" %}: {{ item_url }}

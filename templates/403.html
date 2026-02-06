@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{% translate "Access Denied" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container container-sm">
+    <div class="py-2xl">
+        <div class="text-center">
+
+            <!-- Error Message -->
+            <h1 class="mb-lg" style="font-size: 3rem; font-weight: 700;">403</h1>
+            <h2 class="mb-md text-secondary">{% translate "Access Denied" %}</h2>
+            <p class="mb-xl text-muted" style="max-width: 500px; margin: 0 auto; line-height: 1.6;">
+                {% blocktranslate %}You don't have permission to access this resource.<br>
+                This area requires special authorization or login credentials.{% endblocktranslate %}
+            </p>
+
+            <!-- Actions -->
+            <div class="flex justify-center gap-md mb-xl">
+                <a href="{% url 'home' %}" class="btn btn-primary btn-lg">
+                    {% translate "Go Home" %}
+                </a>
+                <button onclick="history.back()" class="btn btn-outline btn-lg">
+                    ← {% translate "Go Back" %}
+                </button>
+                <a href="{% url 'bug_report_page' %}" class="btn btn-outline btn-lg">
+                    {% translate "Report a Bug" %}
+                </a>
+            </div>
+
+            <!-- Additional Help -->
+            <div class="card" style="max-width: 600px; margin: 0 auto;">
+                <div class="card-body">
+                    <h3 class="mb-md">{% translate "What can you try" %}?</h3>
+                    <ul class="text-left space-y-sm" style="padding-left: 1.5rem;">
+                        <li>{% translate "Log in to your account if you haven't already" %}</li>
+                        <li>{% translate "Check if you have the required permissions" %}</li>
+                        <li>{% translate "Contact the administrator if you believe this is an error" %}</li>
+                        <li>{% translate "Go back to the previous page and try a different approach" %}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

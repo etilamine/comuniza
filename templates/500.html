@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{% translate "Our mistake" %}! - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container container-md">
+    <div class="py-2xl">
+        <div class="text-center">
+            <!-- Error Illustration -->
+            <div class="mb-xl">
+                <div style="font-size: 6rem; color: var(--text-muted);">{% translate "Our bad" %} :(</div>
+            </div>
+
+            <!-- Error Message -->
+            <h1 class="mb-lg" style="font-size: 3rem; font-weight: 700;">500</h1>
+            <h2 class="mb-md text-secondary">{% translate "Server Error" %}</h2>
+            <p class="mb-xl text-muted" style="max-width: 500px; margin: 0 auto; line-height: 1.6;">
+                {% blocktranslate %}Something went wrong on our end. We're working to fix this issue. <br>
+                Your help in reporting bugs makes Comuniza better for everyone.{% endblocktranslate %}
+            </p>
+
+            <!-- Actions -->
+            <div class="flex justify-center gap-md mb-xl">
+                <a href="{% url 'home' %}" class="btn btn-primary btn-lg">
+                    {% translate "Go Home" %}
+                </a>
+                <button onclick="history.back()" class="btn btn-outline btn-lg">
+                    ← {% translate "Go Back" %}
+                </button>
+                <button onclick="location.reload()" class="btn btn-outline btn-lg">
+                    {% translate "Try Again" %}
+                </button>
+            </div>
+
+            <!-- Bug Report Form -->
+            <div class="card mb-xl" style="max-width: 700px; margin: 0 auto;">
+                <div class="card-body">
+                    <h3 class="mb-md">{% translate "Report This Bug" %}</h3>
+                    <p class="text-sm text-muted mb-lg">
+                        {% translate "Help us improve! Send details about what you were doing when this error occurred" %}.
+                    </p>
+
+                    <form id="bug-report-form" method="post" action="{% url 'report_bug' %}">
+                        <input type="hidden" name="error_type" value="500">
+                        <input type="hidden" name="current_url" value="{{ request.build_absolute_uri }}">
+                        <input type="hidden" name="user_agent" value="{{ request.META.HTTP_USER_AGENT }}">
+                        <input type="hidden" name="referrer" value="{{ request.META.HTTP_REFERER }}">
+
+                        <div class="form-group mb-md">
+                            <label for="bug_description" class="form-label">{% translate "What were you trying to do" %}?</label>
+                            <textarea
+                                name="description"
+                                id="bug_description"
+                                class="form-control"
+                                rows="4"
+                                placeholder="{% translate 'Describe what you were doing when the error occurred...' %}"
+                                maxlength="1000"
+                                required
+                            ></textarea>
+                            <small class="form-help">{% translate "Max 1000 characters. Be as specific as possible" %}.</small>
+                        </div>
+
+                        <div class="form-group mb-md">
+                            <label for="user_email" class="form-label">{% translate "Your Email (Optional" %})</label>
+                            <input
+                                type="email"
+                                name="user_email"
+                                id="user_email"
+                                class="form-control"
+                                placeholder="{% translate 'your@email.com' %}"
+                                value="{% if user.is_authenticated %}{{ user.email }}{% endif %}"
+                            >
+                            <small class="form-help">{% translate "We'll use this to follow up if needed" %}.</small>
+                        </div>
+
+                        <div class="form-group mb-lg">
+                            <label class="form-label">{% translate "Severity" %}</label>
+                            <div class="flex gap-sm">
+                                <label class="radio-label">
+                                    <input type="radio" name="severity" value="low" checked>
+                                    <span>{% translate "Low - Minor inconvenience" %}</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="severity" value="{% translate "medium" %}">
+                                    <span>{% translate "Medium - Can't complete task" %}</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="severity" value="{% translate "high" %}">
+                                    <span>{% translate "High - Critical functionality broken" %}</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <small class="text-muted">
+                                {% translate "Reports are sent to our development team at bugs@comuniza.org" %}
+                            </small>
+                            <button type="submit" class="btn btn-success" id="submit-bug-report">
+                                {% translate "Send Bug Report" %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Alternative Contact -->
+            <div class="text-center">
+                <p class="text-sm text-muted mb-sm">
+                    {% translate "Having trouble with the form? Contact us directly" %}:
+                </p>
+                <a href="mailto:bugs@comuniza.org" class="text-primary">
+                    {% translate "bugs@comuniza.org" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.radio-label:hover {
+    border-color: var(--primary-color);
+}
+
+.radio-label input[type="radio"] {
+    margin: 0;
+}
+
+.radio-label span {
+    font-size: 0.875rem;
+    color: var(--text-color);
+}
+
+.radio-label input[type="radio"]:checked + span {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('bug-report-form');
+    const submitBtn = document.getElementById('submit-bug-report');
+
+    form.addEventListener('submit', function(e) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '📤 Sending...';
+
+        // Add a timeout to re-enable button if something goes wrong
+        setTimeout(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '📤 Send Bug Report';
+        }, 10000);
+    });
+});
+</script>
+{% endblock %}

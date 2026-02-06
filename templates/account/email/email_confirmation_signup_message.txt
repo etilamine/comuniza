@@ -1,0 +1,22 @@
+{% load i18n %}
+{% translate "Hello" %} {{ user.email }}!
+
+{% translate "Thank you for signing up for Comuniza. To complete your registration and start sharing items with your community, please confirm your email address by clicking the link below" %}:
+
+{{ activate_url }}
+
+{% translate "If you cannot click the link, please copy and paste this URL into your browser" %}:
+{{ activate_url }}
+
+{% translate "IMPORTANT SECURITY NOTES:
+- This link will expire in" %} {{ expire_days }} {% translate "days
+- If you did not sign up for this account, please ignore this email
+- Your account will be automatically deleted if not confirmed within" %} {{ expire_days }} {% translate "days
+
+Thank you,
+The Comuniza Team
+
+---
+COMUNIZA
+Community Resource Sharing Platform
+https://comuniza.org" %}

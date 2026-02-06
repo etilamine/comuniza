@@ -1,0 +1,1 @@
+{% translate "Loan Message from" %} {{ sender.get_display_name }}

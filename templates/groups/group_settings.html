@@ -1,0 +1,314 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load thumbnail %}
+{% block title %}{% translate "Settings" %} - {{ group.name }} - {{ SITE_NAME }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.group-preview-img {
+    max-width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.group-preview-placeholder {
+    width: 200px;
+    height: 120px;
+    background: var(--bg-secondary);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    .flex.flex-wrap.gap-sm {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .flex.flex-wrap.gap-sm .btn {
+        width: 100%;
+    }
+
+    .group-preview-img {
+        max-width: 100%;
+        max-height: 150px;
+    }
+
+    .group-preview-placeholder {
+        width: 100%;
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-outline {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+
+    .group-preview-img {
+        max-width: 100%;
+        max-height: 120px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container container-md">
+    <!-- Header -->
+    <div class="mb-xl">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="mb-sm">{% translate "Group Settings" %}</h1>
+                <p class="text-secondary">{% translate "Configure" %} {{ group.name }} {% translate "settings" %}</p>
+            </div>
+            <div class="flex flex-wrap gap-sm">
+                <a href="{% url 'groups:detail' group.slug %}" class="btn btn-outline flex-shrink">{% translate "Back to Group" %}</a>
+                <a href="{% url 'groups:manage' group.slug %}" class="btn btn-outline flex-shrink">{% translate "Manage Members" %}</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Form -->
+    <form action="" method="post" enctype="multipart/form-data" class="card">
+        <div class="card-body">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger mb-lg">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <!-- Basic Information -->
+            <div class="mb-xl">
+                <h3 class="mb-lg">{% translate "Basic Information" %}</h3>
+
+                <div class="form-group">
+                    <label for="id_name" class="form-label form-label-required">{% translate "Group Name" %}</label>
+                    <input
+                        type="text"
+                        name="name"
+                        id="id_name"
+                        class="form-control {% if form.name.errors %}is-invalid{% endif %}"
+                        value="{{ group.name }}"
+                        maxlength="100"
+                        required
+                        placeholder="{% translate 'e.g., Berlin Book Lovers' %}"
+                    >
+                    {% if form.name.errors %}
+                        <div class="form-error">{{ form.name.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_description" class="form-label">{% translate "Description" %}</label>
+                    <textarea
+                        name="description"
+                        id="id_description"
+                        class="form-control"
+                        rows="4"
+                        placeholder='{% translate "Describe your group\'s purpose and rules..." %}'
+                    >{{ group.description }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_image" class="form-label">{% translate "Group Image" %}</label>
+                    <div class="flex flex-col gap-md mb-sm">
+                        {% if group.image %}
+                            <img src="{{ group.image.group_list.url }}" alt="{{ group.name }}" class="group-preview-img" style="max-width: 200px; height: auto; object-fit: cover; border-radius: 4px;">
+                        {% else %}
+                            <div class="group-preview-placeholder">
+                                [{% translate "IMG" %}]
+                            </div>
+                        {% endif %}
+                        <div>
+                            <input
+                                type="file"
+                                name="image"
+                                id="id_image"
+                                class="form-control"
+                                accept="image/*"
+                            >
+                            <small class="form-help">{% translate "JPG, PNG or GIF. Max size 5MB. Images will be cropped to banner ratio (1000x300px" %}).</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Privacy Settings -->
+            <div class="mb-xl">
+                <h3 class="mb-lg">{% translate "Privacy & Access" %}</h3>
+
+                <div class="form-group">
+                    <label for="id_privacy" class="form-label">{% translate "Privacy Level" %}</label>
+                    <select
+                        name="privacy"
+                        id="id_privacy"
+                        class="form-control"
+                    >
+                        <option value="private" {% if group.privacy == 'private' %}{% translate "selected" %}{% endif %}>{% translate "Private - Invite only" %}</option>
+                        <option value="public" {% if group.privacy == 'public' %}{% translate "selected" %}{% endif %}>{% translate "Public - Anyone can join" %}</option>
+                        <option value="request" {% if group.privacy == 'request' %}{% translate "selected" %}{% endif %}>{% translate "Join by request" %}</option>
+                    </select>
+                    <small class="form-help">
+                        {% translate "Private: Only invited members can view and join the group" %}<br>
+                        {% translate "Public: Anyone can view and join the group immediately" %}<br>
+                        {% translate "Request: Anyone can view the group, but admins must approve join requests" %}
+                    </small>
+                </div>
+            </div>
+
+            <!-- Location -->
+            <div class="mb-xl">
+                <h3 class="mb-lg">{% translate "Location" %}</h3>
+
+                <div class="grid grid-cols-1 grid-md-3 gap-md">
+                    <div class="form-group">
+                        <label for="id_city" class="form-label form-label-required">{% translate "City" %}</label>
+                        <input
+                            type="text"
+                            name="city"
+                            id="id_city"
+                            class="form-control"
+                            value="{{ group.city }}"
+                            maxlength="100"
+                            required
+                            placeholder="{% translate 'e.g., Berlin' %}"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_state" class="form-label">{% translate "State/Region" %}</label>
+                        <input
+                            type="text"
+                            name="state"
+                            id="id_state"
+                            class="form-control"
+                            value="{{ group.state }}"
+                            maxlength="100"
+                            placeholder="{% translate 'e.g., Bavaria (optional)' %}"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_country" class="form-label form-label-required">{% translate "Country" %}</label>
+                        <input
+                            type="text"
+                            name="country"
+                            id="id_country"
+                            class="form-control"
+                            value="{{ group.country }}"
+                            maxlength="100"
+                            required
+                            placeholder="{% translate 'e.g., Germany' %}"
+                        >
+                    </div>
+                </div>
+                <small class="form-help">{% translate "Location helps members find groups near them on the map" %}</small>
+            </div>
+
+            <!-- Group Policies -->
+            <div class="mb-xl">
+                <h3 class="mb-lg">{% translate "Group Policies" %}</h3>
+
+                <div class="form-group">
+                    <label for="id_loan_visibility" class="form-label">{% translate "Loan Visibility" %}</label>
+                    <select
+                        name="loan_visibility"
+                        id="id_loan_visibility"
+                        class="form-control"
+                    >
+                        <option value="public" {% if group.loan_visibility == 'public' %}{% translate "selected" %}{% endif %}>{% translate "Public to members" %}</option>
+                        <option value="admin_only" {% if group.loan_visibility == 'admin_only' %}{% translate "selected" %}{% endif %}>{% translate "Admins only" %}</option>
+                        <option value="hidden" {% if group.loan_visibility == 'hidden' %}{% translate "selected" %}{% endif %}>{% translate "Hidden from members" %}</option>
+                    </select>
+                    <small class="form-help">
+                        {% translate "Control who can see loan activity within this group" %}
+                    </small>
+                </div>
+
+                <div class="space-y-md">
+                    <div class="form-check">
+                        <input
+                            type="checkbox"
+                            name="allow_member_invites"
+                            id="id_allow_member_invites"
+                            class="form-check-input"
+                            {% if group.allow_member_invites %}checked{% endif %}
+                        >
+                        <label class="form-check-label" for="id_allow_member_invites">
+                            {% translate "Allow members to invite others" %}
+                        </label>
+                        <small class="form-help">{% translate "Let regular members send group invitations" %}</small>
+                    </div>
+
+                    <div class="form-check">
+                        <input
+                            type="checkbox"
+                            name="require_approval_for_items"
+                            id="id_require_approval_for_items"
+                            class="form-check-input"
+                            {% if group.require_approval_for_items %}checked{% endif %}
+                        >
+                        <label class="form-check-label" for="id_require_approval_for_items">
+                            {% translate "Require admin approval for new items" %}
+                        </label>
+                        <small class="form-help">{% translate "Items shared to the group need admin approval before being visible" %}</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="flex gap-sm">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    {% translate "Save Changes" %}
+                </button>
+                <a href="{% url 'groups:detail' group.slug %}" class="btn btn-ghost btn-lg">
+                    {% translate "Cancel" %}
+                </a>
+            </div>
+        </div>
+    </form>
+
+    <!-- Danger Zone - Separate form to avoid nesting issues -->
+    <div class="container container-md mt-xl">
+        <div class="mb-xl">
+            <h3 class="mb-lg text-danger">{% translate "Danger Zone" %}</h3>
+
+            <div class="p-lg border border-danger rounded">
+                <h4 class="mb-md">{% translate "Delete Group" %}</h4>
+                <p class="text-sm text-secondary mb-md">
+                    {% translate "Once you delete this group, there is no going back. Please be certain" %}.
+                </p>
+                {% if group.owner == user %}
+                    <form method="post" action="{% url 'groups:settings' group.slug %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="delete_group" value="1">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirmDelete()">
+                            {% translate "Delete Group" %}
+                        </button>
+                    </form>
+                {% else %}
+                    <p class="text-sm text-warning">{% translate "Only the group owner can delete the group" %}.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function confirmDelete() {
+    return confirm('Are you sure you want to delete this group? This action cannot be undone.');
+}
+</script>
+{% endblock %}

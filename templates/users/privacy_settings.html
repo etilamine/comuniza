@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{% translate "Privacy Settings" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="mb-xl">
+        <h1 class="mb-sm">{% translate "Privacy Settings" %}</h1>
+        <p class="text-secondary">{% translate "Control who can see your profile information and activity" %}</p>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-lg">
+                    <h3 class="mb-md">{% translate "Profile Visibility" %}</h3>
+                    <p class="text-secondary text-sm mb-md">{% translate "Who can view your profile page and basic information" %}</p>
+
+                    <div class="form-group">
+                        <label class="form-label">{% translate "Profile visibility" %}</label>
+                        <div class="radio-group">
+                            <label class="radio-btn{% if user.profile_visibility == 'private' %} active{% endif %}">
+                                <input
+                                    type="radio"
+                                    name="profile_visibility"
+                                    value="private"
+                                    id="profile_private"
+                                    {% if user.profile_visibility == 'private' %}checked{% endif %}
+                                >
+                               {% translate "Groups - Only group members" %}
+                            </label>
+                            <label class="radio-btn{% if user.profile_visibility == 'public' %} active{% endif %}">
+                                <input
+                                    type="radio"
+                                    name="profile_visibility"
+                                    value="public"
+                                    id="profile_public"
+                                    {% if user.profile_visibility == 'public' %}checked{% endif %}
+                                >
+                                {% translate "Public - Anyone can view" %}
+                            </label>
+                            <label class="radio-btn{% if user.profile_visibility == 'lenders_borrowers' %} active{% endif %}">
+                                <input
+                                    type="radio"
+                                    name="profile_visibility"
+                                    value="lenders_borrowers"
+                                    id="profile_lenders_borrowers"
+                                    {% if user.profile_visibility == 'lenders_borrowers' %}checked{% endif %}
+                                >
+                                {% translate "Private - Only users you've transacted with" %}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-lg">
+                    <h3 class="mb-md">{% translate "Groups Visibility" %}</h3>
+                    <p class="text-secondary text-sm mb-md">{% translate "Who can see which groups you belong to" %}</p>
+
+                    <div class="form-group">
+                        <label class="form-label">{% translate "Groups visibility" %}</label>
+                        <div class="radio-group">
+                            <label class="radio-btn{% if user.groups_visibility == 'private' %} active{% endif %}">
+                                <input
+                                    type="radio"
+                                    name="groups_visibility"
+                                    value="private"
+                                    id="groups_private"
+                                    {% if user.groups_visibility == 'private' %}checked{% endif %}
+                                >
+                                {% translate "Groups - Only group members" %}
+                            </label>
+                            <label class="radio-btn{% if user.groups_visibility == 'public' %} active{% endif %}">
+                                <input
+                                    type="radio"
+                                    name="groups_visibility"
+                                    value="public"
+                                    id="groups_public"
+                                    {% if user.groups_visibility == 'public' %}checked{% endif %}
+                                >
+                                {% translate "Public - Anyone can view" %}
+                            </label>
+                            <label class="radio-btn{% if user.groups_visibility == 'lenders_borrowers' %} active{% endif %}">
+                                <input
+                                    type="radio"
+                                    name="groups_visibility"
+                                    value="lenders_borrowers"
+                                    id="groups_lenders_borrowers"
+                                    {% if user.groups_visibility == 'lenders_borrowers' %}checked{% endif %}
+                                >
+                                {% translate "Private - Only users you've transacted with in that group" %}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-lg">
+                    <h3 class="mb-md">{% translate "Location Visibility" %}</h3>
+                    <p class="text-secondary text-sm mb-md">{% translate "Who can see your location information" %}</p>
+
+                    <div class="form-group">
+                        <label class="form-label">{% translate "Location visibility" %}</label>
+                        <div class="radio-group">
+                            <label class="radio-btn{% if user.location_visibility == 'private' %} active{% endif %}">
+                                <input
+                                    type="radio"
+                                    name="location_visibility"
+                                    value="private"
+                                    id="location_private"
+                                    {% if user.location_visibility == 'private' %}checked{% endif %}
+                                >
+                                {% translate "Groups - Only group members" %}
+                            </label>
+                            <label class="radio-btn{% if user.location_visibility == 'public' %} active{% endif %}">
+                                <input
+                                    type="radio"
+                                    name="location_visibility"
+                                    value="public"
+                                    id="location_public"
+                                    {% if user.location_visibility == 'public' %}checked{% endif %}
+                                >
+                                {% translate "Public - Anyone can view" %}
+                            </label>
+                            <label class="radio-btn{% if user.location_visibility == 'lenders_borrowers' %} active{% endif %}">
+                                <input
+                                    type="radio"
+                                    name="location_visibility"
+                                    value="lenders_borrowers"
+                                    id="location_lenders_borrowers"
+                                    {% if user.location_visibility == 'lenders_borrowers' %}checked{% endif %}
+                                >
+                                {% translate "Private - Only users you've transacted with" %}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-lg">
+                    <h3 class="mb-md">{% translate "Default Item Visibility" %}</h3>
+                    <p class="text-secondary text-sm mb-md">{% translate "Default visibility setting for new items you create" %}</p>
+
+                    <div class="form-group">
+                        <label class="form-label">{% translate "Default item visibility" %}</label>
+                        <div class="radio-group">
+                            <label class="radio-btn{% if user.default_item_visibility == 'public' %} active{% endif %}">
+                                <input
+                                    type="radio"
+                                    name="default_item_visibility"
+                                    value="public"
+                                    id="default_public"
+                                    {% if user.default_item_visibility == 'public' %}checked{% endif %}
+                                >
+                                {% translate "Public" %}
+                            </label>
+                            <label class="radio-btn{% if user.default_item_visibility == 'private' %} active{% endif %}">
+                                <input
+                                    type="radio"
+                                    name="default_item_visibility"
+                                    value="private"
+                                    id="default_private"
+                                    {% if user.default_item_visibility == 'private' %}checked{% endif %}
+                                >
+                                {% translate "Private" %}
+                            </label>
+                            <label class="radio-btn{% if user.default_item_visibility == 'restricted' %} active{% endif %}">
+                                <input
+                                    type="radio"
+                                    name="default_item_visibility"
+                                    value="restricted"
+                                    id="default_restricted"
+                                    {% if user.default_item_visibility == 'restricted' %}checked{% endif %}
+                                >
+                                    {% translate "Groups" %}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-md">
+                    <button type="submit" class="btn btn-primary">{% translate "Save Settings" %}</button>
+                    <a href="{% url 'users:profile' %}" class="btn btn-outline">{% translate "Cancel" %}</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle radio button active states
+    const radioGroups = document.querySelectorAll('.radio-group');
+
+    radioGroups.forEach(group => {
+        const radios = group.querySelectorAll('input[type="radio"]');
+
+        radios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                // Remove active class from all labels in this group
+                const labels = group.querySelectorAll('label.radio-btn');
+                labels.forEach(label => label.classList.remove('active'));
+
+                // Add active class to the selected label
+                if (this.checked) {
+                    this.closest('label').classList.add('active');
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

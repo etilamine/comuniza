@@ -1,0 +1,46 @@
+{% extends "notifications/email/base_email.html" %}
+
+{% block header_title %}{% translate "LOAN REVIEW" %}{% endblock %}
+
+{% block email_content %}
+<h2>{{ reviewer.get_display_name }} {% translate "Left A Review" %}</h2>
+<p>{% translate "For" %}: <strong>{{ item.title }}</strong></p>
+
+<div class="data-box">
+    <h3>{% translate "Overall Rating" %}:</h3>
+    <p style="font-size: 18px;">{{ "★" * rating }}</p>
+</div>
+
+<div class="data-box">
+    <h3>{% translate "Review Comment" %}:</h3>
+    <p>{{ comment }}</p>
+</div>
+
+<div class="data-box">
+    <h3>{% translate "Detailed Ratings" %}:</h3>
+    <table class="data-table">
+        <tr>
+            <td>{% translate "Communication" %}:</td>
+            <td>{{ "★" * communication_rating }}</td>
+        </tr>
+        <tr>
+            <td>{% translate "Reliability" %}:</td>
+            <td>{{ "★" * reliability_rating }}</td>
+        </tr>
+        <tr>
+            <td>{% translate "Item Condition" %}:</td>
+            <td>{{ "★" * condition_rating }}</td>
+        </tr>
+        <tr>
+            <td>{% translate "Would lend/borrow again" %}:</td>
+            <td>{% if would_lend_again %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}</td>
+        </tr>
+    </table>
+</div>
+
+<p>{% translate "Thank you for contributing to the trust and reputation system" %}!</p>
+
+<div class="btn-container">
+    <a href="{{ site_url }}" class="btn">{% translate "Visit" %} {{ site_name }}</a>
+</div>
+{% endblock %}

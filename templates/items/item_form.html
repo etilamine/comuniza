@@ -1,0 +1,1258 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load item_tags %}
+{% load i18n %}
+{% load thumbnail %}
+{% block title %}{% if object %}{% translate "Edit" %} {{ object.title }}{% else %}{% translate "Add New Item" %}{% endif %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container container-md">
+    <!-- Page Header -->
+    <div class="mb-xl">
+        <h1 class="mb-sm">{% if object %}{% translate "Edit Item" %}{% else %}{% translate "Add New Item" %}{% endif %}</h1>
+        <p class="text-secondary">{% translate "Share something with your community" %}</p>
+    </div>
+
+    <!-- Form -->
+     <form action="" method="post" enctype="multipart/form-data" class="card">
+          <div class="card-body">
+              {% csrf_token %}
+              <input type="hidden" name="cover_url" id="id_cover_url" value="">
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger mb-lg">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <!-- Basic Information -->
+            <div class="mb-xl">
+                <h3 class="mb-lg">{% translate "Basic Information" %}</h3>
+
+                 <div class="form-group">
+                     <label for="id_title" class="form-label form-label-required">{% translate "Title" %}</label>
+                     <input
+                         type="text"
+                         name="title"
+                         id="id_title"
+                         class="form-control {% if form.title.errors %}is-invalid{% endif %}"
+                         value="{{ form.title.value|default:'' }}"
+                         maxlength="200"
+                         {% translate "required" %}
+                         placeholder="{% translate 'e.g., The Lean Startup, Dewalt Power Drill, Canon EOS Camera' %}"
+                     >
+                     {% if form.title.errors %}
+                         <div class="form-error">{{ form.title.errors.0 }}</div>
+                     {% endif %}
+                 </div>
+
+                 <div class="form-group">
+                     <label for="id_category" class="form-label">{% translate "Category" %}</label>
+                     <select
+                         name="category"
+                         id="id_category"
+                         class="form-control {% if form.category.errors %}is-invalid{% endif %}"
+                         data-category-change="true"
+                     >
+                         <option value="">{% translate "Select a category (optional" %})</option>
+                         {% for category in form.category.field.queryset %}
+                             <option value="{{ category.id }}" data-category-name="{{ category.name }}" {% if object.category.id == category.id or form.category.value == category.id %}selected{% endif %}>
+                                 {{ category.name }}
+                             </option>
+                         {% endfor %}
+                     </select>
+                    {% if form.category.errors %}
+                        <div class="form-error">{{ form.category.errors.0 }}</div>
+                    {% endif %}
+                    <small class="form-help">{% translate "Choose a category to show relevant fields" %}</small>
+                </div>
+
+                 <div class="form-group">
+                     <label for="id_description" class="form-label">{% translate "Description" %}</label>
+                     <textarea
+                         name="description"
+                         id="id_description"
+                         class="form-control {% if form.description.errors %}is-invalid{% endif %}"
+                         rows="4"
+                         placeholder="{% translate 'Describe your item, its condition, and any special features...' %}"
+                     >{{ form.description.value|default:'' }}</textarea>
+                     {% if form.description.errors %}
+                         <div class="form-error">{{ form.description.errors.0 }}</div>
+                     {% endif %}
+                 </div>
+            </div>
+
+            <!-- Item Details -->
+            <div class="mb-xl" id="item-details-section">
+                <h3 class="mb-lg">{% translate "Item Details" %}</h3>
+
+                <!-- Category-specific fields will be shown/hidden by JavaScript -->
+
+                <!-- Author/Brand Field (shown for most categories) -->
+                <div class="form-group category-field" data-categories="Books,Tools,Electronics,Sports & Outdoors,Home & Garden,Games & Hobbies">
+                    <label for="id_author" class="form-label" id="author-label">{% translate "Author / Brand" %}</label>
+                    <input
+                        type="text"
+                        name="author"
+                        id="id_author"
+                        class="form-control"
+                        value="{{ form.author.value|default:'' }}"
+                        maxlength="200"
+                        placeholder="{% translate 'e.g., Eric Ries, DeWalt, Canon' %}"
+                    >
+                    <small class="form-help" id="author-help">{% translate "Author for books, brand for tools/equipment" %}</small>
+                </div>
+
+                <!-- Publisher Field (shown for Books, Games & Hobbies) -->
+                <div class="form-group category-field" data-categories="Books,Games & Hobbies">
+                    <label for="id_publisher" class="form-label" id="publisher-label">{% translate "Publisher" %}</label>
+                    <input
+                        type="text"
+                        name="publisher"
+                        id="id_publisher"
+                        class="form-control"
+                        value="{{ form.publisher.value|default:'' }}"
+                        maxlength="200"
+                        placeholder="{% translate 'e.g., Penguin Books, Amazon' %}"
+                    >
+                    <small class="form-help" id="publisher-help">{% translate "Publishing company" %}</small>
+                </div>
+
+                <!-- Languages Field (Books specific) -->
+                <div class="form-group category-field" data-categories="Books">
+                    <label for="id_languages" class="form-label">{% translate "Languages" %}</label>
+                    <input
+                        type="text"
+                        name="languages"
+                        id="id_languages"
+                        class="form-control"
+                        value="{{ form.languages.value|default:'' }}"
+                        maxlength="200"
+                        placeholder="{% translate 'e.g., English, Spanish, French' %}"
+                    >
+                    <small class="form-help">{% translate "Comma-separated list of languages" %}</small>
+                </div>
+
+                <!-- Book Format Field (Books specific) -->
+                <div class="form-group category-field" data-categories="Books">
+                    <label for="id_book_format" class="form-label">{% translate "Book Format" %}</label>
+                    <select
+                        name="book_format"
+                        id="id_book_format"
+                        class="form-control"
+                    >
+                        <option value="">{% translate "Select format" %}</option>
+                        {% for choice in form.book_format.field.choices %}
+                            <option value="{{ choice.0 }}" {% if form.book_format.value == choice.0 %}{% translate "selected" %}{% endif %}>
+                                {{ choice.1 }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <small class="form-help">{% translate "Format for books" %}</small>
+                </div>
+
+                <!-- Subjects Field (Books specific) -->
+                <div class="form-group category-field" data-categories="Books">
+                    <label for="id_subjects" class="form-label">{% translate "Subjects" %}</label>
+                    <input
+                        type="text"
+                        name="subjects"
+                        id="id_subjects"
+                        class="form-control"
+                        value="{{ form.subjects.value|default:'' }}"
+                        maxlength="500"
+                        placeholder="{% translate 'e.g., Fiction, Fantasy, Adventure' %}"
+                    >
+                    <small class="form-help">{% translate "Subjects/topics for books (comma-separated" %})</small>
+                </div>
+
+                <!-- ISBN/Serial Number Field (shown for Books, Tools, Electronics) -->
+                <div class="form-group category-field" data-categories="Books,Tools,Electronics">
+                    <label for="id_isbn" class="form-label" id="isbn-label">{% translate "ISBN / Serial Number" %}</label>
+                    <input
+                        type="text"
+                        name="isbn"
+                        id="id_isbn"
+                        class="form-control"
+                        value="{{ form.isbn.value|default:'' }}"
+                        maxlength="50"
+                        placeholder="{% translate 'Enter ISBN to auto-fetch book data...' %}"
+                        data-isbn-lookup-url="{% url 'items:isbn_lookup' %}"
+                    >
+                    <div id="isbn-lookup-status" class="isbn-lookup-status" style="display: none;">
+                        <div class="loading-spinner"></div>
+                        <div class="status-message"></div>
+                    </div>
+                    <div id="isbn-suggestions" class="isbn-suggestions" style="display: none;">
+                        <h5>📚 {% translate "Found Book Information" %}</h5>
+                        <div class="suggestion-options">
+                            <div class="suggestion-option">
+                                <strong>{% translate "Title" %}:</strong> <span id="suggested-title"></span>
+                            </div>
+                            <div class="suggestion-option">
+                                <strong>{% translate "Author" %}:</strong> <span id="suggested-author"></span>
+                            </div>
+                            <div class="suggestion-option">
+                                <strong>{% translate "Publisher" %}:</strong> <span id="suggested-publisher"></span>
+                            </div>
+                            <div class="suggestion-option">
+                                <strong>{% translate "Year" %}:</strong> <span id="suggested-year"></span>
+                            </div>
+                            <div class="suggestion-option">
+                                <strong>{% translate "Languages" %}:</strong> <span id="suggested-languages"></span>
+                            </div>
+                             <div class="suggestion-option">
+                                 <strong>{% translate "Subjects" %}:</strong> <span id="suggested-subjects"></span>
+                             </div>
+                            <div class="suggestion-actions">
+                                <button type="button" id="accept-suggestion" class="btn btn-primary">
+                                    <i class="fas fa-check"></i> {% translate "Use This Data" %}
+                                </button>
+                                <button type="button" id="set-isbn-cover" class="btn btn-success">
+                                    <i class="fas fa-image"></i> {% translate "Set as Cover" %}
+                                </button>
+                                <button type="button" id="reject-suggestion" class="btn btn-outline">
+                                    <i class="fas fa-times"></i> {% translate "Use Original" %}
+                                </button>
+                            </div>
+                        </div>
+                        <div id="suggestion-cover-preview" class="suggestion-cover-preview">
+                            <img id="cover-preview-image" src="" alt="{% translate "Cover preview" %}">
+                            <span class="cover-source-label"></span>
+                        </div>
+                    </div>
+                    {% if form.isbn.errors %}
+                        <div class="form-error">{{ form.isbn.errors.0 }}</div>
+                    {% endif %}
+                    <small class="form-help" id="isbn-help">{% translate "Enter ISBN-10 or ISBN-13. Book data will be auto-fetched" %}.</small>
+                </div>
+
+                <!-- Year Field (shown for Books, Tools, Electronics, Games & Hobbies) -->
+                <div class="form-group category-field" data-categories="Books,Tools,Electronics,Games & Hobbies,Sports & Outdoors,Home & Garden">
+                    <label for="id_year" class="form-label" id="year-label">{% translate "Year" %}</label>
+                    <input
+                        type="number"
+                        name="year"
+                        id="id_year"
+                        class="form-control"
+                        value="{{ form.year.value|default:'' }}"
+                        min="1900"
+                        max="2100"
+                        placeholder="{% translate 'e.g., 2020' %}"
+                    >
+                    <small class="form-help" id="year-help">{% translate "Year of publication/manufacture" %}</small>
+                </div>
+
+                <!-- Estimated Value Field (shown for Tools, Electronics, Sports & Outdoors, Home & Garden) -->
+                <div class="form-group category-field" data-categories="Tools,Electronics,Sports & Outdoors,Home & Garden">
+                    <label for="id_estimated_value" class="form-label">{% translate "Estimated Value" %} ($)</label>
+                    <input
+                        type="number"
+                        name="estimated_value"
+                        id="id_estimated_value"
+                        class="form-control"
+                        value="{{ form.estimated_value.value|default:'' }}"
+                        step="0.01"
+                        min="0"
+                        placeholder="{% translate 'Optional' %}"
+                    >
+                    <small class="form-help">{% translate "Approximate replacement value for insurance purposes" %}</small>
+                </div>
+            </div>
+
+            <!-- Condition & Status -->
+            <div class="mb-xl">
+                <h3 class="mb-lg">{% translate "Condition & Status" %}</h3>
+
+                 <div class="form-group">
+                     <label for="id_condition" class="form-label">{% translate "Condition" %}</label>
+                     <select
+                         name="condition"
+                         id="id_condition"
+                         class="form-control {% if form.condition.errors %}is-invalid{% endif %}"
+                     >
+                         {% for choice in form.condition.field.choices %}
+                             <option value="{{ choice.0 }}" {% if form.condition.value == choice.0 %}{% translate "selected" %}{% endif %}>
+                                 {{ choice.1 }}
+                             </option>
+                         {% endfor %}
+                     </select>
+                    {% if form.condition.errors %}
+                        <div class="form-error">{{ form.condition.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                 <div class="form-group">
+                     <label for="id_status" class="form-label">{% translate "Status" %}</label>
+                     <select
+                         name="status"
+                         id="id_status"
+                         class="form-control {% if form.status.errors %}is-invalid{% endif %}"
+                     >
+                         {% for choice in form.status.field.choices %}
+                             <option value="{{ choice.0 }}" {% if form.status.value == choice.0 %}{% translate "selected" %}{% endif %}>
+                                 {{ choice.1 }}
+                             </option>
+                         {% endfor %}
+                     </select>
+                    {% if form.status.errors %}
+                        <div class="form-error">{{ form.status.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                 <div class="form-group">
+                     <label for="id_max_loan_days" class="form-label">{% translate "Maximum Loan Period" %}</label>
+                     <select
+                         name="max_loan_days"
+                         id="id_max_loan_days"
+                         class="form-control {% if form.max_loan_days.errors %}is-invalid{% endif %}"
+                     >
+                         {% for choice in form.max_loan_days.field.choices %}
+                             <option value="{{ choice.0 }}" {% if form.max_loan_days.value == choice.0 %}{% translate "selected" %}{% endif %}>
+                                 {{ choice.1 }}
+                             </option>
+                         {% endfor %}
+                     </select>
+                    {% if form.max_loan_days.errors %}
+                        <div class="form-error">{{ form.max_loan_days.errors.0 }}</div>
+                    {% endif %}
+                 </div>
+
+                 <div class="form-group">
+                    <div class="form-check">
+                        <input
+                            type="checkbox"
+                            name="allow_reservations"
+                            id="id_allow_reservations"
+                            class="form-check-input {% if form.allow_reservations.errors %}is-invalid{% endif %}"
+                        >
+                        <label class="form-check-label" for="id_allow_reservations">
+                            {% translate "Allow reservations when item is borrowed" %}
+                        </label>
+                    </div>
+                    {% if form.allow_reservations.errors %}
+                        <div class="form-error">{{ form.allow_reservations.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+
+            </div>
+
+             <!-- Groups -->
+              <div class="mb-xl">
+                  <h3 class="mb-lg">{% translate "Item Privacy" %}</h3>
+
+                  <div class="form-group">
+                      <label class="form-label">{% translate "Visibility" %}</label>
+                      <div class="radio-group">
+                          {% for choice in form.visibility.field.choices %}
+                              <label class="radio-btn{% if form.visibility.value == choice.0 %} active{% endif %}">
+                                  <input
+                                      type="radio"
+                                      name="visibility"
+                                      value="{{ choice.0 }}"
+                                      id="id_visibility_{{ choice.0 }}"
+                                      {% if form.visibility.errors %}class="is-invalid"{% endif %}
+                                      {% if form.visibility.value == choice.0 %}checked{% endif %}
+                                  >
+                                  {{ choice.1 }}
+                              </label>
+                          {% endfor %}
+                      </div>
+                      {% if form.visibility.errors %}
+                          <div class="form-error">{{ form.visibility.errors.0 }}</div>
+                      {% endif %}
+                      <small class="form-help">
+                          {% translate "Public: visible to everyone" %}<br>
+                          {% translate "Private: hidden from all users" %}<br>
+                          {% translate "Restricted: only visible to members of selected groups" %}
+                      </small>
+                  </div>
+
+                  <div class="form-group">
+                      <div class="form-check">
+                          <input
+                              type="checkbox"
+                              name="select_all_groups"
+                              id="id_select_all_groups"
+                              class="form-check-input {% if form.select_all_groups.errors %}is-invalid{% endif %}"
+                              {% if form.select_all_groups.value %}checked{% endif %}
+                          >
+                          <label class="form-check-label" for="id_select_all_groups">
+                              {% translate "Share with all my groups" %}
+                          </label>
+                          <small class="form-help">{% translate "Automatically select all groups you belong to (only applies when Restricted visibility is selected" %})</small>
+                      </div>
+                      {% if form.select_all_groups.errors %}
+                          <div class="form-error">{{ form.select_all_groups.errors.0 }}</div>
+                      {% endif %}
+                  </div>
+
+                 <div class="form-group">
+                     <label class="form-label">{% translate "Available in these groups" %}</label>
+                    {% if form.groups.field.queryset %}
+                        <div class="flex flex-col gap-sm">
+                            {% for group in form.groups.field.queryset %}
+                                <div class="form-check">
+                                    <input
+                                        type="checkbox"
+                                        name="groups"
+                                        id="id_groups_{{ group.id }}"
+                                        class="form-check-input {% if form.groups.errors %}is-invalid{% endif %}"
+                                        value="{{ group.id }}"
+                                        {% if group.id in form.groups.value %}
+                                            checked
+                                        {% endif %}
+                                    >
+                                    <label class="form-check-label" for="id_groups_{{ group.id }}">
+                                        {{ group.name }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-secondary">{% translate "You're not a member of any groups yet" %}.</p>
+                    {% endif %}
+                    {% if form.groups.errors %}
+                        <div class="form-error">{{ form.groups.errors.0 }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Images -->
+            <div x-data="imageUploadManager()" @init="init()" class="mb-xl">
+                <h3 class="mb-lg">{% translate "Images" %}</h3>
+
+                <!-- Drop Zone -->
+                <div class="upload-drop-zone card p-lg text-center mb-lg"
+                     @dragover.prevent="dragOver = true"
+                     @dragleave.prevent="dragOver = false"
+                     @drop.prevent="handleDrop($event)"
+                     :class="{'drag-over': dragOver}">
+
+                    <div class="mb-md">
+                        <h4 class="mb-sm">Drop images here or click to browse</h4>
+                        <p class="text-secondary text-sm">
+                            Max 8 images, 5MB each. First image will be the cover.
+                        </p>
+                    </div>
+
+                    <input type="file"
+                           x-ref="fileInput"
+                           id="id_images"
+                           name="images"
+                           multiple
+                           accept="image/*"
+                           class="form-control"
+                           @change="handleFileSelect($event)"
+                           style="display: none;">
+
+                    <button type="button"
+                            @click="$refs.fileInput.click()"
+                            class="btn btn-outline">
+                        Choose Files
+                    </button>
+                </div>
+
+                <!-- Upload Progress -->
+                <div x-show="uploading" class="mb-lg">
+                    <div class="flex items-center gap-sm">
+                        <div class="loading-spinner"></div>
+                        <span>Uploading images...</span>
+                    </div>
+                </div>
+
+                <!-- Single Gallery for All Images (existing + uploaded) -->
+                <div id="all-images" class="grid grid-cols-2 grid-md-3 gap-md mb-md">
+                    <!-- Existing images will be loaded here (if editing) -->
+                    {% if object %}
+                        {% for image in object.images.all %}
+                            <div class="image-item card p-sm"
+                                 draggable="true"
+                                 data-image-id="{{ image.id }}"
+                                 data-order="{{ image.order }}"
+                                 data-type="existing">
+                                <div class="image-container mb-sm" style="position: relative; width: 100%; aspect-ratio: 1 / 1; overflow: hidden;">
+                                    <img
+                                        src="{{ image.image.item_gallery.url }}"
+                                        alt="{% translate "Item image" %}"
+                                        class="w-full object-cover rounded"
+                                        style="width: 100%; height: 100%; object-fit: cover;"
+                                    >
+                                    {% if image.is_primary %}
+                                        <div class="primary-badge" style="position: absolute; top: 8px; left: 8px; background: var(--primary); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold;">
+                                            ★ {% translate "Cover" %}
+                                        </div>
+                                    {% endif %}
+                                    <button type="button" class="delete-image-btn" data-image-id="{{ image.id }}" style="position: absolute; top: 8px; right: 8px; background: rgba(220, 38, 38, 0.9); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px;">
+                                        ×
+                                    </button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <!-- New uploaded images will be added here dynamically -->
+                </div>
+
+                <small class="form-help">{% translate "Drag to reorder images. The first image will be the cover. Click × to delete" %}.</small>
+
+                <!-- Hidden fields -->
+                <input type="hidden" name="temp_image_ids" :value="tempImageIds">
+                <input type="hidden" name="image_order" id="id_image_order" value="">
+                <input type="hidden" name="all_images_order" id="id_all_images_order" value="">
+                <input type="hidden" name="images_to_delete" id="id_images_to_delete" value="">
+                <input type="hidden" name="use_isbn_cover" id="id_use_isbn_cover" value="false">
+            </div>
+
+            <!-- Submit -->
+            <div class="flex gap-sm">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    {% if object %}{% translate "Update Item" %}{% else %}{% translate "Add Item" %}{% endif %}
+                </button>
+                <a href="{% if object %}{% url 'item_detail' object.identifier %}{% else %}{% url 'items:my_items' %}{% endif %}" class="btn btn-ghost btn-lg">
+                    {% translate "Cancel" %}
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const isbnInput = document.getElementById('id_isbn');
+    const suggestionsDiv = document.getElementById('isbn-suggestions');
+    const statusDiv = document.getElementById('isbn-lookup-status');
+    const suggestedTitle = document.getElementById('suggested-title');
+    const suggestedAuthor = document.getElementById('suggested-author');
+    const suggestedPublisher = document.getElementById('suggested-publisher');
+    const suggestedYear = document.getElementById('suggested-year');
+    const suggestedLanguages = document.getElementById('suggested-languages');
+    const suggestedSubjects = document.getElementById('suggested-subjects');
+    const acceptBtn = document.getElementById('accept-suggestion');
+    const rejectBtn = document.getElementById('reject-suggestion');
+    const coverPreview = document.getElementById('cover-preview-image');
+    const coverSourceLabel = document.querySelector('.cover-source-label');
+    const categorySelect = document.getElementById('id_category');
+
+    let debounceTimer;
+    let currentLookupData = null;
+
+    // Category-specific field configurations
+    const categoryConfigs = {
+        'Books': {
+            'author': { label: 'Author', placeholder: 'e.g., Eric Ries, Stephen King', help: 'Author of the book' },
+            'publisher': { label: 'Publisher', placeholder: 'e.g., Penguin Books, Random House', help: 'Publishing company' },
+            'isbn': { label: 'ISBN', placeholder: 'Enter ISBN to auto-fetch book data...', help: 'ISBN-10 or ISBN-13. Book data will be auto-fetched.' },
+            'year': { label: 'Publication Year', placeholder: 'e.g., 2020', help: 'Year the book was published' },
+            'showFields': ['author', 'publisher', 'languages', 'book_format', 'subjects', 'isbn', 'year']
+        },
+        'Tools': {
+            'author': { label: 'Brand/Manufacturer', placeholder: 'e.g., DeWalt, Makita, Stanley', help: 'Tool brand or manufacturer' },
+            'publisher': { label: 'Distributor', placeholder: 'e.g., Home Depot, Lowe\'s', help: 'Where you purchased it (optional)' },
+            'isbn': { label: 'Serial Number', placeholder: 'Enter serial number...', help: 'Serial number for warranty/tracking purposes' },
+            'year': { label: 'Manufacture Year', placeholder: 'e.g., 2020', help: 'Year of manufacture' },
+            'showFields': ['author', 'publisher', 'isbn', 'year', 'estimated_value']
+        },
+        'Electronics': {
+            'author': { label: 'Brand', placeholder: 'e.g., Apple, Sony, Samsung', help: 'Electronics brand' },
+            'publisher': { label: 'Retailer', placeholder: 'e.g., Best Buy, Amazon', help: 'Retailer where purchased (optional)' },
+            'isbn': { label: 'Serial Number', placeholder: 'Enter serial number...', help: 'Serial number for warranty/support' },
+            'year': { label: 'Model Year', placeholder: 'e.g., 2023', help: 'Model year or year of purchase' },
+            'showFields': ['author', 'publisher', 'isbn', 'year', 'estimated_value']
+        },
+        'Sports & Outdoors': {
+            'author': { label: 'Brand', placeholder: 'e.g., Nike, Coleman, Patagonia', help: 'Brand if applicable' },
+            'year': { label: 'Year', placeholder: 'e.g., 2022', help: 'Year of manufacture or purchase' },
+            'showFields': ['author', 'year', 'estimated_value']
+        },
+        'Home & Garden': {
+            'author': { label: 'Brand', placeholder: 'e.g., Cuisinart, OXO, Rubbermaid', help: 'Brand if applicable' },
+            'year': { label: 'Year', placeholder: 'e.g., 2021', help: 'Year of purchase or manufacture' },
+            'showFields': ['author', 'year', 'estimated_value']
+        },
+        'Games & Hobbies': {
+            'author': { label: 'Publisher/Developer', placeholder: 'e.g., Nintendo, Wizards of the Coast', help: 'Game publisher or developer' },
+            'publisher': { label: 'Distributor', placeholder: 'e.g., Hasbro, Steam', help: 'Distributor or publisher (if different)' },
+            'year': { label: 'Release Year', placeholder: 'e.g., 2023', help: 'Year of release' },
+            'showFields': ['author', 'publisher', 'year']
+        }
+    };
+
+    // Handle category change
+    function handleCategoryChange() {
+        const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+        const categoryName = selectedOption ? selectedOption.getAttribute('data-category-name') : '';
+
+        // Get field orders for all categories from template context
+        const allFieldOrders = {{ all_field_orders_json|default:"{}"|safe }};
+
+        // Get the ordered field list for the selected category
+        const itemDetailsFieldOrder = allFieldOrders[categoryName] || [];
+
+        // Hide all category-specific fields first
+        document.querySelectorAll('.category-field').forEach(field => {
+            field.style.display = 'none';
+        });
+
+        if (categoryName && categoryConfigs[categoryName]) {
+            const config = categoryConfigs[categoryName];
+
+            // Show relevant fields and update their labels/help text
+            config.showFields.forEach(fieldName => {
+                const field = document.querySelector(`[name="${fieldName}"]`).closest('.category-field');
+                if (field) {
+                    field.style.display = 'block';
+
+                    // Update label if configured
+                    if (config[fieldName] && config[fieldName].label) {
+                        const label = field.querySelector('label');
+                        if (label) label.textContent = config[fieldName].label;
+                    }
+
+                    // Update placeholder if configured
+                    if (config[fieldName] && config[fieldName].placeholder) {
+                        const input = field.querySelector('input');
+                        if (input) input.placeholder = config[fieldName].placeholder;
+                    }
+
+                    // Update help text if configured
+                    if (config[fieldName] && config[fieldName].help) {
+                        const helpText = field.querySelector('.form-help');
+                        if (helpText) helpText.textContent = config[fieldName].help;
+                    }
+                }
+            });
+
+            // Reorder fields in Item Details section if ordering is specified
+            if (itemDetailsFieldOrder && itemDetailsFieldOrder.length > 0) {
+                reorderItemDetailsFields(itemDetailsFieldOrder);
+            }
+        }
+    }
+
+    // Function to reorder Item Details fields
+    function reorderItemDetailsFields(fieldOrder) {
+        const itemDetailsSection = document.getElementById('item-details-section');
+        if (!itemDetailsSection) return;
+
+        const container = itemDetailsSection.querySelector('.space-y-md') || itemDetailsSection;
+        const fields = Array.from(container.querySelectorAll('.category-field'));
+
+        // Create a map of field name to element
+        const fieldMap = {};
+        fields.forEach(field => {
+            const input = field.querySelector('input, select, textarea');
+            if (input && input.name) {
+                fieldMap[input.name] = field;
+            }
+        });
+
+        // Clear the container
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // Re-add fields in the specified order
+        fieldOrder.forEach(fieldName => {
+            if (fieldMap[fieldName]) {
+                container.appendChild(fieldMap[fieldName]);
+            }
+        });
+
+        // Add any remaining fields not in the order
+        Object.keys(fieldMap).forEach(fieldName => {
+            if (!fieldOrder.includes(fieldName)) {
+                container.appendChild(fieldMap[fieldName]);
+            }
+        });
+    }
+
+    // Add event listener for category change
+    if (categorySelect) {
+        categorySelect.addEventListener('change', handleCategoryChange);
+
+        // Initialize on page load
+        handleCategoryChange();
+    }
+
+    // Debounce: ISBN input
+    isbnInput.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        const isbn = isbnInput.value.trim().replace(/[-\s]/g, ''); // Remove hyphens and spaces
+
+        if (isbn.length >= 10) { // Minimum ISBN-10 length
+            statusDiv.style.display = 'block';
+            statusDiv.querySelector('.loading-spinner').style.display = 'inline-block';
+            statusDiv.querySelector('.status-message').textContent = 'Looking up book...';
+
+            debounceTimer = setTimeout(() => {
+                performISBLLookup(isbn);
+            }, 500); // Wait 500ms after user stops typing
+        } else {
+            hideSuggestions();
+        }
+    });
+
+    // Accept suggestion button
+    acceptBtn.addEventListener('click', function() {
+        if (currentLookupData && currentLookupData.metadata) {
+            document.getElementById('id_title').value = currentLookupData.metadata.title || '';
+            document.getElementById('id_author').value = currentLookupData.metadata.authors ? currentLookupData.metadata.authors.join(', ') : '';
+            document.getElementById('id_publisher').value = currentLookupData.metadata.publisher || '';
+            document.getElementById('id_languages').value = currentLookupData.metadata.languages ? currentLookupData.metadata.languages.join(', ') : '';
+            document.getElementById('id_subjects').value = currentLookupData.metadata.subjects ? currentLookupData.metadata.subjects.join(', ') : '';
+            document.getElementById('id_year').value = currentLookupData.metadata.publish_date ? new Date(currentLookupData.metadata.publish_date).getFullYear() : '';
+            document.getElementById('id_description').value = currentLookupData.metadata.description || '';
+
+            // Auto-select "Books" category
+            const categorySelect = document.getElementById('id_category');
+            for (let i = 0; i < categorySelect.options.length; i++) {
+                if (categorySelect.options[i].getAttribute('data-category-name') === 'Books') {
+                    categorySelect.selectedIndex = i;
+                    // Trigger category change to show book-specific fields
+                    handleCategoryChange();
+                    break;
+                }
+            }
+
+            // Store cover URL for submission
+            if (currentLookupData.cover_url) {
+                coverPreview.src = currentLookupData.cover_url;
+                coverSourceLabel.textContent = 'Cover preview from Open Library';
+                document.getElementById('id_cover_url').value = currentLookupData.cover_url;
+            }
+
+            hideSuggestions();
+            showMessage('Book data applied!', 'success');
+        }
+    });
+
+    // Reject suggestion button
+    rejectBtn.addEventListener('click', hideSuggestions);
+
+    function performISBLLookup(isbn) {
+        const lookupUrl = document.getElementById('id_isbn').getAttribute('data-isbn-lookup-url');
+
+        fetch(lookupUrl + '?isbn=' + encodeURIComponent(isbn))
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    currentLookupData = data;
+                    showSuggestions(data.metadata, data.cover_url);
+                    showMessage('Book found! You can use this data or enter your own.', 'success');
+                } else {
+                    currentLookupData = null;
+                    hideSuggestions();
+                    showMessage(data.error || 'Book not found', 'error');
+                }
+            })
+            .catch(error => {
+                currentLookupData = null;
+                hideSuggestions();
+                showMessage('Lookup failed: ' + error.message, 'error');
+            });
+    }
+
+    function showSuggestions(metadata, coverUrl) {
+        if (metadata) {
+            suggestedTitle.textContent = metadata.title || 'Unknown';
+            suggestedAuthor.textContent = metadata.authors ? metadata.authors.join(', ') : 'Unknown';
+            suggestedPublisher.textContent = metadata.publisher || 'Unknown';
+            suggestedYear.textContent = metadata.publish_date ? new Date(metadata.publish_date).getFullYear() : 'Unknown';
+            suggestedLanguages.textContent = metadata.languages ? metadata.languages.join(', ') : 'Not specified';
+            suggestedSubjects.textContent = metadata.subjects ? metadata.subjects.join(', ') : 'Not specified';
+
+            // Auto-select "Books" category when ISBN data is found
+            const categorySelect = document.getElementById('id_category');
+            for (let i = 0; i < categorySelect.options.length; i++) {
+                if (categorySelect.options[i].getAttribute('data-category-name') === 'Books') {
+                    categorySelect.selectedIndex = i;
+                    // Trigger category change to show book-specific fields
+                    handleCategoryChange();
+                    break;
+                }
+            }
+        }
+
+        if (coverUrl) {
+            coverPreview.src = coverUrl;
+            coverSourceLabel.textContent = 'Cover preview from Open Library';
+            document.getElementById('suggestion-cover-preview').style.display = 'block';
+        } else {
+            document.getElementById('suggestion-cover-preview').style.display = 'none';
+        }
+
+        statusDiv.style.display = 'none';
+        suggestionsDiv.style.display = 'block';
+    }
+
+    function hideSuggestions() {
+        suggestionsDiv.style.display = 'none';
+        statusDiv.style.display = 'none';
+        coverPreview.src = '';
+        currentLookupData = null;
+    }
+
+    function showMessage(message, type) {
+        statusDiv.style.display = 'block';
+        statusDiv.querySelector('.loading-spinner').style.display = 'none';
+        statusDiv.querySelector('.status-message').textContent = message;
+        statusDiv.className = 'isbn-lookup-status ' + (type === 'error' ? 'error' : 'success');
+    }
+
+    // ISBN format validation (basic)
+    function isValidISBN(isbn) {
+        const clean = isbn.replace(/[-\s]/g, '');
+        return (clean.length === 10 || clean.length === 13) && /^\d+$/.test(clean);
+    }
+
+    // Image Management
+    const allImagesContainer = document.getElementById('all-images');
+    const imageOrderInput = document.getElementById('id_image_order');
+    const useIsbnCoverInput = document.getElementById('id_use_isbn_cover');
+    const setIsbnCoverBtn = document.getElementById('set-isbn-cover');
+
+    // Initialize sortable for all images (both existing and temp)
+    // This is handled by Alpine.js in base.html, but we still need updateImageOrder() for form submission
+
+    // Update image order and primary indicators
+    // Make this a global function so Alpine can call it
+    window.updateImageOrder = function updateImageOrder() {
+        if (!allImagesContainer) return;
+
+        const imageItems = allImagesContainer.querySelectorAll('.image-item');
+        const existingImageIds = [];
+        const tempImageIds = [];
+
+        imageItems.forEach((item, index) => {
+            const imageType = item.getAttribute('data-type'); // 'existing' or 'temp'
+            const imageId = imageType === 'temp' ? item.dataset.tempImageId : item.dataset.imageId;
+            const orderSpan = item.querySelector('[data-order-text]');
+            const primaryBadge = item.querySelector('.primary-badge');
+
+            // Update order display (1-indexed for user display)
+            if (orderSpan) {
+                orderSpan.textContent = `Order: ${index + 1}`;
+            }
+
+            // Update primary badge (first image is primary)
+            if (index === 0) {
+                // Remove any existing badges first
+                const existingBadge = item.querySelector('.primary-badge');
+                if (existingBadge) {
+                    existingBadge.remove();
+                }
+                // Add new badge
+                const badge = document.createElement('div');
+                badge.className = 'primary-badge';
+                badge.style.cssText = 'position: absolute; top: 8px; left: 8px; background: var(--primary); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold;';
+                badge.textContent = '★ Cover';
+                item.querySelector('.image-container').appendChild(badge);
+            } else {
+                // Remove badge if not primary
+                if (primaryBadge) {
+                    primaryBadge.remove();
+                }
+            }
+
+            // Track both existing and temp images in order
+            if (imageType === 'existing' && imageId) {
+                existingImageIds.push(imageId);
+            } else if (imageType === 'temp' && imageId) {
+                tempImageIds.push(imageId);
+            }
+        });
+
+        // Set the order for form submission
+        // We send both existing and temp image IDs in order they appear in the gallery
+        // The backend will use this to determine the final order
+        const allImageIds = [];
+        imageItems.forEach((item) => {
+            const imageType = item.getAttribute('data-type');
+            const imageId = imageType === 'temp' ? item.dataset.tempImageId : item.dataset.imageId;
+            if (imageId) {
+                allImageIds.push(imageId);
+            }
+        });
+
+        // Store all images in their final order
+        const allImagesOrderField = document.getElementById('id_all_images_order');
+        if (allImagesOrderField) {
+            allImagesOrderField.value = allImageIds.join(',');
+        }
+
+        // Keep existing IDs for backward compatibility
+        imageOrderInput.value = existingImageIds.join(',');
+
+        // Keep temp image IDs for identification
+        const tempImageIdsField = document.querySelector('input[name="temp_image_ids"]');
+        if (tempImageIdsField) {
+            tempImageIdsField.value = tempImageIds.join(',');
+        }
+    };
+
+    // Delete images from the unified #all-images gallery
+    if (allImagesContainer) {
+        allImagesContainer.addEventListener('click', function(e) {
+            if (e.target.classList.contains('delete-image-btn')) {
+                e.preventDefault();
+                const imageItem = e.target.closest('.image-item');
+                const imageType = imageItem.getAttribute('data-type'); // 'existing' or 'temp'
+
+                // Get the image ID
+                let imageId = e.target.dataset.imageId;
+                if (!imageId && imageType === 'temp') {
+                    imageId = imageItem.dataset.tempImageId;
+                }
+
+                if (!imageId) {
+                    console.error('Image ID not found');
+                    return;
+                }
+
+                // Smooth deletion animation
+                imageItem.style.transition = 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                imageItem.style.opacity = '0';
+                imageItem.style.transform = 'scale(1.05) rotate(-5deg)';
+
+                // Delete after animation
+                setTimeout(() => {
+                    if (imageType === 'temp') {
+                        // For temp images: delete immediately via endpoint
+                        const deleteUrl = `/items/delete-temp-image/${imageId}/`;
+                        fetch(deleteUrl, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                            },
+                        })
+                        .then(() => {
+                            imageItem.remove();
+                            updateImageOrder();
+                            console.log(`Deleted temp image ${imageId}`);
+                        })
+                        .catch(error => {
+                            console.error('Error deleting temp image:', error);
+                            imageItem.style.opacity = '1';
+                            imageItem.style.transform = 'scale(1)';
+                        });
+                    } else {
+                        // For existing images: defer deletion until form submission
+                        // Mark as deleted and hide it visually
+                        imageItem.classList.add('image-deleted');
+                        imageItem.style.opacity = '0.5';
+                        imageItem.style.textDecoration = 'line-through';
+
+                        // Add to images_to_delete list
+                        const imagesToDeleteField = document.getElementById('id_images_to_delete');
+                        let imagesToDelete = imagesToDeleteField.value ? imagesToDeleteField.value.split(',') : [];
+                        if (!imagesToDelete.includes(String(imageId))) {
+                            imagesToDelete.push(String(imageId));
+                        }
+                        imagesToDeleteField.value = imagesToDelete.join(',');
+                        console.log(`Marked existing image ${imageId} for deletion on save`);
+                    }
+                }, 300);
+
+            }
+        });
+    }
+
+    // Set ISBN cover
+    if (setIsbnCoverBtn) {
+        setIsbnCoverBtn.addEventListener('click', async function() {
+            if (currentLookupData && currentLookupData.cover_url) {
+                try {
+                    // Fetch the cover image
+                    const response = await fetch(currentLookupData.cover_url);
+                    const blob = await response.blob();
+
+                    // Create a File object from the blob
+                    const fileName = currentLookupData.cover_url.split('/').pop() || 'isbn-cover.jpg';
+                    const file = new File([blob], fileName, { type: blob.type });
+
+                    // Get Alpine component - it's mounted on the element with x-data
+                    const alpineElement = document.querySelector('[x-data="imageUploadManager()"]');
+                    if (!alpineElement) {
+                        console.error('Alpine element not found');
+                        alert('Error: Could not find image uploader');
+                        return;
+                    }
+
+                    // Access Alpine component data through various possible locations
+                    let component = null;
+
+                    // Try different ways to access the Alpine component data
+                    if (alpineElement._x_dataStack && alpineElement._x_dataStack[0]) {
+                        component = alpineElement._x_dataStack[0];
+                    } else if (alpineElement.__x && alpineElement.__x.$data) {
+                        component = alpineElement.__x.$data;
+                    } else if (alpineElement.__data) {
+                        component = alpineElement.__data;
+                    }
+
+                    if (component && typeof component.uploadSingleFile === 'function') {
+                        // Upload the file
+                        await component.uploadSingleFile(file);
+
+                        // Image is appended to the end by addImageToDOM()
+                        // Update the order display
+                        const allImagesContainer = document.getElementById('all-images');
+                        if (allImagesContainer && typeof component.updateImageOrder === 'function') {
+                            component.updateImageOrder();
+                        }
+
+                        hideSuggestions();
+                    } else {
+                        console.error('Component not found or uploadSingleFile method unavailable');
+                        alert('Error: Could not access image uploader.');
+                    }
+                } catch (error) {
+                    console.error('Error downloading/uploading cover:', error);
+                    alert('Failed to download and upload cover image. Please try again.');
+                }
+            } else {
+                alert('No cover available to set.');
+            }
+        });
+    }
+
+    // Initialize order on page load
+    // Order is now handled by Alpine component
+
+    // Visibility warning for public items without location
+    const visibilityRadios = document.querySelectorAll('input[name="visibility"]');
+    const locationWarning = document.createElement('div');
+    locationWarning.className = 'alert alert-warning';
+    locationWarning.innerHTML = 'Warning: You need to set your location in your profile to publish public items.';
+    locationWarning.style.display = 'none';
+
+    visibilityRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            // Update active state on labels
+            const labels = document.querySelectorAll('label.radio-btn');
+            labels.forEach(label => label.classList.remove('active'));
+            this.closest('label').classList.add('active');
+
+            if (this.value === 'public' && this.checked) {
+                // Check if user has location (placeholder - implement location check)
+                const hasLocation = false; // TODO: Check if user has location set
+                if (!hasLocation) {
+                    // Insert warning after visibility field
+                    const visibilityGroup = document.querySelector('.radio-group').closest('.form-group');
+                    if (!visibilityGroup.querySelector('.alert-warning')) {
+                        visibilityGroup.appendChild(locationWarning);
+                        locationWarning.style.display = 'block';
+                    }
+                } else {
+                    locationWarning.style.display = 'none';
+                }
+            } else {
+                locationWarning.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+
+<style>
+/* Category-specific field styles */
+.category-field {
+    transition: all 0.3s ease;
+}
+
+.category-field[style*="display: none"] {
+    display: none !important;
+}
+
+.category-field[style*="display: block"] {
+    display: block !important;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Highlight category section when changed */
+#item-details-section {
+    transition: all 0.3s ease;
+}
+
+#item-details-section.category-changed {
+    background-color: rgba(59, 130, 246, 0.05);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+/* Image Management Styles */
+#existing-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+}
+
+.image-item {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--white);
+    transition: box-shadow var(--transition-fast);
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+    touch-action: none;
+}
+
+.image-item:hover {
+    box-shadow: var(--shadow);
+}
+
+.image-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-fast);
+}
+
+.image-container:hover img {
+    transform: scale(1.05);
+}
+
+.delete-image-btn {
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.image-container:hover .delete-image-btn {
+    opacity: 1;
+}
+
+.image-deleted {
+    opacity: 0.5 !important;
+    pointer-events: none;
+}
+
+.primary-badge {
+    position: absolute !important;
+    top: 8px !important;
+    left: 8px !important;
+    background: var(--primary) !important;
+    color: white !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    font-size: 0.75rem !important;
+    font-weight: bold !important;
+    z-index: 10;
+}
+
+/* ISBN Cover Styles */
+.suggestion-cover-preview {
+    margin-top: 1rem;
+    text-align: center;
+    padding: 1rem;
+    border: 2px solid var(--accent-color);
+    border-radius: var(--radius);
+    background: var(--bg-color);
+}
+
+.suggestion-cover-preview img {
+    max-width: 150px;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: var(--radius);
+    margin-bottom: 0.5rem;
+}
+
+.cover-source-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Existing ISBN styles */
+.isbn-lookup-status {
+    margin-top: 0.5rem;
+    padding: 1rem;
+    border: 2px solid var(--accent-color);
+    border-radius: var(--radius);
+    background: var(--bg-color);
+    display: none;
+}
+
+.isbn-lookup-status.success {
+    border-color: var(--success-color);
+}
+
+.isbn-lookup-status.error {
+    border-color: var(--error-color);
+}
+
+.loading-spinner {
+    display: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--accent-color);
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 0.5rem;
+    display: inline-block;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.status-message {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    display: inline-block;
+}
+
+.isbn-suggestions {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 2px solid var(--success-color);
+    border-radius: var(--radius);
+    background: var(--bg-color);
+}
+
+.isbn-suggestions h5 {
+    margin: 0 0 1rem 0;
+    color: var(--success-color);
+    font-size: 1.1rem;
+}
+
+.suggestion-options {
+    margin-bottom: 1rem;
+}
+
+.suggestion-option {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius);
+}
+
+.suggestion-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends "notifications/email/base_email.html" %}
+
+{% block header_title %}{% translate "LOAN APPROVED" %}{% endblock %}
+
+{% block email_content %}
+<div class="success-box">
+    <h2>{% translate "Your Loan Request Has Been Approved" %}!</h2>
+    <p>{% translate "Congratulations" %}! <strong>{{ lender.get_display_name }}</strong> {% translate "has approved your request to borrow" %} <strong>{{ item.title }}</strong>.</p>
+</div>
+
+{% if start_date %}
+    <div class="data-box">
+        <h3>{% translate "Loan Details" %}:</h3>
+        <table class="data-table">
+            <tr>
+                <td>{% translate "Start Date" %}:</td>
+                <td>{{ start_date|date:"F j, Y" }}</td>
+            </tr>
+            <tr>
+                <td>{% translate "Due Date" %}:</td>
+                <td>{{ due_date|date:"F j, Y" }}</td>
+            </tr>
+            <tr>
+                <td>{% translate "Borrower" %}:</td>
+                <td>{{ borrower.get_display_name }}</td>
+            </tr>
+            <tr>
+                <td>{% translate "Lender" %}:</td>
+                <td>{{ lender.get_display_name }}</td>
+            </tr>
+            {% if group %}
+                <tr>
+                    <td>{% translate "Shared via" %}:</td>
+                    <td>{{ group.name }}</td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
+{% endif %}
+
+<p>{% translate "You can view all loan details and communicate with lender through your dashboard" %}.</p>
+
+<div class="btn-container">
+    <a href="{{ loan_url }}" class="btn">{% translate "View Loan Details" %}</a>
+    <a href="{{ messages_url }}" class="btn btn-secondary">{% translate "Send Message" %}</a>
+</div>
+{% endblock %}
+    
+    <div style="color: #333; margin-bottom: 20px;">
+        <h2 style="color: #28a745; font-size: 18px; margin-bottom: 10px;">{% translate "Your loan request has been approved" %}!</h2>
+        <p style="font-size: 16px; line-height: 1.5;">
+            {% translate "Congratulations" %}! <strong>{{ borrower.get_display_name }}</strong> {% translate "has approved your request to borrow" %} <strong>{{ item.title }}</strong>.
+        </p>
+        
+        {% if start_date %}
+            <div style="background: #e9ecef; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                <h3 style="color: #495057; margin-top: 0; font-size: 16px;">{% translate "Loan Details" %}:</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                            <td style="padding: 8px; border-bottom: 1px solid #dee2e6; font-weight: bold; width: 150px;">{% translate "Start Date" %}:</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">{{ start_date|date:"F j, Y" }}</td>
+                        </tr>
+                    <tr>
+                            <td style="padding: 8px; border-bottom: 1px solid #dee2e6; font-weight: bold;">{% translate "Due Date" %}:</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">{{ due_date|date:"F j, Y" }}</td>
+                        </tr>
+                    <tr>
+                            <td style="padding: 8px; border-bottom: 1px solid #dee2e6; font-weight: bold;">{% translate "Borrower" %}:</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">{{ borrower.get_display_name }}</td>
+                        </tr>
+                    <tr>
+                            <td style="padding: 8px; border-bottom: 1px solid #dee2e6; font-weight: bold;">{% translate "Lender" %}:</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">{{ lender.get_display_name }}</td>
+                        </tr>
+                    {% if group %}
+                        <tr>
+                            <td style="padding: 8px; border-bottom: 1px solid #dee2e6; font-weight: bold;">{% translate "Shared via" %}:</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">{{ group.name }}</td>
+                        </tr>
+                    {% endif %}
+                </table>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div style="text-align: center; margin-top: 30px;">
+        <p style="margin-bottom: 15px; font-size: 14px; color: #666;">
+            {% translate "You can view all loan details and communicate with the borrower through your dashboard" %}.
+        </p>
+        <a href="{{ loan_url }}" style="display: inline-block; background: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            {% translate "View Loan Details" %}
+        </a>
+        <a href="{{ messages_url }}" style="display: inline-block; background: #6c757d; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; margin-left: 10px;">
+            {% translate "Send Message" %}
+        </a>
+    </div>
+</div>

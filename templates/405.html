@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{% translate "Method Not Allowed" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container container-sm">
+    <div class="py-2xl">
+        <div class="text-center">
+
+            <!-- Error Message -->
+            <h1 class="mb-lg" style="font-size: 3rem; font-weight: 700;">405</h1>
+            <h2 class="mb-md text-secondary">{% translate "Maybe you shouldn't be doing that" %}.</h2>
+            <p class="mb-xl text-muted" style="max-width: 500px; margin: 0 auto; line-height: 1.6;">
+                {% blocktranslate %}The request method you used is not supported for this resource.<br>
+                This usually happens when using the wrong HTTP method.{% endblocktranslate %}
+            </p>
+
+            <!-- Actions -->
+            <div class="flex justify-center gap-md mb-xl">
+                <a href="{% url 'home' %}" class="btn btn-primary btn-lg">
+                    {% translate "Go Home" %}
+                </a>
+                <button onclick="history.back()" class="btn btn-outline btn-lg">
+                    ← {% translate "Go Back" %}
+                </button>
+                <a href="{% url 'bug_report_page' %}" class="btn btn-outline btn-lg">
+                    {% translate "Report a Bug" %}
+                </a>
+            </div>
+
+            <!-- Technical Details -->
+            <div class="card" style="max-width: 600px; margin: 0 auto;">
+                <div class="card-body">
+                    <h3 class="mb-md">{% translate "What does this mean" %}?</h3>
+                    <div class="text-left space-y-sm">
+                        <p>{% translate "This error occurs when" %}:</p>
+                        <ul style="padding-left: 1.5rem;">
+                            <li>{% translate "You tried to use POST on a GET-only page" %}</li>
+                            <li>{% translate "You tried to use GET on a POST-only page" %}</li>
+                            <li>{% translate "The server doesn't allow the requested method" %}</li>
+                        </ul>
+                        <p class="mt-md">{% translate "Try refreshing the page or going back to the previous page" %}.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

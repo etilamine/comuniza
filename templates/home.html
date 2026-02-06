@@ -1,0 +1,477 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{{ SITE_NAME }} - {% translate "Share Freely, Receive Freely" %}{% endblock %}
+{% block meta_description %}{% translate "Join the community lending revolution. Share things with your friends and neighbors. Buy less, share more." %}{% endblock %}
+{% block content %}
+<!-- Hero Section -->
+<div
+    style="
+        background: linear-gradient(
+            135deg,
+            var(--bg-main) 0%,
+            var(--bg-secondary) 100%
+        );
+        border-bottom: 2px solid var(--border);
+    "
+>
+    <div class="container" style="padding: 0">
+        <div
+            class="grid grid-cols-1 grid-md-2 gap-2xl items-center"
+        >
+            <div>
+                <h1
+                    style="
+                        font-size: 3rem;
+                        line-height: 1.3;
+                        margin-bottom: var(--space-2xl);
+                        padding: var(--space-sm);
+                    "
+                >
+                     [{% translate "LUXURY COMMUNISM" %}]<br />
+                     <span
+                         style="
+                             font-size: 2rem;
+                             color: var(--text-secondary);
+                             display: block;
+                             margin-top: var(--space-md);
+                         "
+                         >{% translate "Share Freely, Receive Freely" %}</span
+                     >
+                </h1>
+                 <p
+                     class="text-lg mb-md"
+                     style="line-height: 2; max-width: 600px;padding: var(--space-sm); padding-top: 0px;"
+                 >
+                     {% translate "Build a library of commons. Lend and borrow books and things within your community." %}<br /><br />
+                     <strong>{% translate "No money. No fees. Pure sharing economy." %}</strong>
+                 </p>
+
+                {% if user.is_authenticated %}
+                <div class="flex gap-lg" style="margin-top: var(--space-sm)">
+<a
+                        href="{% url 'items:list' %}"
+                        class="btn btn-primary btn-lg"
+                        style="padding: var(--space-md) var(--space-xl)"
+                    >{% translate "[BROWSE THINGS]" %}</a>
+<a
+                        href="{% url 'items:create' %}"
+                        class="btn btn-outline btn-lg"
+                        style="padding: var(--space-md) var(--space-xl)"
+                    >{% translate "[SHARE THINGS]" %}</a>
+                </div>
+                {% else %}
+                <div class="flex gap-lg" style="margin-top: var(--space-xl)">
+<a
+                        href="{% url 'account_signup' %}"
+                        class="btn btn-primary btn-lg"
+                        style="padding: var(--space-md) var(--space-xl)"
+                    >{% translate "[JOIN NOW]" %}</a>
+                     <a
+                         href="{% url 'account_login' %}"
+                         class="btn btn-outline btn-lg"
+                         style="padding: var(--space-md) var(--space-xl)"
+                     >
+                         {% translate "[LOGIN]" %}
+                     </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Stats Box -->
+            <div class="card">
+                 <div class="card-header">
+                     <h3 class="mb-0 text-sm">▸ {% translate "COMMUNITY STATS" %}</h3>
+                 </div>
+                <div class="card-body" style="padding: var(--space-lg)">
+                    <div class="grid grid-cols-2 gap-lg">
+                        <div
+                            style="
+                                text-align: center;
+                                padding: var(--space-lg) var(--space-sm);
+                            "
+                        >
+                            <div
+                                style="
+                                    font-size: 2.5rem;
+                                    font-weight: bold;
+                                    color: var(--primary);
+                                "
+                            >
+                                {{ total_items|default:"0" }}
+                            </div>
+                             <div class="text-sm text-secondary">
+                                 {% translate "ITEMS SHARED" %}
+                             </div>
+                         </div>
+                         <div
+                             style="
+                                 text-align: center;
+                                 padding: var(--space-lg) var(--space-sm);
+                             "
+                         >
+                             <div
+                                 style="
+                                     font-size: 2.5rem;
+                                     font-weight: bold;
+                                     color: var(--primary);
+                                 "
+                             >
+                                 {{ available_items|default:"0" }}
+                             </div>
+                             <div class="text-sm text-secondary">
+                                 {% translate "AVAILABLE NOW" %}
+                            </div>
+                        </div>
+                        <div
+                            style="
+                                text-align: center;
+                                padding: var(--space-lg) var(--space-sm);
+                            "
+                        >
+                            <div
+                                style="
+                                    font-size: 2.5rem;
+                                    font-weight: bold;
+                                    color: var(--primary);
+                                "
+                            >
+                                {{ total_groups|default:"0" }}
+                            </div>
+                            <div class="text-sm text-secondary">
+                                {% translate "ACTIVE GROUPS" %}
+                            </div>
+                        </div>
+                        <div
+                            style="
+                                text-align: center;
+                                padding: var(--space-lg) var(--space-sm);
+                            "
+                        >
+                            <div
+                                style="
+                                    font-size: 2.5rem;
+                                    font-weight: bold;
+                                    color: var(--primary);
+                                "
+                            >
+                                {{ total_users|default:"0" }}
+                            </div>
+                            <div class="text-sm text-secondary">{% translate "COMRADES" %}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Manifesto Section -->
+<div class="container" style="padding: var(--space-xl) 0">
+    <div class="grid grid-cols-1 grid-md-3 gap-xl">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">[1] {% translate "SHARE" %}</h3>
+            </div>
+            <div class="card-body" style="padding: var(--space-lg)">
+                    <p class="text-secondary" style="line-height: 2">
+                        {% translate "Add books and items you own to the commons. Let others benefit from what sits idle on your shelf." %}
+                        <strong>{% translate "Contribute with what you can" %}.</strong>
+                    </p>
+                </div>
+            </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">[{% translate "2] BORROW" %}</h3>
+            </div>
+            <div class="card-body" style="padding: var(--space-lg)">
+                <p class="text-secondary" style="line-height: 2">
+                    {% translate "Request items from your community. Read books without buying them. Build knowledge without accumulation" %}.
+                    <strong>{% translate "Receive what you need" %}.</strong>
+                </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">[{% translate "3] GROW" %}</h3>
+            </div>
+            <div class="card-body" style="padding: var(--space-lg)">
+                    <p class="text-secondary" style="line-height: 2">
+                        {% blocktranslate %} Receive badges and reputation from the ecosystem. Create
+                        groups in your neighborhood. Expand the commons. {% endblocktranslate %}
+                        <strong>{% translate "Solidarity over profit" %}.</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Map Section -->
+<div
+    style="
+        background: var(--bg-secondary);
+        border-top: 2px solid var(--border);
+        border-bottom: 2px solid var(--border);
+        padding: var(--space-xl) 0;
+    "
+>
+    <div class="container">
+        <div style="padding: var(--space-lg) 0">
+            <div class="text-center mb-2xl">
+                <h2 class="mb-lg" style="font-size: 2.5rem">
+                    [{% translate "FIND YOUR COMMUNITY" %}]
+                </h2>
+                <p
+                    class="text-secondary text-lg"
+                    style="margin-top: var(--space-lg)"
+                >
+                    {% translate "Groups are forming across cities. Join one near you or start your own" %}.
+                </p>
+            </div>
+
+            <!-- Map Container -->
+            <div class="card" style="margin-bottom: var(--space-2xl)">
+                <div class="card-body p-0">
+                    <div
+                        id="groupMap"
+                        style="
+                            height: 550px;
+                            width: 100%;
+                            background: var(--bg-main);
+                        "
+                    ></div>
+                </div>
+            </div>
+
+            {% if not user.is_authenticated %}
+            <div class="text-center" style="padding: var(--space-lg) 0">
+                <p class="text-xl mb-lg">{% translate "Ready to join the movement" %}?</p>
+                <a
+                    href="{% url 'account_signup' %}"
+                    class="btn btn-primary btn-lg"
+                    style="padding: var(--space-md) var(--space-2xl)"
+                >
+                    [{% translate "CREATE YOUR ACCOUNT" %}]
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- How It Works -->
+<div class="container" style="padding: var(--space-xl) 0">
+    <div style="padding: var(--space-lg) 0">
+        <div class="text-center mb-2xl">
+            <h2 class="mb-lg" style="font-size: 2.5rem">[{% translate "HOW IT WORKS" %}]</h2>
+            <p
+                class="text-secondary text-lg"
+                style="margin-top: var(--space-lg)"
+            >
+                {% translate "Simple. No bureaucracy. No capitalism" %}.
+            </p>
+        </div>
+
+        <div
+            class="grid grid-cols-1 grid-md-2 gap-2xl"
+            style="max-width: 1000px; margin: 0 auto"
+        >
+        <div class="card">
+            <div class="card-body" style="padding: var(--space-lg)">
+                <h4 class="mb-lg">▸ {% translate "FOR LENDERS" %}</h4>
+                    <ul
+                        style="
+                            list-style: none;
+                            padding-left: 0;
+                            line-height: 2.5;
+                        "
+                    >
+                        <li>{% translate "1. Sign up and join/create a group" %}</li>
+                        <li>{% translate "2. Add items you want to share" %}</li>
+                        <li>{% translate "3. Receive borrow requests" %}</li>
+                        <li>{% translate "4. Hand over the item, set return date" %}</li>
+                        <li>{% translate "5. Get it back, earn badges & reputation" %}</li>
+                    </ul>
+                </div>
+            </div>
+
+        <div class="card">
+            <div class="card-body" style="padding: var(--space-lg)">
+                <h4 class="mb-lg">▸ {% translate "FOR BORROWERS" %}</h4>
+                    <ul
+                        style="
+                            list-style: none;
+                            padding-left: 0;
+                            line-height: 2.5;
+                        "
+                    >
+                        <li>{% translate "1. Sign up and join a local group" %}</li>
+                        <li>{% translate "2. Browse available things" %}</li>
+                        <li>{% translate "3. Request what you want to use or borrow" %}</li>
+                        <li>{% translate "4. Pick it up, enjoy it" %}</li>
+                        <li>{% translate "5. Return on time, leave a review" %}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+{% if not user.is_authenticated %}
+<div
+    style="
+        background: var(--primary);
+        color: white;
+        text-align: center;
+        padding: var(--space-xl) 0;
+    "
+>
+    <div class="container" style="padding: var(--space-lg) 0">
+        <h2 class="mb-xl" style="color: white; font-size: 2.5rem">
+            [{% translate "THE COMMONS AWAIT" %}]
+        </h2>
+        <p
+            class="text-xl mb-xl"
+            style="
+                color: rgba(255, 255, 255, 0.9);
+                max-width: 700px;
+                margin-left: auto;
+                margin-right: auto;
+                line-height: 2;
+            "
+        >
+            {% blocktranslate %} Join people building a post-capitalist library. Share
+            what you have. Take what you need. {% endblocktranslate %}
+        </p>
+        <a
+            href="{% url 'account_signup' %}"
+            class="btn btn-lg"
+            style="
+                background: white;
+                color: var(--primary);
+                border: 2px solid white;
+                padding: var(--space-md) var(--space-2xl);
+            "
+        >
+            [{% translate "START SHARING TODAY" %}]
+        </a>
+    </div>
+</div>
+{% endif %} {% endblock %} {% block extra_css %}
+<style>
+    /* Leaflet CSS will be loaded via CDN */
+    .leaflet-popup-content-wrapper {
+        background: var(--bg-main);
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        border: 2px solid var(--border);
+        border-radius: 0;
+        box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .leaflet-popup-tip {
+        background: var(--bg-main);
+        border: 2px solid var(--border);
+        box-shadow: none;
+    }
+
+    .leaflet-popup-content {
+        margin: var(--space-md);
+        font-size: var(--font-size-sm);
+    }
+
+    .leaflet-container {
+        font-family: var(--font-mono);
+        background: var(--bg-main);
+    }
+
+    /* Map marker styling */
+    .map-marker {
+        background: var(--primary);
+        border: 2px solid var(--border);
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 0.75rem;
+    }
+</style>
+{% endblock %} {% block extra_js %}
+<!-- Leaflet.js for maps -->
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    // Initialize map
+    document.addEventListener('DOMContentLoaded', function() {
+        // Create map centered on Europe (Germany default)
+        const map = L.map('groupMap').setView([51.1657, 10.4515], 6);
+
+        // Add tile layer (OpenStreetMap)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 18,
+        }).addTo(map);
+
+        // Fetch group locations from API
+        fetch('/api/groups-api/locations/')
+            .then(response => response.json())
+            .then(data => {
+                if (data.locations.length === 0) {
+                    // Show message if no groups yet
+                    L.popup()
+                        .setLatLng([51.1657, 10.4515])
+                        .setContent('<strong>[NO GROUPS YET]</strong><br>Be the first to create one!')
+                        .openOn(map);
+                    return;
+                }
+
+                // Add markers for each location
+                data.locations.forEach(location => {
+                    const marker = L.marker([location.latitude, location.longitude], {
+                        icon: L.divIcon({
+                            className: 'map-marker',
+                            html: `<div class="map-marker">${location.group_count}</div>`,
+                            iconSize: [30, 30],
+                        })
+                    }).addTo(map);
+
+                    // Add popup
+                    const popupContent = `
+                        <strong>[${location.display_name.toUpperCase()}]</strong><br>
+                        <p style="margin: var(--space-sm) 0;">
+                            ${location.group_count} group${location.group_count > 1 ? 's' : ''} active
+                        </p>
+                        ${!{{ user.is_authenticated|yesno:"true,false" }} ?
+                            '<a href="/accounts/signup/" class="btn btn-sm btn-primary" style="display: block; margin-top: var(--space-sm);">[JOIN A GROUP]</a>' :
+                            '<a href="/groups/" class="btn btn-sm btn-primary" style="display: block; margin-top: var(--space-sm);">[VIEW GROUPS]</a>'
+                        }
+                    `;
+                    marker.bindPopup(popupContent);
+                });
+
+                // Fit map to show all markers
+                if (data.locations.length > 0) {
+                    const bounds = L.latLngBounds(
+                        data.locations.map(loc => [loc.latitude, loc.longitude])
+                    );
+                    map.fitBounds(bounds, { padding: [50, 50] });
+                }
+            })
+            .catch(error => {
+                console.error('Error loading map data:', error);
+            });
+    });
+</script>
+{% endblock %}

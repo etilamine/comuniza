@@ -1,0 +1,40 @@
+{% extends "notifications/email/base_email.html" %}
+
+{% block header_title %}{% translate "LOAN MESSAGE" %}{% endblock %}
+
+{% block email_content %}
+<h2>{{ sender.get_display_name }} {% translate "Sent You A Message" %}</h2>
+<p>{% translate "Regarding" %}: <strong>{{ loan.item.title }}</strong></p>
+
+<div class="data-box">
+    <h3>{% translate "Message Preview" %}:</h3>
+    <p>{{ message_content|truncatewords:50 }}</p>
+</div>
+
+{% if has_loan_context %}
+    <div class="data-box">
+        <h3>{% translate "Related Loan" %}:</h3>
+        <table class="data-table">
+            <tr>
+                <td>{% translate "Item" %}:</td>
+                <td>{{ loan_item_title }}</td>
+            </tr>
+            <tr>
+                <td>{% translate "Status" %}:</td>
+                <td>{{ loan_status }}</td>
+            </tr>
+            <tr>
+                <td>{% translate "Action Required" %}:</td>
+                <td>{{ action_required|yesno:"Yes" if action_required else "No" }}</td>
+            </tr>
+        </table>
+    </div>
+{% endif %}
+
+<p>{% translate "You can reply to this message or view loan details" %}.</p>
+
+<div class="btn-container">
+    <a href="{{ loan_url }}" class="btn">{% translate "View Loan Details" %}</a>
+    <a href="{{ conversation_url }}" class="btn btn-secondary">{% translate "Reply to Message" %}</a>
+</div>
+{% endblock %}

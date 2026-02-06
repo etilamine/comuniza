@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load socialaccount %}
+{% load i18n %}
+{% block title %}{% translate "Login" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container container-sm">
+    <div class="py-xl">
+        <!-- Header -->
+        <div class="text-center mb-2xl">
+            <h1 class="mb-sm">[{% translate "LOGIN" %}]</h1>
+            <p class="text-secondary">{% translate "ACCESS YOUR ACCOUNT" %}</p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-lg" style="max-width: 500px; margin: 0 auto;">
+            <!-- Social Login Options -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0 text-sm">▸ {% translate "QUICK LOGIN" %}</h3>
+                </div>
+                 <div class="card-body">
+                     <div class="flex flex-col gap-sm">
+                         {% if providers %}
+                             {% for provider in providers %}
+                                 {% if provider.id == 'google' %}
+                                 <form method="post" action="{% url 'google_login' %}">
+                                         {% csrf_token %}
+                                         {% if redirect_field_value %}
+                                         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                                         {% endif %}
+                                 <button type="submit" class="btn btn-primary btn-block btn-lg mb-md">
+                                     <span>[{% translate "G" %}]</span>
+                                     <span>{% translate "CONTINUE WITH GOOGLE" %}</span>
+                                 </button>
+                                 </form>
+                                 {% elif provider.id == 'github' %}
+                                     <a href="{% provider_login_url 'github' %}" class="btn btn-outline btn-block">
+                                         <span>[{% translate "GH" %}]</span>
+                                         <span>{% translate "CONTINUE WITH GITHUB" %}</span>
+                                     </a>
+                                 {% endif %}
+                             {% endfor %}
+                          {% else %}
+                              <a href="{% provider_login_url 'google' method='oauth2' %}" class="btn btn-primary btn-block">
+                                  <span>[{% translate "G" %}]</span>
+                                  <span>{% translate "CONTINUE WITH GOOGLE" %}</span>
+                              </a>
+                          {% endif %}
+                      </div>
+                 </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="flex items-center gap-md">
+                <div class="divider" style="flex: 1; margin: 0;"></div>
+                <span class="text-sm text-muted uppercase">[{% translate "OR" %}]</span>
+                <div class="divider" style="flex: 1; margin: 0;"></div>
+            </div>
+
+            <!-- Email Login Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0 text-sm">▸ {% translate "EMAIL LOGIN" %}</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'account_login' %}">
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger mb-lg">
+                                {% for error in form.non_field_errors %}
+                                    <p class="mb-0">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        {% if redirect_field_value %}
+                            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                        {% endif %}
+
+                        <div class="form-group">
+                            <label for="id_login" class="form-label form-label-required">{% translate "EMAIL" %}</label>
+                            <input
+                                type="email"
+                                name="login"
+                                id="id_login"
+                                class="form-control {% if form.login.errors %}is-invalid{% endif %}"
+                                placeholder="{% translate 'your@email.com' %}"
+                                required
+                                autocomplete="email"
+                                value="{{ form.login.value|default:'' }}"
+                            >
+                            {% if form.login.errors %}
+                                {% for error in form.login.errors %}
+                                    <div class="form-error">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_password" class="form-label form-label-required">{% translate "PASSWORD" %}</label>
+                            <input
+                                type="password"
+                                name="password"
+                                id="id_password"
+                                class="form-control {% if form.password.errors %}is-invalid{% endif %}"
+                                placeholder="••••••••"
+                                required
+                                autocomplete="current-password"
+                            >
+                            {% if form.password.errors %}
+                                {% for error in form.password.errors %}
+                                    <div class="form-error">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input
+                                    type="checkbox"
+                                    name="remember"
+                                    id="id_remember"
+                                    class="form-check-input"
+                                    {% if form.remember.value %}checked{% endif %}
+                                >
+                                <label for="id_remember" class="form-label m-0" style="text-transform: none; font-weight: normal;">
+                                    {% translate "REMEMBER ME" %}
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block btn-lg mb-md">
+                            [{% translate "LOGIN" %}]
+                        </button>
+
+                        <div class="text-center">
+                            <a href="{% url 'account_reset_password' %}" class="text-sm">
+                                {% translate "FORGOT PASSWORD" %}?
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sign Up Link -->
+            <div class="card" style="background: var(--bg-secondary);">
+                <div class="card-body text-center">
+                    <p class="mb-sm text-sm">{% translate "DON'T HAVE AN ACCOUNT" %}?</p>
+                    <a href="{% url 'account_signup' %}" class="btn btn-outline">
+                        [{% translate "CREATE ACCOUNT" %}]
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Login page specific styles */
+    .form-control:focus {
+        transform: translate(-2px, -2px);
+    }
+
+    .btn-block + .btn-block {
+        margin-top: var(--space-sm);
+    }
+</style>
+{% endblock %}
+
+ {% block extra_js %}
+{% endblock %}

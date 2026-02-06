@@ -1,0 +1,24 @@
+ipython
+django-silk
+django-redis
+django-extensions
+django-watchfiles
+black
+isort
+flake8
+pre-commit
+werkzeug
+django-browser-reload
+pyjwt
+
+# Testing
+
+coverage
+pytest
+pytest-django
+pytest-cov
+factory-boy
+
+# Debugging
+django-debug-toolbar
+sqlparse

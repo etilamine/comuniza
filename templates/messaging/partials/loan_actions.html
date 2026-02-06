@@ -1,0 +1,118 @@
+<!-- Loan action buttons within messaging -->
+{% load loan_tags %}
+{% load i18n %}
+<div class="loan-actions-banner bg-primary bg-opacity-10 border rounded p-md mb-lg">
+    <h4 class="mb-sm">{% translate "Loan Action Required" %}</h4>
+
+    {% if loan.status == 'requested' and loan.lender == user %}
+        <div class="flex gap-sm">
+            <form method="post" action="{% url 'loans:approve' loan.id %}" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success btn-sm">{% translate "Approve Loan" %}</button>
+            </form>
+            <form method="post" action="{% url 'loans:reject' loan.id %}" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline btn-sm">{% translate "Reject Loan" %}</button>
+            </form>
+            <a href="{% url 'loans:loan_detail' loan.id %}" class="btn btn-outline btn-sm">{% translate "View Details" %}</a>
+        </div>
+    {% elif loan.status == 'approved' and loan.borrower == user %}
+        <div class="flex gap-sm">
+            <form method="post" action="{% url 'loans:return' loan.id %}" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-sm">{% translate "Mark as Returned" %}</button>
+            </form>
+            <a href="{% url 'loans:loan_detail' loan.id %}" class="btn btn-outline btn-sm">{% translate "View Details" %}</a>
+        </div>
+    {% elif loan.status == 'active' and loan.borrower == user %}
+        <div class="flex gap-sm">
+            <form method="post" action="{% url 'loans:return' loan.id %}" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary btn-sm">{% translate "Mark as Returned" %}</button>
+            </form>
+            <a href="{% url 'loans:request_extension' loan.id %}" class="btn btn-outline btn-sm">{% translate "Request Extension" %}</a>
+        </div>
+    {% elif loan.status == 'returned' %}
+        <div class="text-center">
+            <p class="text-sm text-secondary mb-sm">{% translate "Loan completed on" %} {{ loan.returned_at|date:'M j, Y' }}</p>
+            {% if not loan|user_has_reviewed_loan:user %}
+                <a href="{% url 'loans:submit_review' loan.id %}" class="btn btn-primary btn-sm">{% translate "Leave Review" %}</a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <!-- Loan Summary -->
+    <div class="mt-md text-sm">
+        <div class="grid grid-cols-2 gap-sm">
+            <div>
+                <span class="text-secondary">{% translate "Item" %}:</span>
+                <span class="font-medium">{{ loan.item.title }}</span>
+            </div>
+            <div>
+                <span class="text-secondary">{% translate "Status" %}:</span>
+                <span class="badge badge-{{ loan.status }}">{{ loan.get_status_display }}</span>
+            </div>
+            <div>
+                <span class="text-secondary">{% translate "Requested" %}:</span>
+                <span>{{ loan.requested_at|date:'M j' }}</span>
+            </div>
+            <div>
+                <span class="text-secondary">{% translate "Due" %}:</span>
+                <span {% if loan.is_overdue %}class="text-warning"{% endif %}>
+                    {{ loan.due_date|date:'M j' }}
+                    {% if loan.is_overdue %} ({% translate "OVERDUE" %}){% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.loan-actions-banner {
+    background: rgba(0, 123, 255, 0.1);
+    border: 1px solid rgba(0, 123, 255, 0.3);
+}
+
+.bg-opacity-10 {
+    background-opacity: 0.1;
+}
+
+.badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.badge-requested { background: #6c757d; color: white; }
+.badge-approved { background: #28a745; color: white; }
+.badge-active { background: #007bff; color: white; }
+.badge-returned { background: #6f42c1; color: white; }
+.badge-rejected { background: #dc3545; color: white; }
+.badge-cancelled { background: #6c757d; color: white; }
+
+.text-warning {
+    color: #ffc107;
+}
+
+.inline {
+    display: inline;
+}
+
+.grid {
+    display: grid;
+}
+
+.grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.gap-sm {
+    gap: 0.5rem;
+}
+
+.gap-md {
+    gap: 1rem;
+}
+</style>

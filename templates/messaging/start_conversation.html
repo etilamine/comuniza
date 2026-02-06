@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load thumbnail %}
+{% block title %}{% translate "Start Conversation with" %} {{ other_user.get_display_name }} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container container-md">
+    <!-- Page Header -->
+    <div class="mb-xl">
+        <h1 class="mb-sm">{% translate "Start Conversation" %}</h1>
+        <p class="text-secondary">{% translate "Send a message to" %} {{ other_user.get_display_name }}</p>
+    </div>
+
+    <!-- Form -->
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger mb-lg">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <!-- Subject Field (Optional) -->
+                <div class="form-group">
+                    <label for="{{ form.subject.id_for_label }}" class="form-label">{% translate "Subject (Optional" %})</label>
+                    {{ form.subject }}
+                    {% if form.subject.errors %}
+                        <div class="form-error">{{ form.subject.errors.0 }}</div>
+                    {% endif %}
+                    <small class="form-help">{% translate "Give this conversation a topic" %}</small>
+                </div>
+
+                <!-- Initial Message Field -->
+                <div class="form-group">
+                    <label for="{{ form.initial_message.id_for_label }}" class="form-label form-label-required">{% translate "Your Message" %}</label>
+                    {{ form.initial_message }}
+                    {% if form.initial_message.errors %}
+                        <div class="form-error">{{ form.initial_message.errors.0 }}</div>
+                    {% endif %}
+                    <small class="form-help">{% translate "This will be your first message in the conversation" %}</small>
+                </div>
+
+                <!-- Submit Buttons -->
+                <div class="flex gap-sm mt-lg">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> {% translate "Send Message" %}
+                    </button>
+                    <a href="{% url 'messaging:conversation_list' %}" class="btn btn-ghost">
+                        {% translate "Cancel" %}
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Info -->
+    <div class="card mt-lg">
+        <div class="card-body">
+            <div class="flex items-center gap-md">
+<div class="avatar avatar-lg">
+                    {% if other_user.avatar %}
+                        <img src="{{ other_user.avatar.avatar_small.url }}" alt="{{ other_user.get_display_name }}">
+                    {% else %}
+                        <div class="avatar-placeholder">
+                            {{ other_user.username|first|upper }}
+                        </div>
+                    {% endif %}
+                </div>
+                    {% endthumbnail %}
+                </div>
+                <div>
+                    <h4 class="mb-xs">{{ other_user.get_display_name }}</h4>
+                    <p class="text-sm text-secondary">@{{ other_user.username }}</p>
+                    {% if other_user.profile.bio %}
+                        <p class="text-sm mt-xs">{{ other_user.profile.bio|truncatechars:100 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

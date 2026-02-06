@@ -1,0 +1,70 @@
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+media/
+staticfiles/
+
+# Environment
+.env
+.env.production
+.env.development
+!.env.example
+
+# Docker
+data/
+*.tar.gz
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.zed
+.claude
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp files
+*.tmp
+*.temp
+*.bak
+
+# Database dumps
+*.sql
+*.sql.gz
+
+# Logs
+logs/
+
+# Code coverage
+.coverage
+htmlcov/
+
+# Development files
+.todorc.yml
+todo.md
+deploy-dev-fast.sh
+deploy-dev.sh.bak
+backup-postgres-dev.sh
+apps/loans/models.py.bak
+apps/items/models.py.bak
+
+# Project documentation
+DOCU
+DOCS_OLD
+
+# Node.js
+node_modules
+package.json
+package-lock.json
+
+# Temporary test files
+test_*.py
+test_*.js
+*.md.bak

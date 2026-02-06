@@ -1,0 +1,17 @@
+{% translate "LOAN REJECTED
+
+Your loan request has been declined.
+
+Unfortunately" %}, {{ lender.get_display_name }} {% translate "has declined your request to borrow" %} {{ item.title }}.
+
+{% if rejection_reason %}
+{% translate "Reason provided" %}: {{ rejection_reason }}
+{% endif %}
+
+{% translate "What happens next?
+- You can look for other items to borrow in the community
+- Consider reaching out to the lender to understand the decision
+- Update your profile to improve future loan requests
+
+Browse more items" %}: {{ item_url }}
+{% translate "View loan details" %}: {{ loan_url }}

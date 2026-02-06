@@ -1,0 +1,97 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% translate "Welcome to Comuniza" %}</title>
+    <style>
+        body {
+            font-family: monospace;
+            margin: 0;
+            padding: 20px;
+            background: #ffffff;
+            color: #000000;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            border: 2px solid #000000;
+        }
+        .header {
+            padding: 20px;
+            border-bottom: 1px solid #000000;
+        }
+        .content {
+            padding: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #000000;
+            color: #ffffff;
+            text-decoration: none;
+            border: 2px solid #000000;
+            margin: 20px 0;
+        }
+        .button:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+        .footer {
+            padding: 20px;
+            border-top: 1px solid #000000;
+            font-size: 12px;
+        }
+        .code {
+            background: #f0f0f0;
+            padding: 10px;
+            border: 1px solid #000000;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{% translate "COMUNIZA" %}</h1>
+            <p>{% translate "Community Resource Sharing Platform" %}</p>
+        </div>
+
+        <div class="content">
+            <h2>{% translate "Confirm Your Email Address" %}</h2>
+
+            <p>{% translate "Hello" %} {{ user.email }}!</p>
+
+            <p>{% translate "Thank you for signing up for Comuniza. To complete your registration and start sharing items with your community, please confirm your email address" %}.</p>
+
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                    <td align="center" style="padding: 20px 0;">
+                        <a href="{{ activate_url }}" class="button">{% translate "CONFIRM EMAIL" %}</a>
+                    </td>
+                </tr>
+            </table>
+
+            <p><strong>{% translate "Or copy this link" %}:</strong></p>
+            <div class="code">{{ activate_url }}</div>
+
+            <hr style="border: 1px solid #000000; margin: 20px 0;">
+
+            <p><strong>{% translate "Important" %}:</strong></p>
+            <ul style="list-style-type: square; padding-left: 20px;">
+                <li>{% translate "This link will expire in" %} {{ expire_days }} {% translate "days" %}</li>
+                <li>{% translate "If you did not sign up for this account, please ignore this email" %}</li>
+                <li>{% translate "Your account will be deleted if not confirmed within" %} {{ expire_days }} {% translate "days" %}</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>{% translate "Thank you" %},<br>{% translate "The Comuniza Team" %}</p>
+            <hr style="border: 1px solid #000000; margin: 10px 0;">
+            <p>{% translate "This is an automated message from Comuniza" %}.</p>
+            <p>{% translate "If you have questions, contact us at support@comuniza.org" %}</p>
+        </div>
+    </div>
+</body>
+</html>

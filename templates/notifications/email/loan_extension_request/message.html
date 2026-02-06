@@ -1,0 +1,28 @@
+{% extends "notifications/email/base_email.html" %}
+
+{% block header_title %}{% translate "EXTENSION REQUEST" %}{% endblock %}
+
+{% block email_content %}
+<h2>{% translate "Extension Request For" %} {{ item.title }}</h2>
+<p><strong>{{ borrower.get_display_name }}</strong> {% translate "is requesting an extension of" %} <strong>{{ extension_days }} {% translate "days" %}</strong> {% translate "for this loan" %}.</p>
+
+{% if extension_reason %}
+    <div class="data-box">
+        <h3>{% translate "Reason" %}:</h3>
+        <p>{{ extension_reason }}</p>
+    </div>
+{% endif %}
+
+<div class="data-box">
+    <h3>{% translate "New Due Date" %}:</h3>
+    <p><strong>{{ current_due_date|date:"F j, Y" }}</strong> + {{ extension_days }} {% translate "days" %} = <strong>{{ new_due_date|date:"F j, Y" }}</strong></p>
+</div>
+
+<h3>{% translate "What happens next" %}?</h3>
+<p>{% translate "The lender will review this request and either approve or reject the extension. You will be notified of their decision via email and in your dashboard" %}.</p>
+
+<div class="btn-container">
+    <a href="{{ loan_url }}" class="btn">{% translate "View Loan Details" %}</a>
+    <a href="{{ messages_url }}" class="btn btn-secondary">{% translate "Message Lender" %}</a>
+</div>
+{% endblock %}

@@ -1,0 +1,1 @@
+{% translate "Loan Request" %}: {{ item.title }}

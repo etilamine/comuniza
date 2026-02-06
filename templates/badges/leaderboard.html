@@ -1,0 +1,324 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load thumbnail %}
+{% block title %}[{% translate "LEADERBOARD" %} ]{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="section">
+        <h1 class="glow-text">[{% translate "LEADERBOARD" %} ]</h1>
+        <p class="subtitle">{% translate "Top comrades in the P2P library revolution" %}</p>
+
+        <div class="leaderboard-tabs">
+            <button class="tab-btn active" data-tab="overall">{% translate "OVERALL" %}</button>
+            <button class="tab-btn" data-tab="lending">{% translate "LENDING" %}</button>
+            <button class="tab-btn" data-tab="borrowing">{% translate "BORROWING" %}</button>
+            <button class="tab-btn" data-tab="reputation">{% translate "REPUTATION" %}</button>
+        </div>
+
+        {% for leaderboard_type, entries in leaderboards.items %}
+        <div class="leaderboard-tab" id="{{ leaderboard_type }}-tab" {% if leaderboard_type != 'overall' %}style="display: none;"{% endif %}>
+            <div class="leaderboard-list">
+                {% for entry in entries %}
+                <div class="leaderboard-entry {% if user_ranks and user_ranks.leaderboard_type == entry.rank %}current-user{% endif %}">
+                    <div class="rank-badge {{ entry.rank|default:'unranked' }}">
+                        {% if entry.rank %}
+                            #{{ entry.rank }}
+                        {% else %}
+                            --
+                        {% endif %}
+                    </div>
+                    <div class="user-info">
+                        <div class="avatar avatar-md">
+                            {% if entry.user.avatar %}
+                                <img src="{{ entry.user.avatar.avatar_small.url }}" alt="{{ entry.user.username }}">
+                            {% else %}
+                                <div class="avatar-placeholder">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="user-details">
+                            <div class="user-name">{{ entry.user.username|default:'Anonymous' }}</div>
+                            <div class="user-stats">
+                                {% if leaderboard_type == 'overall' %}
+                                    {{ entry.score|floatformat:0 }} {% translate "pts" %}
+                                {% elif leaderboard_type == 'lending' %}
+                                    {{ entry.user.owned_items.count }} {% translate "items shared" %}
+                                {% elif leaderboard_type == 'borrowing' %}
+                                    {{ entry.user.borrowed_loans.count }} {% translate "items borrowed" %}
+                                {% elif leaderboard_type == 'reputation' %}
+                                    {% translate "Trust Score" %}: {{ entry.score|floatformat:0 }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="score-display">
+                        {% if leaderboard_type == 'reputation' %}
+                            <div class="trust-score">{{ entry.score|floatformat:0 }}</div>
+                        {% else %}
+                            <div class="score">{{ entry.score|floatformat:0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-leaderboard">
+                    <p>[{% translate "NO ENTRIES YET" %} ]</p>
+                    <p>{% translate "Be the first to climb the ranks" %}!</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        {% if user.is_authenticated and user_ranks %}
+        <div class="my-ranks">
+            <h3>[{% translate "YOUR RANKS" %} ]</h3>
+            <div class="ranks-grid">
+                <div class="rank-item">
+                    <span class="rank-label">{% translate "Overall" %}:</span>
+                    <span class="rank-value">#{{ user_ranks.overall|default:'--' }}</span>
+                </div>
+                <div class="rank-item">
+                    <span class="rank-label">{% translate "Lending" %}:</span>
+                    <span class="rank-value">#{{ user_ranks.lending|default:'--' }}</span>
+                </div>
+                <div class="rank-item">
+                    <span class="rank-label">{% translate "Borrowing" %}:</span>
+                    <span class="rank-value">#{{ user_ranks.borrowing|default:'--' }}</span>
+                </div>
+                <div class="rank-item">
+                    <span class="rank-label">{% translate "Reputation" %}:</span>
+                    <span class="rank-value">#{{ user_ranks.reputation|default:'--' }}</span>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.leaderboard-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 3px solid var(--accent-color);
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 1rem 1.5rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -3px;
+}
+
+.tab-btn:hover {
+    color: var(--accent-color);
+}
+
+.tab-btn.active {
+    color: var(--accent-color);
+    border-bottom-color: var(--accent-color);
+}
+
+.leaderboard-tab {
+    margin-top: 2rem;
+}
+
+.leaderboard-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.leaderboard-entry {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border: 3px solid var(--border-color);
+    background: var(--bg-color);
+    transition: all 0.3s ease;
+}
+
+.leaderboard-entry:hover {
+    border-color: var(--accent-color);
+    transform: translateX(5px);
+}
+
+.leaderboard-entry.current-user {
+    border-color: var(--accent-color);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.rank-badge {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border: 2px solid;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.rank-badge:nth-child(1) { border-color: #FFD700; color: #FFD700; }
+.rank-badge:nth-child(2) { border-color: #C0C0C0; color: #C0C0C0; }
+.rank-badge:nth-child(3) { border-color: #CD7F32; color: #CD7F32; }
+.rank-badge:not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(3)) {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+
+
+.user-details {
+    flex: 1;
+}
+
+.user-name {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+    color: var(--text-color);
+}
+
+.user-stats {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+.score-display {
+    text-align: right;
+}
+
+.score,
+.trust-score {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+.empty-leaderboard {
+    text-align: center;
+    padding: 3rem;
+    border: 3px solid var(--accent-color);
+    background: var(--bg-color);
+}
+
+.empty-leaderboard p {
+    margin: 0.5rem 0;
+    color: var(--text-color);
+}
+
+.my-ranks {
+    margin-top: 3rem;
+    padding: 2rem;
+    border: 3px solid var(--accent-color);
+    background: var(--bg-color);
+}
+
+.my-ranks h3 {
+    margin: 0 0 1rem 0;
+    color: var(--text-color);
+}
+
+.ranks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.rank-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.rank-label {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    opacity: 0.7;
+}
+
+.rank-value {
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+@media (max-width: 768px) {
+    .leaderboard-tabs {
+        flex-wrap: wrap;
+    }
+
+    .tab-btn {
+        flex: 1;
+        min-width: 120px;
+        text-align: center;
+    }
+
+    .leaderboard-entry {
+        padding: 0.75rem;
+    }
+
+    .rank-badge {
+        width: 50px;
+        height: 50px;
+        font-size: 1rem;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    .ranks-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.leaderboard-tab');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const targetTab = this.dataset.tab;
+
+            // Remove active class from all buttons and contents
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.style.display = 'none');
+
+            // Add active class to clicked button
+            this.classList.add('active');
+
+            // Show corresponding content
+            document.getElementById(targetTab + '-tab').style.display = 'block';
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,1369 @@
+{% load static %}
+{% load i18n %}
+{% load thumbnail %}
+<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="{% block meta_description %}{% translate "Share and borrow items within your community" %}{% endblock %}"
+        />
+        <title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
+
+        <!-- Apply theme before page renders to prevent flash -->
+        <script>
+            (function() {
+                const savedTheme = localStorage.getItem("theme") || "light";
+                document.documentElement.setAttribute("data-theme", savedTheme);
+            })();
+        </script>
+
+        <!-- Preload critical assets -->
+        <link rel="preload" href="{% static 'css/base.css' %}" as="style" />
+
+        <!-- Styles -->
+        <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+
+        <!-- HTMX and Alpine.js for live interactions -->
+        <script src="https://unpkg.com/htmx.org@2.0.3"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+        {% block extra_css %}
+        <style>
+        /* Image Upload Styles */
+        .upload-drop-zone {
+            border: 3px dashed var(--border-color);
+            background: var(--bg-main);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .upload-drop-zone:hover,
+        .upload-drop-zone.drag-over {
+            border-color: var(--primary);
+            background: var(--bg-secondary);
+            transform: translateY(-2px);
+        }
+
+        .image-item {
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: grab;
+            position: relative;
+        }
+
+        .image-item:hover {
+            transform: translateY(-4px) scale(1.1);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        .image-item.dragging {
+            opacity: 0.9;
+            filter: blur(1px);
+            transform: scale(1.2);
+            transition-duration: 1s;
+            z-index: 1000;
+            cursor: grabbing;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            background: var(--bg-secondary);
+        }
+
+        .image-item.drag-over-target {
+            transform: scale(1.02);
+            opacity: 1;
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .image-item.drag-over-target::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: inherit;
+            pointer-events: none;
+        }
+        }
+
+        .insertion-point {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .image-item.selected {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary);
+        }
+
+        /* Mobile touch feedback */
+        @media (hover: none) and (pointer: coarse) {
+            .image-item:active {
+                transform: scale(0.95);
+                opacity: 0.8;
+            }
+
+            .drag-handle {
+                font-size: 1.2rem;
+                padding: 0.5rem;
+                cursor: grab;
+            }
+
+            .drag-handle:active {
+                cursor: grabbing;
+            }
+
+.image-item {
+            touch-action: none;
+        }
+
+            .image-item.dragging {
+                transform: scale(1.05);
+                opacity: 0.9;
+            }
+        }
+
+        /* Loading states */
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-top: 2px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .avatar {
+            border-radius: 50%;
+            overflow: hidden;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar.avatar-sm {
+            width: 32px;
+            height: 32px;
+        }
+
+        .avatar.avatar-md {
+            width: 48px;
+            height: 48px;
+        }
+
+        .avatar.avatar-lg {
+            width: 64px;
+            height: 64px;
+        }
+
+        .avatar.avatar-xl {
+            width: 128px;
+            height: 128px;
+        }
+
+        .avatar-placeholder {
+            color: white;
+            font-weight: bold;
+        }
+
+        .avatar.avatar-sm .avatar-placeholder {
+            font-size: 14px;
+        }
+
+        .avatar.avatar-md .avatar-placeholder {
+            font-size: 18px;
+        }
+
+        .avatar.avatar-lg .avatar-placeholder {
+            font-size: 24px;
+        }
+
+        .avatar.avatar-xl .avatar-placeholder {
+            font-size: 48px;
+        }
+        </style>
+        {% endblock %}
+
+        <!-- Favicon -->
+        <link
+            rel="icon"
+            href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 font-family=%22monospace%22>[C]</text></svg>"
+        />
+    </head>
+    <body>
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="container">
+                <div class="navbar-content">
+                    <a
+                        href="{% if user.is_authenticated %}{% url 'items:list' %}{% else %}{% url 'home' %}{% endif %}"
+                        class="navbar-brand"
+                    >
+                        {{ SITE_NAME }}
+                    </a>
+
+                    <button
+                        class="navbar-toggle"
+                        onclick="toggleMenu()"
+                        aria-label="Toggle menu"
+                    >
+                        [{% translate "MENU" %}]
+                    </button>
+
+                    <ul class="navbar-nav" id="navMenu">
+                        {% if user.is_authenticated %}
+                        <li>
+                            <a
+                                href="{% url 'items:list' %}"
+                                class="{% if request.resolver_match.url_name == 'list' %}active{% endif %}"
+                                >{% translate "Browse" %}</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="{% url 'groups:list' %}"
+                                class="{% if 'groups' in request.path %}active{% endif %}"
+                                >{% translate "Groups" %}</a
+                            >
+                        </li>
+                         <li>
+                             <a
+                                 href="{% url 'loans:my_loans' %}"
+                                 class="{% if 'loans' in request.path %}active{% endif %}"
+                                 >{% translate "My Loans" %}
+                                 {% if pending_loans > 0 %}
+                                 <span class="notification-badge">{{ pending_loans }}</span>
+                                 {% endif %}
+                             </a>
+                         </li>
+                         <li>
+                             <a
+                                 href="{% url 'items:my_items' %}"
+                                 class="{% if 'my_items' in request.path %}active{% endif %}"
+                                 >{% translate "My Items" %}</a
+                             >
+                         </li>
+                          <li>
+                              <a
+                                  href="{% url 'messaging:conversation_list' %}"
+                                  class="{% if 'messages' in request.path %}active{% endif %}"
+                                  >{% translate "Messages" %}
+                                  {% if unread_messages > 0 %}
+                                  <span class="notification-badge">{{ unread_messages }}</span>
+                                  {% endif %}
+                              </a>
+                          </li>
+                         <!-- Badges and Leaderboard temporarily hidden
+                         <li>
+                             <a
+                                 href="{% url 'badges:list' %}"
+                                 class="{% if 'badges' in request.path %}active{% endif %}"
+                                 >Badges</a
+                             >
+                         </li>
+                         <li>
+                             <a
+                                 href="{% url 'badges:leaderboard' %}"
+                                 class="{% if 'leaderboard' in request.path %}active{% endif %}"
+                                 >Leaderboard</a
+                             >
+                          </li>
+                          -->
+                         <li>
+                            <div class="flex items-center gap-sm">
+<div class="avatar avatar-sm">
+                                      {% if user.avatar %}
+                                      <img
+                                          src="{{ user.avatar.avatar_small.url }}"
+                                          alt="{{ user.username }}"
+                                          loading="lazy"
+                                      />
+                                      {% else %}
+                                      <div class="avatar-placeholder">
+                                          {{ user.username|first|upper }}
+                                      </div>
+                                      {% endif %}
+                                   </div>
+                                 <a href="{% url 'users:profile' %}">{% translate "Profile" %}</a>
+                             </div>
+                         </li>
+                         <li>
+                             <a
+                                 href="{% url 'account_logout' %}"
+                                 class="btn btn-sm btn-outline"
+                                 >{% translate "Logout" %}</a
+                            >
+                        </li>
+                         <li>
+                             <button
+                                 class="theme-toggle"
+                                 onclick="toggleTheme()"
+                                 aria-label="Toggle dark mode"
+                             >
+                                 <span id="theme-icon">[◐]</span>
+                             </button>
+                         </li>
+                         {% else %}
+                         <li><a href="{% url 'home' %}">{% translate "Home" %}</a></li>
+                         <li><a href="{% url 'items:list' %}">{% translate "Browse" %}</a></li>
+                         <li>
+                             <a
+                                 href="{% url 'account_login' %}"
+                                 class="btn btn-sm btn-primary"
+                                 >{% translate "Login" %}</a
+                             >
+                         </li>
+                        {% if ENABLE_REGISTRATION %}
+                        <li>
+                            <a
+                                href="{% url 'account_signup' %}"
+                                class="btn btn-sm btn-outline"
+                                >{% translate "Sign Up" %}</a
+                            >
+                        </li>
+                        {% endif %}
+                        <li>
+                            <button
+                                class="theme-toggle"
+                                 onclick="toggleTheme()"
+                                 aria-label="{% translate "Toggle dark mode" %}"
+                             >
+                                 <span id="theme-icon-mobile">[◐]</span>
+                            </button>
+                        </li>
+
+                        {% endif %}
+                        <!-- Language Switcher -->
+                        <li>
+                            <div class="locale-dropdown-container">
+                                <button class="theme-toggle locale-toggle" onclick="toggleLocale()" aria-label="Change language">
+                                    <span id="locale-indicator">{% get_current_language as LANGUAGE_CODE %}{{ LANGUAGE_CODE|upper }}</span>
+                                    <span class="dropdown-arrow">▼</span>
+                                </button>
+
+                                <!-- Hidden form for language switching -->
+                                <form id="locale-form" action="{% url 'set_language' %}" method="post" style="display: none;">
+                                    {% csrf_token %}
+                                    <input name="next" type="hidden" value="{{ redirect_to }}" />
+                                    <select id="locale-select" name="language">
+                                        {% get_current_language as LANGUAGE_CODE %}
+                                        {% get_available_languages as LANGUAGES %}
+                                        {% get_language_info_list for LANGUAGES as languages %}
+                                        {% for language in languages %}
+                                        <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                                            {{ language.code|upper }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </form>
+
+                                <!-- Dropdown menu -->
+                                <div id="locale-dropdown" class="locale-dropdown" style="display: none;">
+                                    {% get_current_language as LANGUAGE_CODE %}
+                                    {% get_available_languages as LANGUAGES %}
+                                    {% get_language_info_list for LANGUAGES as languages %}
+                                    {% for language in languages %}
+                                    <button class="locale-option" data-lang="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}data-current="true"{% endif %}>
+                                        <span class="locale-code">{{ language.code|upper }}</span>
+                                    </button>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Messages/Alerts -->
+        {% if messages %}
+        <div class="container mt-md">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Main Content -->
+        <main class="py-md">{% block content %}{% endblock %}</main>
+
+        <!-- Footer -->
+        <footer
+            style="
+                background: var(--bg-secondary);
+                padding: var(--space-xl) 0;
+                margin-top: var(--space-2xl);
+                border-top: 1px solid var(--border);
+            "
+        >
+            <div class="container">
+                <div class="grid grid-cols-1 grid-md-3 gap-lg">
+                    <div>
+                        <h5 class="mb-md">{{ SITE_NAME }}</h5>
+                        <p class="text-secondary text-sm">
+                            [{% translate "SHARE AND BORROW WITHIN YOUR COMMUNITY" %}]
+                        </p>
+                    </div>
+                    <div>
+                        <h6 class="mb-md">{% translate "Quick Links" %}</h6>
+                        <ul style="list-style: none; padding: 0">
+                            <li class="mb-sm">
+                                <a
+                                    href="{% url 'items:list' %}"
+                                    class="text-secondary text-sm"
+                                    >{% translate "Browse Items" %}</a
+                                >
+                            </li>
+                            <li class="mb-sm">
+                                <a
+                                    href="{% url 'groups:list' %}"
+                                    class="text-secondary text-sm"
+                                    >{% translate "Groups" %}</a
+                                >
+                            </li>
+                            <li class="mb-sm">
+                                <a href="{% url 'faq' %}" class="text-secondary text-sm">{% translate "FAQ" %}</a>
+                            </li>
+                            <li class="mb-sm">
+                                <a href="/bug-report/" class="text-secondary text-sm">{% translate "Report Bug" %}</a>
+                            </li>
+                            {% if user.is_authenticated %}
+                            <li class="mb-sm">
+                                <a
+                                    href="{% url 'items:create' %}"
+                                    class="text-secondary text-sm"
+                                    >{% translate "Add Item" %}</a
+                                >
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div>
+                        <h6 class="mb-md">{% translate "About" %}</h6>
+                        <p class="text-secondary text-sm">{{ SITE_DOMAIN }}</p>
+                        <p class="text-secondary text-sm mt-md">
+                            &copy; {% now "Y" %} {{ SITE_NAME }}
+                        </p>
+                        <p class="text-secondary text-sm mt-md">
+                            {% translate "Made in Leipzig with love" %}. </br> {% translate "We're not affiliated in any way with the company based in Barcelona" %}.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Scripts -->
+        <script>
+            // Dark mode toggle
+            function toggleTheme() {
+                const html = document.documentElement;
+                const currentTheme = html.getAttribute("data-theme");
+                const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+                html.setAttribute("data-theme", newTheme);
+                localStorage.setItem("theme", newTheme);
+
+                // Update icon
+                const icons = document.querySelectorAll(
+                    "#theme-icon, #theme-icon-mobile",
+                );
+                icons.forEach((icon) => {
+                    icon.textContent = newTheme === "dark" ? "[◑]" : "[◐]";
+                });
+            }
+
+            // Load saved theme on page load
+            (function () {
+                const savedTheme = localStorage.getItem("theme") || "light";
+                document.documentElement.setAttribute("data-theme", savedTheme);
+
+                // Update icon on load
+                const icons = document.querySelectorAll(
+                    "#theme-icon, #theme-icon-mobile",
+                );
+                icons.forEach((icon) => {
+                    icon.textContent = savedTheme === "dark" ? "[◑]" : "[◐]";
+                });
+            })();
+
+            // Locale dropdown toggle
+            function toggleLocale() {
+                const dropdown = document.getElementById('locale-dropdown');
+                const isVisible = dropdown.style.display !== 'none';
+
+                // Hide any other open dropdowns
+                document.querySelectorAll('.locale-dropdown').forEach(d => {
+                    d.style.display = 'none';
+                });
+
+                // Toggle this dropdown
+                dropdown.style.display = isVisible ? 'none' : 'block';
+            }
+
+            // Handle locale option clicks and close dropdown on outside click
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.locale-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        const langCode = this.dataset.lang;
+                        const select = document.getElementById('locale-select');
+                        const form = document.getElementById('locale-form');
+
+                        // Update select value
+                        select.value = langCode;
+
+                        // Submit form
+                        form.submit();
+                    });
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    const container = document.querySelector('.locale-dropdown-container');
+                    const dropdown = document.getElementById('locale-dropdown');
+
+                    if (container && dropdown && !container.contains(e.target)) {
+                        dropdown.style.display = 'none';
+                    }
+                });
+            });
+
+            // Mobile menu toggle
+            function toggleMenu() {
+                const menu = document.getElementById("navMenu");
+                menu.classList.toggle("active");
+            }
+
+            // Close mobile menu when clicking outside
+            document.addEventListener("click", function (event) {
+                const nav = document.querySelector(".navbar");
+                const menu = document.getElementById("navMenu");
+                const toggle = document.querySelector(".navbar-toggle");
+
+                if (
+                    !nav.contains(event.target) &&
+                    menu.classList.contains("active")
+                ) {
+                    menu.classList.remove("active");
+                }
+            });
+
+            // Lazy load images with fade-in effect
+            if ("IntersectionObserver" in window) {
+                const imageObserver = new IntersectionObserver(
+                    (entries, observer) => {
+                        entries.forEach((entry) => {
+                            if (entry.isIntersecting) {
+                                const img = entry.target;
+                                img.src = img.dataset.src;
+                                img.classList.remove("skeleton");
+                                img.style.opacity = "0";
+                                img.onload = () => {
+                                    img.style.transition = "opacity 0.3s ease";
+                                    img.style.opacity = "1";
+                                };
+                                observer.unobserve(img);
+                            }
+                        });
+                    },
+                );
+
+                document.querySelectorAll("img[data-src]").forEach((img) => {
+                    imageObserver.observe(img);
+                });
+            }
+
+            // Auto-hide alerts after 5 seconds
+            document.querySelectorAll(".alert").forEach((alert) => {
+                setTimeout(() => {
+                    alert.style.transition =
+                        "opacity 0.3s ease, transform 0.3s ease";
+                    alert.style.opacity = "0";
+                    alert.style.transform = "translateY(-10px)";
+                    setTimeout(() => alert.remove(), 300);
+                }, 5000);
+            });
+
+            // Privacy banner initialization
+            function initPrivacyBanner() {
+                const privacyBanner = document.getElementById('privacy-banner');
+                const dismissed = localStorage.getItem('privacy-banner-dismissed');
+
+                console.log('Privacy banner debug:', {
+                    element: privacyBanner,
+                    dismissed: dismissed,
+                    shouldShow: privacyBanner && !dismissed
+                });
+
+                if (privacyBanner && !dismissed) {
+                    privacyBanner.style.display = 'block';
+                    console.log('Privacy banner shown');
+                } else if (privacyBanner) {
+                    console.log('Privacy banner hidden (dismissed)');
+                }
+
+                window.dismissPrivacyBanner = function() {
+                    if (privacyBanner) {
+                        privacyBanner.style.display = 'none';
+                        localStorage.setItem('privacy-banner-dismissed', 'true');
+                    }
+                };
+            }
+
+            // Initialize privacy banner after DOM loads
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initPrivacyBanner);
+            } else {
+                initPrivacyBanner();
+            }
+        </script>
+
+        {% block extra_js %}{% endblock %}
+
+        <!-- Ko-fi Support Widget -->
+        <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+        <script>
+            // Get the primary color from CSS custom properties
+            const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
+
+
+            kofiWidgetOverlay.draw('animalite', {
+                'type': 'floating-chat',
+                'floating-chat.donateButton.text': 'Support!',
+                'floating-chat.donateButton.background-color': primaryColor,
+                'floating-chat.donateButton.text-color': '#fff'
+            });
+
+        </script>
+
+        <!-- Override Ko-fi widget z-index to appear below privacy banner -->
+        <script>
+            // Override Ko-fi widget z-index after it loads
+            setTimeout(function() {
+                const kofiElements = document.querySelectorAll('[class*="kofi"], [id*="kofi"], .kofi-chat, #kofi-overlay');
+                kofiElements.forEach(function(el) {
+                    el.style.zIndex = '999';
+                    el.style.position = 'relative'; // Ensure positioning works
+                });
+
+                // Also override any iframe or other elements that might be created
+                const allElements = document.querySelectorAll('*');
+                allElements.forEach(function(el) {
+                    if (el.className && el.className.toString().includes('kofi')) {
+                        el.style.zIndex = '999';
+                    }
+                    if (el.id && el.id.includes('kofi')) {
+                        el.style.zIndex = '999';
+                    }
+                });
+            }, 2000); // Wait 2 seconds for Ko-fi to fully load
+
+            // Use mutation observer for dynamically added elements
+            const kofiObserver = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    mutation.addedNodes.forEach(function(node) {
+                        if (node.nodeType === 1 && node.className && node.className.includes('kofi')) {
+                            node.style.zIndex = '999';
+                        }
+                        // Check child elements too
+                        if (node.querySelectorAll) {
+                            const childKofi = node.querySelectorAll('[class*="kofi"], [id*="kofi"]');
+                            childKofi.forEach(function(child) {
+                                child.style.zIndex = '999';
+                            });
+                        }
+                    });
+                });
+            });
+
+            kofiObserver.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        </script>
+
+        <!-- Privacy Notice Banner -->
+        <div id="privacy-banner" class="privacy-banner">
+            <div class="container">
+                <div class="privacy-banner-content">
+                    <span class="text-sm">{% translate "We respect your privacy." %} <br> {% translate "Read our" %} <a href="{% url 'faq' %}" class="text-primary">{% translate "FAQ" context "banner" %}</a>.</span>
+                    <button onclick="dismissPrivacyBanner()" class="btn btn-ghost btn-sm" aria-label="Dismiss privacy notice">×</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alpine.js Components for Image Upload -->
+        <script>
+        document.addEventListener('alpine:init', () => {
+            // Main image upload manager
+            Alpine.data('imageUploadManager', () => ({
+                tempImages: [],
+                tempImageIds: '',
+                uploading: false,
+                dragOver: false,
+                draggedElement: null,
+
+                async init() {
+                    console.log('Alpine.js image upload manager initialized');
+                    this.setupExistingImagesListeners();
+                    this.setupPageUnload();
+                    // Clear any stale temp images from previous session
+                    await this.clearStaleTempImages();
+                    this.$nextTick(() => {
+                        this.setupTempImageListeners();
+                        this.updateImageOrder();
+                    });
+                },
+
+                async clearStaleTempImages() {
+                    console.log('Clearing stale temp images...');
+
+                    // Clean up UI first
+                    const container = document.getElementById('temp-images-container');
+                    if (container) {
+                        console.log('Clearing temp-images-container');
+                        container.innerHTML = '';
+                    }
+                    this.tempImages = [];
+                    this.tempImageIds = '';
+
+                    // Reset temp images from previous sessions on server
+                    try {
+                        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+                        if (csrfToken) {
+                            console.log('Calling reset-temp-images endpoint...');
+                            const response = await fetch('/items/reset-temp-images/', {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRFToken': csrfToken.value
+                                }
+                            });
+                            const data = await response.json();
+                            console.log('Reset response:', data);
+                        } else {
+                            console.warn('CSRF token not found');
+                        }
+                    } catch (error) {
+                        console.error('Error resetting temp images:', error);
+                    }
+                },
+
+                setupPageUnload() {
+                    // Cleanup on page unload only if form wasn't submitted
+                    window.addEventListener('beforeunload', (e) => {
+                        const form = document.querySelector('form');
+                        if (form && !form.dataset.submitting) {
+                            this.cleanupTempImages();
+                        }
+                    });
+
+                    // Mark form as submitted when it's actually submitted
+                    const form = document.querySelector('form');
+                    if (form) {
+                        form.addEventListener('submit', () => {
+                            form.dataset.submitting = 'true';
+                        });
+                    }
+                },
+
+                setupExistingImagesListeners() {
+                    // Use unified gallery #all-images for both existing and new images
+                    const existingImages = document.getElementById('all-images');
+                    if (!existingImages) return;
+
+                    let draggedElement = null;
+                    let touchStartY = 0;
+                    let touchStartX = 0;
+                    const imageOrderInput = document.getElementById('id_image_order');
+
+                    // Mouse drag events
+                    existingImages.addEventListener('dragstart', (e) => {
+                        draggedElement = e.target.closest('.image-item');
+                        if (draggedElement) {
+                            draggedElement.classList.add('dragging');
+                            e.dataTransfer.effectAllowed = 'move';
+                        }
+                    });
+
+                    existingImages.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        e.dataTransfer.dropEffect = 'move';
+                    });
+
+                    existingImages.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        if (!draggedElement) return;
+
+                        const targetElement = e.target.closest('.image-item');
+                        if (targetElement && draggedElement !== targetElement) {
+                            const allItems = Array.from(existingImages.children);
+                            const draggedIndex = allItems.indexOf(draggedElement);
+                            const targetIndex = allItems.indexOf(targetElement);
+
+                            if (draggedIndex < targetIndex) {
+                                existingImages.insertBefore(draggedElement, targetElement.nextSibling);
+                            } else {
+                                existingImages.insertBefore(draggedElement, targetElement);
+                            }
+
+                            this.updateImageOrder();
+                        }
+                    });
+
+                    existingImages.addEventListener('dragend', (e) => {
+                        if (draggedElement) {
+                            draggedElement.classList.remove('dragging');
+                            draggedElement = null;
+                        }
+                    });
+
+                    // Touch events for mobile
+                    existingImages.addEventListener('touchstart', (e) => {
+                        const imageItem = e.target.closest('.image-item');
+                        if (imageItem) {
+                            touchStartY = e.touches[0].clientY;
+                            touchStartX = e.touches[0].clientX;
+                            draggedElement = imageItem;
+                            draggedElement.classList.add('dragging');
+                        }
+                    });
+
+                    // Prevent context menu on image items
+                    existingImages.addEventListener('contextmenu', (e) => {
+                        if (e.target.closest('.image-item')) {
+                            e.preventDefault();
+                        }
+                    });
+
+                    existingImages.addEventListener('touchmove', (e) => {
+                        if (!draggedElement) return;
+                        e.preventDefault();
+                        const touch = e.touches[0];
+                        const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                        const targetElement = element ? element.closest('.image-item') : null;
+
+                        if (targetElement && draggedElement !== targetElement) {
+                            const allItems = Array.from(existingImages.children);
+                            const draggedIndex = allItems.indexOf(draggedElement);
+                            const targetIndex = allItems.indexOf(targetElement);
+
+                            // Only swap if touch moved more than a threshold (to avoid accidental swaps)
+                            const moveDistance = Math.abs(touch.clientY - touchStartY) + Math.abs(touch.clientX - touchStartX);
+                            if (moveDistance > 30) {
+                                if (draggedIndex < targetIndex) {
+                                    existingImages.insertBefore(draggedElement, targetElement.nextSibling);
+                                } else {
+                                    existingImages.insertBefore(draggedElement, targetElement);
+                                }
+                                touchStartY = touch.clientY;
+                                touchStartX = touch.clientX;
+                                this.updateImageOrder();
+                            }
+                        }
+                    });
+
+                    existingImages.addEventListener('touchend', (e) => {
+                        e.preventDefault();
+                        if (draggedElement) {
+                            draggedElement.classList.remove('dragging');
+                            draggedElement = null;
+                        }
+                    });
+                },
+
+                updateImageOrder() {
+                    const allImagesContainer = document.getElementById('all-images');
+                    if (!allImagesContainer) return;
+
+                    const imageOrderInput = document.getElementById('id_image_order');
+                    const imageItems = allImagesContainer.querySelectorAll('.image-item');
+                    const existingImageIds = [];
+
+                    imageItems.forEach((item, index) => {
+                        const imageId = item.dataset.imageId;
+                        const imageType = item.getAttribute('data-type');
+                        const orderSpan = item.querySelector('[data-order-text]');
+                        const primaryBadge = item.querySelector('.primary-badge');
+
+                        // Update order display
+                        if (orderSpan) {
+                            orderSpan.textContent = `Order: ${index + 1}`;
+                        }
+
+                        // Update primary badge (first image is primary)
+                        if (index === 0) {
+                            if (!primaryBadge) {
+                                const badge = document.createElement('div');
+                                badge.className = 'primary-badge';
+                                badge.style.cssText = 'position: absolute; top: 8px; left: 8px; background: var(--primary); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold;';
+                                badge.textContent = '★ Cover';
+                                item.querySelector('.image-container').appendChild(badge);
+                            }
+                        } else {
+                            if (primaryBadge) {
+                                primaryBadge.remove();
+                            }
+                        }
+
+                        // Only track existing images for the order field
+                        if (imageType === 'existing' && imageId) {
+                            existingImageIds.push(imageId);
+                        }
+                    });
+
+                    // Set the order for form submission (only existing images)
+                    if (imageOrderInput) {
+                        imageOrderInput.value = existingImageIds.join(',');
+                    }
+                },
+
+                async handleFileSelect(event) {
+                    const files = Array.from(event.target.files);
+                    await this.uploadFiles(files, event.target);
+                },
+
+                async handleDrop(event) {
+                    event.preventDefault();
+                    this.dragOver = false;
+
+                    if (!event.dataTransfer || !event.dataTransfer.files) {
+                        return;
+                    }
+
+                    const files = Array.from(event.dataTransfer.files);
+                    await this.uploadFiles(files);
+                },
+
+                async uploadFiles(files, inputElement = null) {
+                    this.uploading = true;
+
+                    for (const file of files) {
+                        // Calculate current total images
+                        const allImagesContainer = document.getElementById('all-images');
+                        const existingImages = allImagesContainer ?
+                            allImagesContainer.querySelectorAll('[data-type="existing"]:not(.image-deleted)').length : 0;
+                        const tempImages = this.tempImages.length;
+                        const totalCurrent = existingImages + tempImages;
+
+                        if (totalCurrent >= 8) {
+                            alert(`Maximum 8 images allowed. You already have ${totalCurrent} images.`);
+                            break;
+                        }
+
+                        if (!file.type.startsWith('image/')) {
+                            continue;
+                        }
+
+                        if (file.size > 5 * 1024 * 1024) {
+                            alert(`File ${file.name} is too large (max 5MB)`);
+                            continue;
+                        }
+
+                        await this.uploadSingleFile(file);
+                    }
+
+                    this.uploading = false;
+                    if (inputElement) {
+                        inputElement.value = '';
+                    }
+
+                    this.$nextTick(() => {
+                        this.setupTempImageListeners();
+                    });
+                },
+
+                async uploadSingleFile(file) {
+                    const formData = new FormData();
+                    formData.append('images', file);
+
+                    try {
+                        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+                        if (!csrfToken) {
+                            alert('Security error. Please refresh the page.');
+                            return;
+                        }
+
+                        console.log('Uploading file:', file.name);
+                        const response = await fetch('/items/upload-temp-image/', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRFToken': csrfToken.value
+                            }
+                        });
+
+                        if (response.ok) {
+                            const html = await response.text();
+                            const tempId = this.extractTempImageId(html);
+                            console.log('Upload response - extracted ID:', tempId);
+
+                            if (tempId) {
+                                // Calculate order: count existing images + index in temp images
+                                const allImagesContainer = document.getElementById('all-images');
+                                const existingImageCount = allImagesContainer ?
+                                    allImagesContainer.querySelectorAll('[data-type="existing"]').length : 0;
+                                const orderIndex = existingImageCount + this.tempImages.length;
+
+                                const imageObj = {
+                                    id: tempId,
+                                    order: orderIndex
+                                };
+                                this.tempImages.push(imageObj);
+                                this.tempImageIds = this.tempImages.map(img => img.id).join(',');
+
+                                console.log('Added to tempImages:', imageObj);
+                                console.log('Updated tempImageIds:', this.tempImageIds);
+
+                                this.addImageToDOM(html);
+
+                                // Update order display in item form (after DOM is rendered)
+                                // Use a longer delay to ensure DOM is fully settled
+                                setTimeout(() => {
+                                    const updateFunc = window.updateImageOrder || (typeof updateImageOrder !== 'undefined' ? updateImageOrder : null);
+                                    if (typeof updateFunc === 'function') {
+                                        console.log('Calling updateImageOrder');
+                                        updateFunc();
+                                    } else {
+                                        console.error('updateImageOrder function not found');
+                                    }
+                                }, 50);
+                            } else {
+                                console.error('Could not extract temp image ID from response');
+                                alert('Upload succeeded but image ID not found. Please refresh.');
+                            }
+                        } else {
+                            console.error('Upload failed with status:', response.status);
+                            alert('Upload failed. Please try again.');
+                        }
+                    } catch (error) {
+                        console.error('Upload error:', error);
+                        alert('Upload failed. Please try again.');
+                    }
+                },
+
+                extractTempImageId(html) {
+                    const match = html.match(/data-temp-image-id="(\d+)"/);
+                    return match ? parseInt(match[1]) : null;
+                },
+
+                addImageToDOM(html) {
+                    // Add to the unified gallery (#all-images instead of separate temp-images-container)
+                    const container = document.getElementById('all-images');
+                    if (!container) {
+                        console.error('all-images container not found');
+                        return;
+                    }
+
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = html;
+                    const newImage = tempDiv.firstElementChild;
+                    if (newImage) {
+                        // Mark as temporary image for delete handling
+                        newImage.setAttribute('data-type', 'temp');
+                        container.appendChild(newImage);
+                        this.setupDeleteButton(newImage);
+                    }
+                },
+
+                setupDeleteButton(imageElement) {
+                    const deleteBtn = imageElement.querySelector('.delete-image-btn');
+                    if (!deleteBtn) return;
+
+                    deleteBtn.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        // Get temp image ID from the parent element's data attribute
+                        const tempImageId = imageElement.dataset.tempImageId || imageElement.dataset.imageId;
+
+                        if (!tempImageId || isNaN(tempImageId)) {
+                            console.error('Invalid temp image ID:', tempImageId);
+                            return;
+                        }
+
+                        // Smooth deletion animation
+                        imageElement.style.transition = 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                        imageElement.style.opacity = '0';
+                        imageElement.style.transform = 'scale(0.8) rotate(-5deg)';
+
+                        // Delete after animation
+                        await new Promise(resolve => setTimeout(resolve, 300));
+                        await this.deleteTempImage(tempImageId, imageElement);
+                    });
+                },
+
+                async deleteTempImage(tempImageId, element) {
+                    try {
+                        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+                        if (!csrfToken) {
+                            console.error('CSRF token not found');
+                            alert('Security error. Please refresh the page.');
+                            return;
+                        }
+
+                        const tempIdInt = parseInt(tempImageId);
+                        console.log(`Deleting temp image ID: ${tempIdInt}`);
+
+                        const response = await fetch(`/items/delete-temp-image/${tempIdInt}/`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': csrfToken.value
+                            }
+                        });
+
+                        console.log('Delete response status:', response.status);
+
+                        let data = null;
+                        try {
+                            data = await response.json();
+                            console.log('Delete response data:', data);
+                        } catch (e) {
+                            console.warn('Could not parse response as JSON:', e);
+                            data = {};
+                        }
+
+                        // Check if successful (status 200-299)
+                        if (response.ok) {
+                            // Remove element from DOM with proper cleanup
+                            if (element && element.parentNode) {
+                                element.remove();
+                            }
+
+                            // Update Alpine state
+                            this.tempImages = this.tempImages.filter(img => img.id !== tempIdInt);
+                            this.tempImageIds = this.tempImages.map(img => img.id).join(',');
+
+                            // Update order numbers for remaining images
+                            this.updateTempImageOrder();
+
+                            console.log('✓ Image deleted successfully');
+                        } else if (response.status === 404) {
+                            // 404 means image not found - still remove from UI
+                            console.warn('Image not found on server (404)');
+                            if (element && element.parentNode) {
+                                element.remove();
+                            }
+                            this.tempImages = this.tempImages.filter(img => img.id !== tempIdInt);
+                            this.tempImageIds = this.tempImages.map(img => img.id).join(',');
+                            this.updateTempImageOrder();
+                        } else {
+                            // Other errors
+                            console.error('Delete failed with status', response.status);
+                            alert('Failed to delete image: ' + (data.error || 'Server error'));
+                        }
+                    } catch (error) {
+                        console.error('Delete error:', error);
+                        // Still try to remove from UI if fetch failed
+                        if (element && element.parentNode) {
+                            element.remove();
+                        }
+                        console.warn('Removed image from UI due to error');
+                    }
+                },
+
+                setupTempImageListeners() {
+                    // Use unified gallery #all-images for drag and drop
+                    const container = document.getElementById('all-images');
+                    if (!container) return;
+
+                    let draggedElement = null;
+                    let ghostElement = null;
+                    let offsetY = 0;
+
+                    container.addEventListener('dragstart', (e) => {
+                        const imageItem = e.target.closest('.image-item');
+                        if (imageItem) {
+                            draggedElement = imageItem;
+
+                            // Create custom drag image
+                            const dragImage = imageItem.cloneNode(true);
+                            dragImage.style.opacity = '0.8';
+                            dragImage.style.transform = 'scale(1)';
+                            document.body.appendChild(dragImage);
+                            dragImage.style.position = 'fixed';
+                            dragImage.style.pointerEvents = 'none';
+                            dragImage.style.top = '-9999px';
+
+                            e.dataTransfer.setDragImage(dragImage, imageItem.offsetWidth / 2, imageItem.offsetHeight / 2);
+
+                            setTimeout(() => dragImage.remove(), 0);
+
+                            // Smooth animation for dragged item
+                            imageItem.style.transition = 'none';
+                            imageItem.classList.add('dragging');
+                            e.dataTransfer.effectAllowed = 'move';
+                        }
+                    });
+
+                    container.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        e.dataTransfer.dropEffect = 'move';
+
+                        const imageItem = e.target.closest('.image-item');
+                        if (imageItem && draggedElement && imageItem !== draggedElement) {
+                            // Remove previous target
+                            container.querySelectorAll('.drag-over-target').forEach(item => {
+                                item.classList.remove('drag-over-target');
+                            });
+
+                            imageItem.classList.add('drag-over-target');
+
+                            // Visual preview of drop position
+                            const rect = imageItem.getBoundingClientRect();
+                            const containerRect = container.getBoundingClientRect();
+                            const midpoint = rect.top + rect.height / 2;
+                            const mouseY = e.clientY;
+
+                            // Smooth transition for drop position preview
+                            if (mouseY < midpoint) {
+                                imageItem.style.borderLeft = '3px solid var(--primary)';
+                                imageItem.style.borderRight = 'none';
+                            } else {
+                                imageItem.style.borderLeft = 'none';
+                                imageItem.style.borderRight = '3px solid var(--primary)';
+                            }
+                        }
+                    });
+
+                    container.addEventListener('dragleave', (e) => {
+                        const imageItem = e.target.closest('.image-item');
+                        if (imageItem) {
+                            imageItem.classList.remove('drag-over-target');
+                            imageItem.style.borderLeft = 'none';
+                            imageItem.style.borderRight = 'none';
+                        }
+                    });
+
+                    container.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        const targetElement = e.target.closest('.image-item');
+
+                        if (draggedElement && targetElement && draggedElement !== targetElement) {
+                            const allItems = Array.from(container.children);
+                            const draggedIndex = allItems.indexOf(draggedElement);
+                            const targetIndex = allItems.indexOf(targetElement);
+
+                            // Determine drop position
+                            const rect = targetElement.getBoundingClientRect();
+                            const midpoint = rect.top + rect.height / 2;
+                            const insertBefore = e.clientY < midpoint;
+
+                            // Smooth reorder with animation
+                            draggedElement.style.transition = 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+
+                            if (insertBefore) {
+                                container.insertBefore(draggedElement, targetElement);
+                            } else {
+                                container.insertBefore(draggedElement, targetElement.nextSibling);
+                            }
+
+                            // Trigger reflow for animation
+                            draggedElement.offsetHeight;
+                            draggedElement.style.transform = 'translateY(0)';
+
+                            this.updateTempImageOrder();
+                            this.updateImageOrder();
+                        }
+
+                        // Cleanup
+                        container.querySelectorAll('.image-item').forEach(item => {
+                            item.classList.remove('drag-over-target');
+                            item.style.borderLeft = 'none';
+                            item.style.borderRight = 'none';
+                        });
+                    });
+
+                    container.addEventListener('dragend', (e) => {
+                        if (draggedElement) {
+                            draggedElement.style.transition = 'all 0.2s ease-out';
+                            draggedElement.classList.remove('dragging');
+                        }
+                        draggedElement = null;
+
+                        container.querySelectorAll('.image-item').forEach(item => {
+                            item.classList.remove('dragging', 'drag-over-target');
+                            item.style.borderLeft = 'none';
+                            item.style.borderRight = 'none';
+                            item.style.opacity = '1';
+                        });
+                    });
+
+                    // Setup delete buttons
+                    const items = container.querySelectorAll('.image-item');
+                    items.forEach(item => {
+                        this.setupDeleteButton(item);
+                    });
+                },
+
+                updateTempImageOrder() {
+                    const container = document.getElementById('temp-images-container');
+                    if (!container) return;
+
+                    const imageItems = container.querySelectorAll('.image-item');
+                    const orderArray = [];
+
+                    imageItems.forEach((item, index) => {
+                        const tempImageId = item.dataset.tempImageId;
+                        const orderSpan = item.querySelector('[data-order-text]');
+                        const primaryBadge = item.querySelector('.primary-badge');
+
+                        // Update order display
+                        if (orderSpan) {
+                            orderSpan.textContent = `Order: ${index + 1}`;
+                        }
+
+                        // Update primary badge (first image is primary)
+                        if (index === 0) {
+                            if (!primaryBadge) {
+                                const badge = document.createElement('div');
+                                badge.className = 'primary-badge';
+                                badge.style.cssText = 'position: absolute; top: 8px; left: 8px; background: var(--primary); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold;';
+                                badge.textContent = '★ Cover';
+                                item.querySelector('.image-container').appendChild(badge);
+                            }
+                        } else {
+                            if (primaryBadge) {
+                                primaryBadge.remove();
+                            }
+                        }
+
+                        orderArray.push(tempImageId);
+                    });
+
+                    // Update temp image IDs and Alpine state
+                    this.tempImageIds = orderArray.join(',');
+                },
+
+                async cleanupTempImages() {
+                    try {
+                        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+                        await fetch('/items/cleanup-temp-images/', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': csrfToken.value
+                            }
+                        });
+                    } catch (error) {
+                        console.error('Cleanup error:', error);
+                    }
+                }
+            }));
+        });
+        </script>
+
+    </body>
+</html>

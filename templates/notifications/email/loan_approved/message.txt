@@ -1,0 +1,18 @@
+{% translate "Your loan request for" %} {{ item.title }} {% translate "has been approved" %}.
+
+{% if start_date %}
+{% translate "Start Date" %}: {{ start_date|date:"F j, Y" }}
+{% endif %}
+
+{% if due_date %}
+{% translate "Due Date" %}: {{ due_date|date:"F j, Y" }}
+{% endif %}
+
+{% translate "Borrower" %}: {{ borrower.get_display_name }}
+{% translate "Lender" %}: {{ lender.get_display_name }}
+
+{% if group %}
+{% translate "Shared via" %}: {{ group.name }}
+{% endif %}
+
+{% translate "You can view all loan details and communicate with the other party through your dashboard" %}.

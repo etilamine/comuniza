@@ -1,0 +1,75 @@
+{% extends "notifications/email/base_email.html" %}
+
+{% block header_title %}{% translate "LOAN RETURNED" %}{% endblock %}
+
+{% block email_content %}
+<div class="success-box">
+    <h2>{% translate "Loan Completed Successfully" %}!</h2>
+    <p><strong>{{ borrower.get_display_name }}</strong> {% translate "has returned" %} <strong>{{ item.title }}</strong> {% translate "to" %} <strong>{{ lender.get_display_name }}</strong>.</p>
+</div>
+
+{% if returned_at %}
+    <div class="data-box">
+        <h3>{% translate "Return Details" %}:</h3>
+        <table class="data-table">
+            <tr>
+                <td>{% translate "Returned on" %}:</td>
+                <td>{{ returned_at|date:"F j, Y, H:i" }}</td>
+            </tr>
+            {% if condition_at_return %}
+                <tr>
+                    <td>{% translate "Condition" %}:</td>
+                    <td>{{ condition_at_return }}</td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
+{% endif %}
+
+<h3>{% translate "Leave a Review" %}</h3>
+<p>{% translate "Your feedback helps build trust in community. Please share your experience with this loan" %}.</p>
+
+<div class="btn-container">
+    <a href="{{ loan_url }}" class="btn">{% translate "Leave Review for" %} {{ borrower.get_display_name }}</a>
+    <a href="{{ item_url }}" class="btn btn-secondary">{% translate "View Item Details" %}</a>
+</div>
+{% endblock %}
+    
+    <div style="color: #333; margin-bottom: 20px;">
+        <h2 style="color: #6f42c1; font-size: 18px; margin-bottom: 10px;">{% translate "Loan completed successfully" %}!</h2>
+        <p style="font-size: 16px; line-height: 1.5;">
+            <strong>{{ borrower.get_display_name }}</strong> {% translate "has returned" %} <strong>{{ item.title }}</strong> {% translate "to" %} <strong>{{ lender.get_display_name }}</strong>.
+        </p>
+        
+        {% if returned_at %}
+            <div style="background: #e9ecef; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                <h3 style="color: #495057; margin-top: 0; font-size: 16px;">{% translate "Return Details" %}:</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                            <td style="padding: 8px; border-bottom: 1px solid #dee2e6; font-weight: bold; width: 150px;">{% translate "Returned on" %}:</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">{{ returned_at|date:"F j, Y, H:i" }}</td>
+                        </tr>
+                    {% if condition_at_return %}
+                        <tr>
+                            <td style="padding: 8px; border-bottom: 1px solid #dee2e6; font-weight: bold;">{% translate "Condition" %}:</td>
+                            <td style="padding: 8px; border-bottom: 1px solid #dee2e6;">{{ condition_at_return }}</td>
+                        </tr>
+                    {% endif %}
+                </table>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div style="text-align: center; margin-top: 30px;">
+        <h3 style="color: #6f42c1; margin-bottom: 15px; font-size: 18px;">{% translate "Leave a Review" %}</h3>
+        <p style="font-size: 14px; color: #666; margin-bottom: 15px;">
+            {% translate "Your feedback helps build trust in the community. Please share your experience with this loan" %}.
+        </p>
+        <a href="{{ loan_url }}" style="display: inline-block; background: #6f42c1; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            {% translate "Leave Review for" %} {{ borrower.get_display_name }}
+        </a>
+        <a href="{{ item_url }}" style="display: inline-block; background: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; margin-left: 10px;">
+            {% translate "View Item Details" %}
+        </a>
+    </div>
+</div>

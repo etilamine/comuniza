@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load thumbnail %}
+{% block title %}{{ group.name }} - {{ SITE_NAME }}{% endblock %}
+
+{% block extra_js %}
+<script>
+function showFullDescription() {
+    document.querySelectorAll('.text-lg.mb-md').forEach(el => {
+        if (el.id !== 'full-description' && el.textContent.includes('read more')) {
+            el.style.display = 'none';
+        }
+    });
+    document.getElementById('full-description').style.display = 'block';
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Group Header -->
+        <!-- Group Image -->
+        {% if group.image %}
+                <img src="{{ group.image.group_large.url }}" alt="{{ group.name }}" class="group-image">
+        {% endif %}
+    <div class="mb-xl">
+        <div class="mb-lg">
+            <h1 class="mb-xs">{{ group.name }}</h1>
+            <p class="text-secondary">{{ group.city }}, {{ group.country }}</p>
+        </div>
+
+        {% if group.description %}
+            {% if group.description|length > 400 %}
+                <div x-data="{ expanded: false }">
+                    <p class="text-lg mb-md group-description" x-show="!expanded">
+                        {{ group.description|truncatechars:400 }}
+                        <a href="#" @click.prevent="expanded = true" class="text-primary">{% translate "read more" %}</a>
+                    </p>
+                    <p class="text-lg mb-md" x-show="expanded" x-cloak>
+                        {{ group.description }}
+                        <a href="#" @click.prevent="expanded = false" class="text-primary">{% translate "read less" %}</a>
+                    </p>
+                </div>
+            {% else %}
+                <p class="text-lg mb-md">{{ group.description }}</p>
+            {% endif %}
+        {% endif %}
+
+
+        <!-- Group Stats -->
+        <div class="grid grid-cols-2 grid-md-4 gap-md mb-lg">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3 class="mb-xs">{{ member_count }}</h3>
+                    <p class="text-sm text-secondary">{% translate "Members" %}</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3 class="mb-xs">{{ item_count }}</h3>
+                    <p class="text-sm text-secondary">{% translate "Items Shared" %}</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3 class="mb-xs">{{ group.created_at|date:"M Y" }}</h3>
+                    <p class="text-sm text-secondary">{% translate "Founded" %}</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3 class="mb-xs">{{ group.privacy|title }}</h3>
+                    <p class="text-sm text-secondary">{% translate "Privacy" %}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        {% if user.is_authenticated %}
+            {% if is_member %}
+            {% if is_admin %}
+                <div class="flex gap-sm mb-lg">
+                    <a href="{% url 'groups:manage' group.slug %}" class="btn btn-primary">{% translate "Manage Group" %}</a>
+                    <a href="{% url 'groups:settings' group.slug %}" class="btn btn-outline">{% translate "Group Settings" %}</a>
+                </div>
+            {% endif %}
+             {% else %}
+                 {% if group.privacy == 'public' %}
+                     <div class="flex gap-sm mb-lg">
+                         <form method="post" action="{% url 'groups:join' group.slug %}">
+                             {% csrf_token %}
+                             <button type="submit" class="btn btn-primary">{% translate "Join Group" %}</button>
+                         </form>
+                     </div>
+                 {% elif group.privacy == 'request' %}
+                     <div class="flex gap-sm mb-lg">
+                         <form method="post" action="{% url 'groups:join' group.slug %}">
+                             {% csrf_token %}
+                             <button type="submit" class="btn btn-primary">{% translate "Request to Join" %}</button>
+                         </form>
+                     </div>
+                 {% else %}
+                     <div class="alert alert-info mb-lg">
+                         {% translate "This is a private group. Membership is by invitation only" %}.
+                     </div>
+                 {% endif %}
+             {% endif %}
+        {% else %}
+            <div class="alert alert-info mb-lg">
+                <a href="{% url 'account_login' %}" class="text-primary">{% translate "Login" %}</a> {% translate "to join this group and access shared items" %}.
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Recent Items -->
+    {% if recent_items %}
+        <div class="mb-xl">
+            <h2 class="mb-lg">{% translate "Recently Shared Items" %}</h2>
+            <div class="grid grid-cols-1 grid-md-2 grid-lg-3 gap-md">
+                {% for item in recent_items %}
+                    <a href="{% url 'item_detail' item.identifier %}" class="item-card">
+                        <div class="item-card-img-wrapper">
+                            {% if item.images.exists %}
+                                <img src="{{ item.images.first.image.item_detail.url }}" alt="{{ item.title }}" class="item-card-img">
+                            {% else %}
+                                <div class="w-full h-full bg-secondary flex items-center justify-center text-secondary">
+                                    [{% translate "IMG" %}]
+                                </div>
+                            {% endif %}
+                            <div class="item-card-status">
+                                <span class="badge badge-{{ item.status }}">
+                                    {% if item.status == 'available' %}{% translate "Available" %}{% else %}{{ item.get_status_display }}{% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="item-card-body">
+                            <h4 class="item-card-title">{{ item.title }}</h4>
+                            {% if item.author %}
+                                <p class="item-card-author">{{ item.author }}</p>
+                            {% endif %}
+                            {% if item.category %}
+                                <div class="item-card-meta">
+                                    <span>{{ item.category.name }}</span>
+                                    <span>{{ item.owner.get_display_name }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Group Members (if member or public group info) -->
+    {% if is_member or group.privacy == 'public' %}
+        <div class="mb-xl">
+            <h2 class="mb-lg">{% translate "Group Members" %}</h2>
+            <div class="grid grid-cols-2 grid-md-4 grid-lg-6 gap-md">
+                <!-- Group Owner -->
+                <div class="flex items-center gap-sm">
+                    <div class="avatar avatar-sm">
+                        {% if group.owner.avatar %}
+                            <img src="{{ group.owner.avatar.avatar_small.url }}" alt="{{ group.owner.username }}">
+                        {% else %}
+                            <div class="avatar-placeholder">
+                                {{ group.owner.username|first|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium">{{ group.owner.get_display_name }}</p>
+                        <p class="text-xs text-secondary">{% translate "Owner" %}</p>
+                    </div>
+                </div>
+
+                <!-- Other members would be listed here -->
+                <!-- This is a placeholder for now -->
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Empty State -->
+    {% if not recent_items %}
+        <div class="empty-state">
+            <div class="empty-state-icon"></div>
+            <h3 class="mb-sm">{% translate "No items shared yet" %}</h3>
+            <p class="text-secondary mb-lg">
+                {% if is_member %}
+                    {% translate "Be the first to share something with the group" %}!
+                {% else %}
+                    {% translate "Join the group to see shared items" %}.
+                {% endif %}
+            </p>
+            {% if is_member %}
+                <a href="{% url 'items:create' %}" class="btn btn-primary">{% translate "Share an Item" %}</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

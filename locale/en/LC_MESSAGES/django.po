@@ -1,0 +1,6034 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-11 11:08+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: apps/badges/models.py:18
+msgid "Bronze"
+msgstr ""
+
+#: apps/badges/models.py:19
+msgid "Silver"
+msgstr ""
+
+#: apps/badges/models.py:20
+msgid "Gold"
+msgstr ""
+
+#: apps/badges/models.py:21
+msgid "Platinum"
+msgstr ""
+
+#: apps/badges/models.py:22 apps/badges/models.py:30
+msgid "Special"
+msgstr ""
+
+#: apps/badges/models.py:26 apps/badges/models.py:186
+#: templates/badges/leaderboard.html:82
+msgid "Lending"
+msgstr ""
+
+#: apps/badges/models.py:27 apps/badges/models.py:187
+#: templates/badges/leaderboard.html:86
+msgid "Borrowing"
+msgstr ""
+
+#: apps/badges/models.py:28
+msgid "Community"
+msgstr ""
+
+#: apps/badges/models.py:29 apps/badges/models.py:188
+#: templates/badges/leaderboard.html:90 templates/users/profile.html:80
+msgid "Reputation"
+msgstr ""
+
+#: apps/badges/models.py:34 apps/groups/models.py:23 apps/items/models.py:17
+msgid "name"
+msgstr ""
+
+#: apps/badges/models.py:35 apps/groups/models.py:24 apps/items/models.py:18
+#: apps/items/models.py:113
+msgid "slug"
+msgstr ""
+
+#: apps/badges/models.py:36 apps/badges/models.py:257 apps/groups/models.py:25
+#: apps/items/models.py:19 apps/items/models.py:114
+msgid "description"
+msgstr ""
+
+#: apps/badges/models.py:38 apps/items/models.py:21
+msgid "icon"
+msgstr ""
+
+#: apps/badges/models.py:38 apps/items/models.py:21
+msgid "Font Awesome icon class"
+msgstr ""
+
+#: apps/badges/models.py:43
+msgid "badge type"
+msgstr ""
+
+#: apps/badges/models.py:46 apps/items/models.py:121
+msgid "category"
+msgstr ""
+
+#: apps/badges/models.py:49 apps/badges/models.py:256
+msgid "points"
+msgstr ""
+
+#: apps/badges/models.py:49
+msgid "Reputation points awarded"
+msgstr ""
+
+#: apps/badges/models.py:53 apps/badges/models.py:167 apps/groups/models.py:101
+#: apps/items/models.py:72 apps/items/models.py:257 apps/messaging/models.py:34
+#: apps/messaging/models.py:121
+msgid "active"
+msgstr ""
+
+#: apps/badges/models.py:55
+msgid "secret badge"
+msgstr ""
+
+#: apps/badges/models.py:57
+msgid "Badge is hidden until earned"
+msgstr ""
+
+#: apps/badges/models.py:59
+msgid "display order"
+msgstr ""
+
+#: apps/badges/models.py:62 apps/badges/models.py:278 apps/groups/models.py:99
+#: apps/groups/models.py:313 apps/items/models.py:71 apps/items/models.py:293
+#: apps/items/models.py:477 apps/loans/models.py:121 apps/loans/models.py:373
+#: apps/loans/models.py:600 apps/loans/models.py:671
+#: apps/messaging/models.py:32 apps/messaging/models.py:164
+#: apps/notifications/models.py:62 apps/users/models.py:54
+msgid "created at"
+msgstr ""
+
+#: apps/badges/models.py:66 apps/badges/models.py:94 apps/badges/models.py:146
+msgid "badge"
+msgstr ""
+
+#: apps/badges/models.py:67
+msgid "badges"
+msgstr ""
+
+#: apps/badges/models.py:88 apps/badges/models.py:197 apps/badges/models.py:249
+#: apps/groups/models.py:246 apps/items/models.py:504 apps/loans/models.py:408
+#: apps/loans/models.py:549 apps/loans/models.py:622
+#: apps/messaging/models.py:116 apps/notifications/models.py:31
+msgid "user"
+msgstr ""
+
+#: apps/badges/models.py:98
+msgid "earned at"
+msgstr ""
+
+#: apps/badges/models.py:100
+msgid "progress"
+msgstr ""
+
+#: apps/badges/models.py:102
+msgid "Progress percentage for multi-step badges"
+msgstr ""
+
+#: apps/badges/models.py:105
+msgid "context data"
+msgstr ""
+
+#: apps/badges/models.py:108
+msgid "Additional data about how the badge was earned"
+msgstr ""
+
+#: apps/badges/models.py:113
+msgid "user badge"
+msgstr ""
+
+#: apps/badges/models.py:114
+msgid "user badges"
+msgstr ""
+
+#: apps/badges/models.py:133
+msgid "Loan Completed"
+msgstr ""
+
+#: apps/badges/models.py:134
+msgid "Item Shared"
+msgstr ""
+
+#: apps/badges/models.py:135
+msgid "Review Given"
+msgstr ""
+
+#: apps/badges/models.py:136
+msgid "Group Joined"
+msgstr ""
+
+#: apps/badges/models.py:137
+msgid "Streak Maintained"
+msgstr ""
+
+#: apps/badges/models.py:138
+msgid "Threshold Reached"
+msgstr ""
+
+#: apps/badges/models.py:139
+msgid "Special Action"
+msgstr ""
+
+#: apps/badges/models.py:151
+msgid "trigger type"
+msgstr ""
+
+#: apps/badges/models.py:154
+msgid "threshold value"
+msgstr ""
+
+#: apps/badges/models.py:157
+msgid "Value needed to trigger this achievement"
+msgstr ""
+
+#: apps/badges/models.py:160
+msgid "conditions"
+msgstr ""
+
+#: apps/badges/models.py:163
+msgid "Additional conditions for earning this achievement"
+msgstr ""
+
+#: apps/badges/models.py:171
+msgid "achievement"
+msgstr ""
+
+#: apps/badges/models.py:172
+msgid "achievements"
+msgstr ""
+
+#: apps/badges/models.py:185 templates/badges/leaderboard.html:78
+msgid "Overall"
+msgstr ""
+
+#: apps/badges/models.py:189
+msgid "Streak"
+msgstr ""
+
+#: apps/badges/models.py:190
+msgid "Monthly"
+msgstr ""
+
+#: apps/badges/models.py:202
+msgid "leaderboard type"
+msgstr ""
+
+#: apps/badges/models.py:205
+msgid "score"
+msgstr ""
+
+#: apps/badges/models.py:207
+msgid "rank"
+msgstr ""
+
+#: apps/badges/models.py:210
+msgid "period start"
+msgstr ""
+
+#: apps/badges/models.py:211
+msgid "period end"
+msgstr ""
+
+#: apps/badges/models.py:214
+msgid "last updated"
+msgstr ""
+
+#: apps/badges/models.py:218
+msgid "leaderboard"
+msgstr ""
+
+#: apps/badges/models.py:219
+msgid "leaderboards"
+msgstr ""
+
+#: apps/badges/models.py:238
+msgid "Points Earned"
+msgstr ""
+
+#: apps/badges/models.py:239
+msgid "Bonus Points"
+msgstr ""
+
+#: apps/badges/models.py:240
+msgid "Points Deducted"
+msgstr ""
+
+#: apps/badges/models.py:241
+msgid "Streak Bonus"
+msgstr ""
+
+#: apps/badges/models.py:242
+msgid "Achievement"
+msgstr ""
+
+#: apps/badges/models.py:254
+msgid "transaction type"
+msgstr ""
+
+#: apps/badges/models.py:266 apps/messaging/models.py:60
+#: apps/notifications/models.py:50
+msgid "related loan"
+msgstr ""
+
+#: apps/badges/models.py:274
+msgid "related badge"
+msgstr ""
+
+#: apps/badges/models.py:282 apps/badges/models.py:283
+msgid "reputation points"
+msgstr ""
+
+#: apps/groups/admin.py:65
+msgid "Privacy & Settings"
+msgstr ""
+
+#: apps/groups/admin.py:75 apps/groups/admin.py:142 apps/items/admin.py:79
+#: templates/items/item_form.html:285 templates/items/item_list.html:69
+#: templates/messaging/partials/loan_actions.html:52
+#: templates/notifications/email/loan_message/message.html:23
+#: templates/notifications/email/loan_message/message.txt:10
+msgid "Status"
+msgstr ""
+
+#: apps/groups/admin.py:79 apps/items/admin.py:216
+msgid "Statistics"
+msgstr ""
+
+#: apps/groups/admin.py:86 apps/items/admin.py:83 apps/items/admin.py:228
+#: apps/items/admin.py:253 apps/items/admin.py:278 apps/items/admin.py:303
+#: apps/loans/admin.py:147 apps/loans/admin.py:276 apps/loans/admin.py:377
+msgid "Metadata"
+msgstr ""
+
+#: apps/groups/admin.py:111 templates/groups/accept_invitation.html:38
+msgid "Invitation Details"
+msgstr ""
+
+#: apps/groups/admin.py:148 apps/loans/admin.py:97
+msgid "Dates"
+msgstr ""
+
+#: apps/groups/forms.py:71
+msgid "Username or Email"
+msgstr ""
+
+#: apps/groups/forms.py:86
+msgid "Personal Message (optional)"
+msgstr ""
+
+#: apps/groups/forms.py:104
+msgid "Please enter a username or email address."
+msgstr ""
+
+#: apps/groups/forms.py:115
+msgid "This user is already a member of the group."
+msgstr ""
+
+#: apps/groups/forms.py:119
+msgid "This user has already been invited to the group."
+msgstr ""
+
+#: apps/groups/forms.py:124
+msgid "Please enter a valid username or email address."
+msgstr ""
+
+#: apps/groups/forms.py:131
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: apps/groups/forms.py:139
+msgid "A user with this email is already a member of the group."
+msgstr ""
+
+#: apps/groups/forms.py:143
+msgid "This email address has already been invited to the group."
+msgstr ""
+
+#: apps/groups/models.py:18 templates/groups/group_settings.html:156
+msgid "Private - Invite only"
+msgstr ""
+
+#: apps/groups/models.py:19 templates/groups/group_settings.html:157
+msgid "Public - Anyone can join"
+msgstr ""
+
+#: apps/groups/models.py:20 templates/groups/group_settings.html:158
+msgid "Join by request"
+msgstr ""
+
+#: apps/groups/models.py:27 apps/loans/models.py:109
+msgid "privacy"
+msgstr ""
+
+#: apps/groups/models.py:30
+msgid "group image"
+msgstr ""
+
+#: apps/groups/models.py:35
+msgid "city"
+msgstr ""
+
+#: apps/groups/models.py:38
+msgid "City where the group is located"
+msgstr ""
+
+#: apps/groups/models.py:41
+msgid "state/region"
+msgstr ""
+
+#: apps/groups/models.py:44
+msgid "State, province, or region"
+msgstr ""
+
+#: apps/groups/models.py:46
+msgid "country"
+msgstr ""
+
+#: apps/groups/models.py:48
+msgid "latitude"
+msgstr ""
+
+#: apps/groups/models.py:53
+msgid "Latitude coordinate (auto-filled if possible)"
+msgstr ""
+
+#: apps/groups/models.py:56
+msgid "longitude"
+msgstr ""
+
+#: apps/groups/models.py:61
+msgid "Longitude coordinate (auto-filled if possible)"
+msgstr ""
+
+#: apps/groups/models.py:69 apps/items/models.py:220
+msgid "owner"
+msgstr ""
+
+#: apps/groups/models.py:76 templates/groups/group_list.html:54
+#: templates/groups/group_list.html:90 templates/users/profile.html:193
+msgid "members"
+msgstr ""
+
+#: apps/groups/models.py:81
+msgid "allow members to invite others"
+msgstr ""
+
+#: apps/groups/models.py:84
+msgid "require approval for new items"
+msgstr ""
+
+#: apps/groups/models.py:87
+msgid "loan visibility"
+msgstr ""
+
+#: apps/groups/models.py:90 templates/groups/group_settings.html:230
+msgid "Hidden from members"
+msgstr ""
+
+#: apps/groups/models.py:91 templates/groups/group_settings.html:229
+msgid "Admins only"
+msgstr ""
+
+#: apps/groups/models.py:92 templates/groups/group_settings.html:228
+msgid "Public to members"
+msgstr ""
+
+#: apps/groups/models.py:95
+msgid "Who can see loans made within this group"
+msgstr ""
+
+#: apps/groups/models.py:100 apps/items/models.py:294 apps/items/models.py:478
+#: apps/loans/models.py:122 apps/loans/models.py:374 apps/loans/models.py:459
+#: apps/loans/models.py:601 apps/loans/models.py:672
+#: apps/messaging/models.py:33 apps/users/models.py:55
+msgid "updated at"
+msgstr ""
+
+#: apps/groups/models.py:105 apps/groups/models.py:240
+#: apps/groups/models.py:297 apps/loans/models.py:58 apps/loans/models.py:628
+msgid "group"
+msgstr ""
+
+#: apps/groups/models.py:106 apps/items/models.py:225
+msgid "groups"
+msgstr ""
+
+#: apps/groups/models.py:226 templates/groups/manage_group.html:207
+msgid "Member"
+msgstr ""
+
+#: apps/groups/models.py:227 templates/groups/manage_group.html:205
+msgid "Admin"
+msgstr ""
+
+#: apps/groups/models.py:231 apps/loans/models.py:27
+msgid "Active"
+msgstr ""
+
+#: apps/groups/models.py:232 apps/groups/models.py:287
+msgid "Pending"
+msgstr ""
+
+#: apps/groups/models.py:233
+msgid "Banned"
+msgstr ""
+
+#: apps/groups/models.py:249
+msgid "role"
+msgstr ""
+
+#: apps/groups/models.py:252 apps/groups/models.py:307 apps/items/models.py:183
+#: apps/loans/models.py:64
+msgid "status"
+msgstr ""
+
+#: apps/groups/models.py:256 apps/messaging/models.py:120
+msgid "joined at"
+msgstr ""
+
+#: apps/groups/models.py:263 apps/groups/models.py:304
+msgid "invited by"
+msgstr ""
+
+#: apps/groups/models.py:268
+msgid "group membership"
+msgstr ""
+
+#: apps/groups/models.py:269
+msgid "group memberships"
+msgstr ""
+
+#: apps/groups/models.py:288
+msgid "Accepted"
+msgstr ""
+
+#: apps/groups/models.py:289
+msgid "Declined"
+msgstr ""
+
+#: apps/groups/models.py:290
+msgid "Expired"
+msgstr ""
+
+#: apps/groups/models.py:299 apps/users/models.py:37
+msgid "email address"
+msgstr ""
+
+#: apps/groups/models.py:309
+msgid "token"
+msgstr ""
+
+#: apps/groups/models.py:310 apps/messaging/models.py:182
+#: apps/messaging/models.py:241 apps/notifications/models.py:42
+msgid "message"
+msgstr ""
+
+#: apps/groups/models.py:314
+msgid "expires at"
+msgstr ""
+
+#: apps/groups/models.py:315
+msgid "responded at"
+msgstr ""
+
+#: apps/groups/models.py:319
+msgid "group invitation"
+msgstr ""
+
+#: apps/groups/models.py:320
+msgid "group invitations"
+msgstr ""
+
+#: apps/items/admin.py:44
+msgid "Has Form Config"
+msgstr ""
+
+#: apps/items/admin.py:61
+msgid "Form Configuration"
+msgstr ""
+
+#: apps/items/admin.py:72
+msgid ""
+"Configure form field ordering and visibility for this category. Use JSON "
+"format. Example: ['title', 'category', 'author'] for field order."
+msgstr ""
+
+#: apps/items/admin.py:97 apps/items/models.py:67
+msgid ""
+"JSON array of field names in display order. Fields not listed will appear "
+"after ordered fields. Example: ['title', 'category', 'author', 'description']"
+msgstr ""
+
+#: apps/items/admin.py:101
+msgid ""
+"JSON array of field names that should be required for this category. "
+"Example: ['author', 'publisher', 'isbn']"
+msgstr ""
+
+#: apps/items/admin.py:105
+msgid ""
+"JSON array of field names that should be optional for this category. "
+"Example: ['year', 'estimated_value']"
+msgstr ""
+
+#: apps/items/admin.py:109
+msgid ""
+"JSON array of field names that should be hidden for this category. Example: "
+"['book_format', 'subjects']"
+msgstr ""
+
+#: apps/items/admin.py:113
+msgid ""
+"JSON object mapping field names to custom labels. Example: {'author': "
+"'Brand', 'publisher': 'Retailer'}"
+msgstr ""
+
+#: apps/items/admin.py:117
+msgid ""
+"JSON object mapping field names to custom help text. Example: {'isbn': "
+"'Serial number for warranty purposes'}"
+msgstr ""
+
+#: apps/items/admin.py:181 templates/loans/my_loans.html:72
+#: templates/loans/my_loans.html:116 templates/loans/my_loans.html:155
+#: templates/loans/my_loans.html:203 templates/loans/my_loans.html:252
+#: templates/loans/my_loans.html:287 templates/loans/my_loans.html:323
+#: templates/loans/my_loans.html:370 templates/loans/my_loans.html:409
+msgid "Details"
+msgstr ""
+
+#: apps/items/admin.py:194
+msgid "Lending Information"
+msgstr ""
+
+#: apps/items/admin.py:206
+msgid "Availability"
+msgstr ""
+
+#: apps/items/models.py:29
+msgid "parent category"
+msgstr ""
+
+#: apps/items/models.py:34
+msgid "required fields"
+msgstr ""
+
+#: apps/items/models.py:37
+msgid "JSON list of field names that should be required for this category"
+msgstr ""
+
+#: apps/items/models.py:40
+msgid "optional fields"
+msgstr ""
+
+#: apps/items/models.py:43
+msgid "JSON list of field names that should be optional for this category"
+msgstr ""
+
+#: apps/items/models.py:46
+msgid "hidden fields"
+msgstr ""
+
+#: apps/items/models.py:49
+msgid "JSON list of field names that should be hidden for this category"
+msgstr ""
+
+#: apps/items/models.py:52
+msgid "field labels"
+msgstr ""
+
+#: apps/items/models.py:55
+msgid "JSON object mapping field names to custom labels for this category"
+msgstr ""
+
+#: apps/items/models.py:58
+msgid "field help text"
+msgstr ""
+
+#: apps/items/models.py:61
+msgid "JSON object mapping field names to custom help text for this category"
+msgstr ""
+
+#: apps/items/models.py:64
+msgid "field order"
+msgstr ""
+
+#: apps/items/models.py:76
+msgid "item category"
+msgstr ""
+
+#: apps/items/models.py:77
+msgid "item categories"
+msgstr ""
+
+#: apps/items/models.py:97
+msgid "New"
+msgstr ""
+
+#: apps/items/models.py:98
+msgid "Excellent"
+msgstr ""
+
+#: apps/items/models.py:99
+msgid "Good"
+msgstr ""
+
+#: apps/items/models.py:100
+msgid "Fair"
+msgstr ""
+
+#: apps/items/models.py:101
+msgid "Poor"
+msgstr ""
+
+#: apps/items/models.py:105 templates/groups/group_detail.html:122
+#: templates/items/item_detail.html:44 templates/items/item_list.html:72
+#: templates/items/item_list.html:153 templates/items/item_list.html:242
+#: templates/items/my_items.html:30 templates/items/my_items.html:112
+#: templates/items/my_items.html:198
+msgid "Available"
+msgstr ""
+
+#: apps/items/models.py:106 templates/items/item_detail.html:46
+#: templates/items/item_list.html:73 templates/items/item_list.html:155
+#: templates/items/item_list.html:244 templates/items/my_items.html:114
+#: templates/items/my_items.html:200
+msgid "Borrowed"
+msgstr ""
+
+#: apps/items/models.py:107
+msgid "Not Right Now"
+msgstr ""
+
+#: apps/items/models.py:108
+msgid "Special Conditions"
+msgstr ""
+
+#: apps/items/models.py:112 apps/notifications/models.py:41
+msgid "title"
+msgstr ""
+
+#: apps/items/models.py:126
+msgid "author/brand"
+msgstr ""
+
+#: apps/items/models.py:129 templates/items/item_form.html:102
+msgid "Author for books, brand for tools/equipment"
+msgstr ""
+
+#: apps/items/models.py:132
+msgid "publisher"
+msgstr ""
+
+#: apps/items/models.py:135
+msgid "Publisher for books"
+msgstr ""
+
+#: apps/items/models.py:138
+msgid "languages"
+msgstr ""
+
+#: apps/items/models.py:141
+msgid "Languages (comma-separated for books)"
+msgstr ""
+
+#: apps/items/models.py:144
+msgid "book format"
+msgstr ""
+
+#: apps/items/models.py:147
+msgid "Paperback"
+msgstr ""
+
+#: apps/items/models.py:148
+msgid "Hardcover"
+msgstr ""
+
+#: apps/items/models.py:149
+msgid "E-book"
+msgstr ""
+
+#: apps/items/models.py:150
+msgid "Audiobook"
+msgstr ""
+
+#: apps/items/models.py:151 templates/bug_report.html:36
+msgid "Other"
+msgstr ""
+
+#: apps/items/models.py:154 templates/items/item_form.html:150
+msgid "Format for books"
+msgstr ""
+
+#: apps/items/models.py:157
+msgid "subjects"
+msgstr ""
+
+#: apps/items/models.py:160
+msgid "Subjects/topics for books (comma-separated)"
+msgstr ""
+
+#: apps/items/models.py:163
+msgid "ISBN/Serial Number"
+msgstr ""
+
+#: apps/items/models.py:166
+msgid "ISBN for books, serial number for equipment"
+msgstr ""
+
+#: apps/items/models.py:168
+msgid "year"
+msgstr ""
+
+#: apps/items/models.py:170 templates/items/item_confirm_delete.html:47
+#: templates/items/item_detail.html:106
+msgid "condition"
+msgstr ""
+
+#: apps/items/models.py:173
+msgid "estimated value"
+msgstr ""
+
+#: apps/items/models.py:178
+msgid "Estimated replacement value in local currency"
+msgstr ""
+
+#: apps/items/models.py:186 templates/items/item_list.html:281
+msgid "1 day"
+msgstr ""
+
+#: apps/items/models.py:187
+msgid "3 days"
+msgstr ""
+
+#: apps/items/models.py:188 templates/items/item_list.html:285
+msgid "1 week"
+msgstr ""
+
+#: apps/items/models.py:189 templates/items/item_list.html:287
+msgid "2 weeks"
+msgstr ""
+
+#: apps/items/models.py:190 templates/items/item_list.html:289
+msgid "3 weeks"
+msgstr ""
+
+#: apps/items/models.py:191 templates/items/item_list.html:291
+msgid "1 month"
+msgstr ""
+
+#: apps/items/models.py:192 templates/items/item_list.html:293
+msgid "2 months"
+msgstr ""
+
+#: apps/items/models.py:193 templates/items/item_list.html:295
+msgid "3 months"
+msgstr ""
+
+#: apps/items/models.py:197
+msgid "maximum loan days"
+msgstr ""
+
+#: apps/items/models.py:200
+msgid "Maximum number of days this item can be borrowed"
+msgstr ""
+
+#: apps/items/models.py:203
+msgid "requires deposit"
+msgstr ""
+
+#: apps/items/models.py:205
+msgid "Whether borrowers need to provide a deposit"
+msgstr ""
+
+#: apps/items/models.py:208 apps/loans/models.py:81
+msgid "deposit amount"
+msgstr ""
+
+#: apps/items/models.py:226
+msgid "Groups where this item is available"
+msgstr ""
+
+#: apps/items/models.py:230 apps/users/models.py:192
+#: templates/users/privacy_settings.html:156
+msgid "Public"
+msgstr ""
+
+#: apps/items/models.py:231 apps/users/models.py:193
+#: templates/items/item_detail.html:53 templates/items/my_items.html:121
+#: templates/items/my_items.html:208 templates/users/privacy_settings.html:166
+msgid "Private"
+msgstr ""
+
+#: apps/items/models.py:232 apps/users/models.py:194
+#: templates/items/item_detail.html:53 templates/items/my_items.html:121
+#: templates/items/my_items.html:208
+msgid "Restricted"
+msgstr ""
+
+#: apps/items/models.py:236
+msgid "visibility"
+msgstr ""
+
+#: apps/items/models.py:240
+msgid ""
+"Public: visible to everyone, Private: hidden, Restricted: only group members"
+msgstr ""
+
+#: apps/items/models.py:248
+msgid "current borrower"
+msgstr ""
+
+#: apps/items/models.py:253
+msgid "allow reservations"
+msgstr ""
+
+#: apps/items/models.py:255
+msgid "Allow users to reserve this item when it's borrowed"
+msgstr ""
+
+#: apps/items/models.py:260
+msgid "cover URL"
+msgstr ""
+
+#: apps/items/models.py:260
+msgid "External cover URL from API"
+msgstr ""
+
+#: apps/items/models.py:262
+msgid "cover source"
+msgstr ""
+
+#: apps/items/models.py:270
+msgid "Source of the cover image"
+msgstr ""
+
+#: apps/items/models.py:273
+msgid "cover fetched at"
+msgstr ""
+
+#: apps/items/models.py:276
+msgid "When the cover was fetched from external API"
+msgstr ""
+
+#: apps/items/models.py:279
+msgid "ISBN lookup attempted"
+msgstr ""
+
+#: apps/items/models.py:281
+msgid "Whether we've tried to look up this ISBN"
+msgstr ""
+
+#: apps/items/models.py:286
+msgid "unique identifier"
+msgstr ""
+
+#: apps/items/models.py:291
+msgid "Unique item identifier (e.g., ITEM-XXXX)"
+msgstr ""
+
+#: apps/items/models.py:295
+msgid "views count"
+msgstr ""
+
+#: apps/items/models.py:296
+msgid "times borrowed"
+msgstr ""
+
+#: apps/items/models.py:300 apps/items/models.py:411 apps/items/models.py:451
+#: apps/items/models.py:510 apps/loans/models.py:39
+#: templates/items/item_list.html:113
+msgid "item"
+msgstr ""
+
+#: apps/items/models.py:301 templates/groups/group_list.html:55
+#: templates/groups/group_list.html:92
+msgid "items"
+msgstr ""
+
+#: apps/items/models.py:413
+msgid "image"
+msgstr ""
+
+#: apps/items/models.py:414
+msgid "caption"
+msgstr ""
+
+#: apps/items/models.py:415
+msgid "primary image"
+msgstr ""
+
+#: apps/items/models.py:416
+msgid "order"
+msgstr ""
+
+#: apps/items/models.py:419 apps/messaging/models.py:251
+msgid "uploaded at"
+msgstr ""
+
+#: apps/items/models.py:423
+msgid "item image"
+msgstr ""
+
+#: apps/items/models.py:424
+msgid "item images"
+msgstr ""
+
+#: apps/items/models.py:457 apps/loans/models.py:329
+msgid "reviewer"
+msgstr ""
+
+#: apps/items/models.py:465 apps/loans/models.py:127 apps/loans/models.py:323
+msgid "loan"
+msgstr ""
+
+#: apps/items/models.py:470 apps/loans/models.py:346
+msgid "rating"
+msgstr ""
+
+#: apps/items/models.py:472 apps/loans/models.py:348
+msgid "Rating from 1 to 5"
+msgstr ""
+
+#: apps/items/models.py:474 apps/loans/models.py:350
+msgid "comment"
+msgstr ""
+
+#: apps/items/models.py:482
+msgid "item review"
+msgstr ""
+
+#: apps/items/models.py:483
+msgid "item reviews"
+msgstr ""
+
+#: apps/items/models.py:512 apps/loans/models.py:123
+msgid "notes"
+msgstr ""
+
+#: apps/items/models.py:514
+msgid "notify when available"
+msgstr ""
+
+#: apps/items/models.py:516
+msgid "Send notification when this item becomes available"
+msgstr ""
+
+#: apps/items/models.py:520
+msgid "added at"
+msgstr ""
+
+#: apps/items/models.py:524
+msgid "wishlist item"
+msgstr ""
+
+#: apps/items/models.py:525
+msgid "wishlist items"
+msgstr ""
+
+#: apps/loans/admin.py:88
+#: templates/notifications/email/loan_requested/message.html:17
+msgid "Request Details"
+msgstr ""
+
+#: apps/loans/admin.py:112
+msgid "Deposit"
+msgstr ""
+
+#: apps/loans/admin.py:123
+msgid "Extension"
+msgstr ""
+
+#: apps/loans/admin.py:135
+msgid "Condition & Damage"
+msgstr ""
+
+#: apps/loans/admin.py:173
+msgid "Approve selected loans"
+msgstr ""
+
+#: apps/loans/admin.py:191
+msgid "Mark selected loans as active"
+msgstr ""
+
+#: apps/loans/admin.py:209
+msgid "Mark selected loans as returned"
+msgstr ""
+
+#: apps/loans/admin.py:255
+#: templates/notifications/email/loan_review/message.txt:5
+msgid "Rating"
+msgstr ""
+
+#: apps/loans/admin.py:266
+msgid "Feedback"
+msgstr ""
+
+#: apps/loans/admin.py:328
+msgid "Lending Stats"
+msgstr ""
+
+#: apps/loans/admin.py:337
+msgid "Borrowing Stats"
+msgstr ""
+
+#: apps/loans/admin.py:346
+msgid "Overall Stats"
+msgstr ""
+
+#: apps/loans/admin.py:356
+msgid "Reliability Metrics"
+msgstr ""
+
+#: apps/loans/admin.py:367
+msgid "Badges & Achievements"
+msgstr ""
+
+#: apps/loans/admin.py:395
+msgid "Recalculate ratings for selected users"
+msgstr ""
+
+#: apps/loans/forms.py:20
+msgid "Message to lender"
+msgstr ""
+
+#: apps/loans/forms.py:24
+msgid "Introduce yourself and explain why you'd like to borrow this item..."
+msgstr ""
+
+#: apps/loans/forms.py:29
+msgid "Optional message to the item owner"
+msgstr ""
+
+#: apps/loans/forms.py:33
+msgid "Share via group"
+msgstr ""
+
+#: apps/loans/forms.py:36
+msgid "Optional: Choose a group you share with the owner"
+msgstr ""
+
+#: apps/loans/forms.py:57
+msgid "No group (direct request)"
+msgstr ""
+
+#: apps/loans/forms.py:59
+msgid "No common groups available"
+msgstr ""
+
+#: apps/loans/forms.py:60
+msgid "You don't share any groups with this owner"
+msgstr ""
+
+#: apps/loans/forms.py:67 apps/loans/views.py:235
+msgid "You cannot borrow this item."
+msgstr ""
+
+#: apps/loans/forms.py:77
+msgid "You already have an active loan request for this item."
+msgstr ""
+
+#: apps/loans/forms.py:106
+msgid "Share your experience..."
+msgstr ""
+
+#: apps/loans/forms.py:120
+msgid "Item condition (received)"
+msgstr ""
+
+#: apps/loans/forms.py:121
+msgid "How was the condition when you received it?"
+msgstr ""
+
+#: apps/loans/forms.py:123
+msgid "Item condition (returned)"
+msgstr ""
+
+#: apps/loans/forms.py:124
+msgid "How was the condition when it was returned?"
+msgstr ""
+
+#: apps/loans/forms.py:139
+msgid "Please provide a rating."
+msgstr ""
+
+#: apps/loans/forms.py:150
+msgid "Additional days requested"
+msgstr ""
+
+#: apps/loans/forms.py:155
+msgid "Enter number of days"
+msgstr ""
+
+#: apps/loans/forms.py:157
+msgid "How many additional days do you need?"
+msgstr ""
+
+#: apps/loans/forms.py:161
+msgid "Reason for extension"
+msgstr ""
+
+#: apps/loans/forms.py:165
+msgid "Please explain why you need an extension..."
+msgstr ""
+
+#: apps/loans/forms.py:186
+msgid "Only the borrower can request extensions."
+msgstr ""
+
+#: apps/loans/forms.py:190
+msgid "Extensions can only be requested for active loans."
+msgstr ""
+
+#: apps/loans/forms.py:194
+msgid "An extension request is already pending."
+msgstr ""
+
+#: apps/loans/forms.py:214
+msgid "Extensions are not allowed for this loan."
+msgstr ""
+
+#: apps/loans/forms.py:217
+#, python-format
+msgid "Maximum extension days allowed: %(max_days)s."
+msgstr ""
+
+#: apps/loans/forms.py:236 templates/loans/my_loans.html:404
+#: templates/notifications/email/loan_extension_decision/message.html:35
+#: templates/notifications/email/loan_extension_request/message.html:11
+#: templates/notifications/email/loan_extension_request/message.txt:9
+msgid "Reason"
+msgstr ""
+
+#: apps/loans/forms.py:241
+msgid "Optional reason..."
+msgstr ""
+
+#: apps/loans/forms.py:248 templates/loans/loan_detail.html:213
+msgid "Condition at return"
+msgstr ""
+
+#: apps/loans/forms.py:252
+msgid "e.g., Good condition"
+msgstr ""
+
+#: apps/loans/forms.py:268
+msgid "Only the lender can approve loans."
+msgstr ""
+
+#: apps/loans/forms.py:271
+msgid "Only the lender can reject loans."
+msgstr ""
+
+#: apps/loans/forms.py:274
+msgid "Only the borrower can mark items as returned."
+msgstr ""
+
+#: apps/loans/forms.py:277
+msgid "Only the lender can confirm returns."
+msgstr ""
+
+#: apps/loans/forms.py:282
+msgid "Only the borrower can cancel their own loan request."
+msgstr ""
+
+#: apps/loans/forms.py:284
+msgid "Only the lender can cancel approved loans."
+msgstr ""
+
+#: apps/loans/forms.py:286
+msgid "You cannot cancel this loan in its current status."
+msgstr ""
+
+#: apps/loans/models.py:24 templates/groups/manage_group.html:344
+#: templates/loans/loan_detail.html:86 templates/loans/loan_detail.html:281
+#: templates/messaging/partials/loan_actions.html:56
+#: templates/notifications/email/loan_requested/message.html:28
+#: templates/notifications/email/loan_requested/message.txt:6
+msgid "Requested"
+msgstr ""
+
+#: apps/loans/models.py:25 templates/loans/loan_detail.html:91
+#: templates/loans/loan_detail.html:286
+#: templates/notifications/email/loan_extension_decision/message.txt:6
+msgid "Approved"
+msgstr ""
+
+#: apps/loans/models.py:26
+#: templates/notifications/email/loan_extension_decision/message.txt:6
+msgid "Rejected"
+msgstr ""
+
+#: apps/loans/models.py:28
+msgid "Borrower Returned"
+msgstr ""
+
+#: apps/loans/models.py:29 templates/loans/loan_detail.html:117
+#: templates/loans/loan_detail.html:292 templates/loans/my_loans.html:364
+msgid "Returned"
+msgstr ""
+
+#: apps/loans/models.py:30
+msgid "Overdue"
+msgstr ""
+
+#: apps/loans/models.py:31
+msgid "Cancelled"
+msgstr ""
+
+#: apps/loans/models.py:45
+msgid "borrower"
+msgstr ""
+
+#: apps/loans/models.py:51
+msgid "lender"
+msgstr ""
+
+#: apps/loans/models.py:59
+msgid "The group through which this loan was made"
+msgstr ""
+
+#: apps/loans/models.py:67
+msgid "request message"
+msgstr ""
+
+#: apps/loans/models.py:67
+msgid "Message from borrower to lender"
+msgstr ""
+
+#: apps/loans/models.py:69
+msgid "rejection reason"
+msgstr ""
+
+#: apps/loans/models.py:72
+msgid "requested at"
+msgstr ""
+
+#: apps/loans/models.py:73
+msgid "approved at"
+msgstr ""
+
+#: apps/loans/models.py:74
+msgid "start date"
+msgstr ""
+
+#: apps/loans/models.py:75
+msgid "due date"
+msgstr ""
+
+#: apps/loans/models.py:76
+msgid "returned at"
+msgstr ""
+
+#: apps/loans/models.py:79
+msgid "deposit paid"
+msgstr ""
+
+#: apps/loans/models.py:87
+msgid "deposit returned"
+msgstr ""
+
+#: apps/loans/models.py:90
+msgid "extension requested"
+msgstr ""
+
+#: apps/loans/models.py:92
+msgid "extension days"
+msgstr ""
+
+#: apps/loans/models.py:94
+msgid "extension approved"
+msgstr ""
+
+#: apps/loans/models.py:95
+msgid "extension reason"
+msgstr ""
+
+#: apps/loans/models.py:99
+msgid "condition at pickup"
+msgstr ""
+
+#: apps/loans/models.py:102
+msgid "condition at return"
+msgstr ""
+
+#: apps/loans/models.py:104
+msgid "damage reported"
+msgstr ""
+
+#: apps/loans/models.py:105
+msgid "damage description"
+msgstr ""
+
+#: apps/loans/models.py:112 apps/loans/models.py:579 apps/loans/models.py:662
+msgid "Participants only"
+msgstr ""
+
+#: apps/loans/models.py:113 apps/loans/models.py:580 apps/loans/models.py:663
+msgid "Group admins can view"
+msgstr ""
+
+#: apps/loans/models.py:114 apps/loans/models.py:581 apps/loans/models.py:664
+msgid "Visible to group members"
+msgstr ""
+
+#: apps/loans/models.py:117
+msgid "Who can view this loan"
+msgstr ""
+
+#: apps/loans/models.py:123
+msgid "Internal notes"
+msgstr ""
+
+#: apps/loans/models.py:128
+msgid "loans"
+msgstr ""
+
+#: apps/loans/models.py:315 templates/loans/loan_detail.html:82
+#: templates/notifications/email/loan_approved/message.html:28
+#: templates/notifications/email/loan_approved/message.html:72
+#: templates/notifications/email/loan_approved/message.txt:12
+msgid "Lender"
+msgstr ""
+
+#: apps/loans/models.py:316
+#: templates/notifications/email/loan_approved/message.html:24
+#: templates/notifications/email/loan_approved/message.html:68
+#: templates/notifications/email/loan_approved/message.txt:11
+#: templates/notifications/email/loan_requested/message.html:24
+#: templates/notifications/email/loan_requested/message.txt:5
+msgid "Borrower"
+msgstr ""
+
+#: apps/loans/models.py:335
+msgid "reviewee"
+msgstr ""
+
+#: apps/loans/models.py:338
+msgid "reviewer role"
+msgstr ""
+
+#: apps/loans/models.py:341
+msgid "Whether the reviewer was the lender or borrower"
+msgstr ""
+
+#: apps/loans/models.py:354
+msgid "communication"
+msgstr ""
+
+#: apps/loans/models.py:357
+msgid "reliability"
+msgstr ""
+
+#: apps/loans/models.py:360
+msgid "item condition"
+msgstr ""
+
+#: apps/loans/models.py:364
+msgid ""
+"For lender: item returned condition. For borrower: item received condition"
+msgstr ""
+
+#: apps/loans/models.py:369
+msgid "would lend/borrow again"
+msgstr ""
+
+#: apps/loans/models.py:370
+msgid "public review"
+msgstr ""
+
+#: apps/loans/models.py:378
+msgid "loan review"
+msgstr ""
+
+#: apps/loans/models.py:379
+msgid "loan reviews"
+msgstr ""
+
+#: apps/loans/models.py:412
+msgid "items lent"
+msgstr ""
+
+#: apps/loans/models.py:414
+msgid "lending rating"
+msgstr ""
+
+#: apps/loans/models.py:418
+msgid "Average rating as a lender (0-5)"
+msgstr ""
+
+#: apps/loans/models.py:422 templates/badges/leaderboard.html:48
+msgid "items borrowed"
+msgstr ""
+
+#: apps/loans/models.py:424
+msgid "borrowing rating"
+msgstr ""
+
+#: apps/loans/models.py:428
+msgid "Average rating as a borrower (0-5)"
+msgstr ""
+
+#: apps/loans/models.py:433
+msgid "overall rating"
+msgstr ""
+
+#: apps/loans/models.py:437
+msgid "Combined average rating (0-5)"
+msgstr ""
+
+#: apps/loans/models.py:439
+msgid "total reviews"
+msgstr ""
+
+#: apps/loans/models.py:442
+msgid "on-time returns"
+msgstr ""
+
+#: apps/loans/models.py:443
+msgid "late returns"
+msgstr ""
+
+#: apps/loans/models.py:444
+msgid "cancellations"
+msgstr ""
+
+#: apps/loans/models.py:448
+msgid "trust score"
+msgstr ""
+
+#: apps/loans/models.py:450
+msgid "Algorithmic trust score from 0-100"
+msgstr ""
+
+#: apps/loans/models.py:454
+msgid "verified user"
+msgstr ""
+
+#: apps/loans/models.py:455
+msgid "top lender badge"
+msgstr ""
+
+#: apps/loans/models.py:456
+msgid "reliable borrower badge"
+msgstr ""
+
+#: apps/loans/models.py:463
+msgid "user reputation"
+msgstr ""
+
+#: apps/loans/models.py:464
+msgid "user reputations"
+msgstr ""
+
+#: apps/loans/models.py:554
+msgid "default loan days"
+msgstr ""
+
+#: apps/loans/models.py:556
+msgid "Default number of days for loans"
+msgstr ""
+
+#: apps/loans/models.py:559 apps/loans/models.py:639
+msgid "allow extensions"
+msgstr ""
+
+#: apps/loans/models.py:561
+msgid "Whether borrower can request extensions"
+msgstr ""
+
+#: apps/loans/models.py:564 apps/loans/models.py:645
+msgid "require approval for extensions"
+msgstr ""
+
+#: apps/loans/models.py:566
+msgid "Whether extensions require approval or are automatic"
+msgstr ""
+
+#: apps/loans/models.py:569 apps/loans/models.py:651
+msgid "maximum extension days"
+msgstr ""
+
+#: apps/loans/models.py:571
+msgid "Maximum days that can be requested for extension"
+msgstr ""
+
+#: apps/loans/models.py:576
+msgid "default loan privacy"
+msgstr ""
+
+#: apps/loans/models.py:584
+msgid "Default visibility for new loans"
+msgstr ""
+
+#: apps/loans/models.py:589
+msgid "email notifications"
+msgstr ""
+
+#: apps/loans/models.py:591
+msgid "Receive email notifications for loan activities"
+msgstr ""
+
+#: apps/loans/models.py:594
+msgid "message notifications"
+msgstr ""
+
+#: apps/loans/models.py:596
+msgid "Receive in-app message notifications"
+msgstr ""
+
+#: apps/loans/models.py:605 apps/loans/models.py:606
+msgid "user loan settings"
+msgstr ""
+
+#: apps/loans/models.py:633
+msgid "loan days"
+msgstr ""
+
+#: apps/loans/models.py:636
+msgid "Number of days for loans in this group (null = use global setting)"
+msgstr ""
+
+#: apps/loans/models.py:642
+msgid "Allow extensions in this group (null = use global setting)"
+msgstr ""
+
+#: apps/loans/models.py:648
+msgid "Extensions require approval in this group (null = use global setting)"
+msgstr ""
+
+#: apps/loans/models.py:654
+msgid "Maximum extension days in this group (null = use global setting)"
+msgstr ""
+
+#: apps/loans/models.py:659
+msgid "loan privacy"
+msgstr ""
+
+#: apps/loans/models.py:667
+msgid "Visibility for loans in this group (blank = use global setting)"
+msgstr ""
+
+#: apps/loans/models.py:676 apps/loans/models.py:677
+msgid "group loan settings"
+msgstr ""
+
+#: apps/loans/views.py:268
+msgid "Loan request sent successfully!"
+msgstr ""
+
+#: apps/loans/views.py:288
+msgid "This loan cannot be approved."
+msgstr ""
+
+#: apps/loans/views.py:319
+msgid "Loan approved successfully!"
+msgstr ""
+
+#: apps/loans/views.py:337 apps/loans/views.py:391 apps/loans/views.py:452
+#: apps/loans/views.py:497
+msgid "Invalid action submitted."
+msgstr ""
+
+#: apps/loans/views.py:351
+msgid "This loan cannot be rejected."
+msgstr ""
+
+#: apps/loans/views.py:377
+msgid "Loan rejected."
+msgstr ""
+
+#: apps/loans/views.py:405
+msgid "This loan cannot be marked as returned."
+msgstr ""
+
+#: apps/loans/views.py:425
+msgid "Item marked as returned. Lender will confirm."
+msgstr ""
+
+#: apps/loans/views.py:438
+msgid "Item marked as picked up. Enjoy!"
+msgstr ""
+
+#: apps/loans/views.py:466
+msgid "This loan is not awaiting return confirmation."
+msgstr ""
+
+#: apps/loans/views.py:495
+msgid "Return confirmed. Item is now available."
+msgstr ""
+
+#: apps/loans/views.py:517
+msgid "This loan cannot be cancelled."
+msgstr ""
+
+#: apps/loans/views.py:529
+msgid "Loan cancelled."
+msgstr ""
+
+#: apps/loans/views.py:549
+msgid "You can only review completed loans."
+msgstr ""
+
+#: apps/loans/views.py:559
+msgid "You have already reviewed this loan."
+msgstr ""
+
+#: apps/loans/views.py:612
+msgid "Review submitted successfully!"
+msgstr ""
+
+#: apps/loans/views.py:616
+msgid "Failed to submit review. Please try again."
+msgstr ""
+
+#: apps/loans/views.py:639
+msgid "Extension request sent!"
+msgstr ""
+
+#: apps/loans/views.py:653 apps/loans/views.py:694
+msgid "No extension request found."
+msgstr ""
+
+#: apps/loans/views.py:680
+msgid "Extension approved!"
+msgstr ""
+
+#: apps/loans/views.py:710
+msgid "Extension rejected."
+msgstr ""
+
+#: apps/messaging/forms.py:17 templates/groups/accept_invitation.html:54
+#: templates/loans/loan_detail.html:32 templates/loans/loan_detail.html:36
+#: templates/loans/my_loans.html:71 templates/loans/my_loans.html:115
+#: templates/loans/my_loans.html:154 templates/loans/my_loans.html:202
+#: templates/loans/my_loans.html:251 templates/loans/my_loans.html:286
+#: templates/loans/my_loans.html:322 templates/loans/my_loans.html:369
+#: templates/notifications/email/loan_extension_decision/message.txt:10
+#: templates/notifications/email/loan_return_request/message.html:26
+#: templates/notifications/email/loan_return_request/message.txt:12
+msgid "Message"
+msgstr ""
+
+#: apps/messaging/forms.py:21
+msgid "Type your message here..."
+msgstr ""
+
+#: apps/messaging/forms.py:39
+msgid "Subject"
+msgstr ""
+
+#: apps/messaging/forms.py:44 apps/messaging/models.py:30
+msgid "Optional conversation subject"
+msgstr ""
+
+#: apps/messaging/forms.py:49
+msgid "Initial Message"
+msgstr ""
+
+#: apps/messaging/forms.py:53
+msgid "Send your first message..."
+msgstr ""
+
+#: apps/messaging/models.py:22
+msgid "participants"
+msgstr ""
+
+#: apps/messaging/models.py:27
+msgid "subject"
+msgstr ""
+
+#: apps/messaging/models.py:38
+msgid "encryption salt"
+msgstr ""
+
+#: apps/messaging/models.py:41
+msgid "Salt used for end-to-end encryption key derivation"
+msgstr ""
+
+#: apps/messaging/models.py:51
+msgid "related item"
+msgstr ""
+
+#: apps/messaging/models.py:52
+msgid "Item this conversation is about (if applicable)"
+msgstr ""
+
+#: apps/messaging/models.py:61
+msgid "Loan this conversation is about (if applicable)"
+msgstr ""
+
+#: apps/messaging/models.py:66 apps/messaging/models.py:110
+#: apps/messaging/models.py:151
+msgid "conversation"
+msgstr ""
+
+#: apps/messaging/models.py:67
+msgid "conversations"
+msgstr ""
+
+#: apps/messaging/models.py:122
+msgid "last read at"
+msgstr ""
+
+#: apps/messaging/models.py:126
+msgid "conversation participant"
+msgstr ""
+
+#: apps/messaging/models.py:127
+msgid "conversation participants"
+msgstr ""
+
+#: apps/messaging/models.py:157
+msgid "sender"
+msgstr ""
+
+#: apps/messaging/models.py:161
+msgid "encrypted content"
+msgstr ""
+
+#: apps/messaging/models.py:165 apps/notifications/models.py:61
+msgid "read"
+msgstr ""
+
+#: apps/messaging/models.py:166
+msgid "read at"
+msgstr ""
+
+#: apps/messaging/models.py:170
+msgid "Text Message"
+msgstr ""
+
+#: apps/messaging/models.py:171
+msgid "System Message"
+msgstr ""
+
+#: apps/messaging/models.py:174
+msgid "message type"
+msgstr ""
+
+#: apps/messaging/models.py:183
+msgid "messages"
+msgstr ""
+
+#: apps/messaging/models.py:245
+msgid "file"
+msgstr ""
+
+#: apps/messaging/models.py:246
+msgid "filename"
+msgstr ""
+
+#: apps/messaging/models.py:247
+msgid "file size"
+msgstr ""
+
+#: apps/messaging/models.py:248
+msgid "content type"
+msgstr ""
+
+#: apps/messaging/models.py:255
+msgid "message attachment"
+msgstr ""
+
+#: apps/messaging/models.py:256
+msgid "message attachments"
+msgstr ""
+
+#: apps/messaging/views.py:152
+msgid "Message sent successfully."
+msgstr ""
+
+#: apps/messaging/views.py:180
+msgid "User not found."
+msgstr ""
+
+#: apps/messaging/views.py:184
+msgid "You cannot start a conversation with yourself."
+msgstr ""
+
+#: apps/messaging/views.py:274
+msgid "Conversation started successfully."
+msgstr ""
+
+#: apps/notifications/models.py:14
+msgid "New Message"
+msgstr ""
+
+#: apps/notifications/models.py:15
+#: templates/notifications/email/loan_requested/subject.txt:1
+msgid "Loan Request"
+msgstr ""
+
+#: apps/notifications/models.py:16
+msgid "Loan Approved"
+msgstr ""
+
+#: apps/notifications/models.py:17
+msgid "Item Picked Up"
+msgstr ""
+
+#: apps/notifications/models.py:18
+msgid "Return Initiated"
+msgstr ""
+
+#: apps/notifications/models.py:19
+msgid "Item Returned"
+msgstr ""
+
+#: apps/notifications/models.py:20
+#: templates/notifications/email/loan_rejected/subject.txt:1
+msgid "Loan Rejected"
+msgstr ""
+
+#: apps/notifications/models.py:21 templates/loans/loan_detail.html:147
+#: templates/notifications/email/loan_extension_request/subject.txt:1
+msgid "Extension Request"
+msgstr ""
+
+#: apps/notifications/models.py:22
+#: templates/notifications/email/loan_extension_decision/subject.txt:1
+msgid "Extension Decision"
+msgstr ""
+
+#: apps/notifications/models.py:23
+msgid "Loan Overdue"
+msgstr ""
+
+#: apps/notifications/models.py:24
+msgid "Review Received"
+msgstr ""
+
+#: apps/notifications/models.py:35
+msgid "type"
+msgstr ""
+
+#: apps/notifications/models.py:57
+msgid "related conversation"
+msgstr ""
+
+#: apps/users/models.py:29
+msgid "username"
+msgstr ""
+
+#: apps/users/models.py:32
+msgid "Public identifier (Reddit-style generated)"
+msgstr ""
+
+#: apps/users/models.py:41
+msgid "email hash"
+msgstr ""
+
+#: apps/users/models.py:44
+msgid "HMAC-SHA256 hash of email for GDPR privacy protection"
+msgstr ""
+
+#: apps/users/models.py:47
+msgid "phone hash"
+msgstr ""
+
+#: apps/users/models.py:50
+msgid "HMAC-SHA256 hash of phone for privacy"
+msgstr ""
+
+#: apps/users/models.py:58
+msgid "phone number"
+msgstr ""
+
+#: apps/users/models.py:128
+msgid "profile visibility"
+msgstr ""
+
+#: apps/users/models.py:131 apps/users/models.py:143 apps/users/models.py:155
+msgid "Private - Only group members"
+msgstr ""
+
+#: apps/users/models.py:132 apps/users/models.py:144 apps/users/models.py:156
+#: templates/users/privacy_settings.html:43
+#: templates/users/privacy_settings.html:84
+#: templates/users/privacy_settings.html:125
+msgid "Public - Anyone can view"
+msgstr ""
+
+#: apps/users/models.py:133 apps/users/models.py:157
+msgid "Lenders/Borrowers - Only users you've transacted with"
+msgstr ""
+
+#: apps/users/models.py:136
+msgid "Who can see your profile information"
+msgstr ""
+
+#: apps/users/models.py:140
+msgid "groups visibility"
+msgstr ""
+
+#: apps/users/models.py:145
+msgid "Lenders/Borrowers - Only users you've transacted with in that group"
+msgstr ""
+
+#: apps/users/models.py:148
+msgid "Who can see your groups"
+msgstr ""
+
+#: apps/users/models.py:152
+msgid "location visibility"
+msgstr ""
+
+#: apps/users/models.py:160
+msgid "Who can see your location"
+msgstr ""
+
+#: apps/users/models.py:164
+msgid "email visibility"
+msgstr ""
+
+#: apps/users/models.py:167
+msgid "Private - Never shown"
+msgstr ""
+
+#: apps/users/models.py:168
+msgid "Group members only"
+msgstr ""
+
+#: apps/users/models.py:169
+msgid "Public - Everyone"
+msgstr ""
+
+#: apps/users/models.py:172
+msgid "Who can see your email address"
+msgstr ""
+
+#: apps/users/models.py:176
+msgid "activity visibility"
+msgstr ""
+
+#: apps/users/models.py:179
+msgid "Private - No activity shown"
+msgstr ""
+
+#: apps/users/models.py:180
+msgid "Limited - Basic stats only"
+msgstr ""
+
+#: apps/users/models.py:181
+msgid "Public - Full activity"
+msgstr ""
+
+#: apps/users/models.py:184
+msgid "How much of your sharing activity is visible"
+msgstr ""
+
+#: apps/users/models.py:189
+msgid "default item visibility"
+msgstr ""
+
+#: apps/users/models.py:197
+msgid "Default visibility for new items"
+msgstr ""
+
+#: apps/users/models.py:201
+msgid "last password change"
+msgstr ""
+
+#: apps/users/models.py:202
+msgid "password reset required"
+msgstr ""
+
+#: apps/users/views_account.py:67
+msgid "Email confirmed successfully! You are now logged in."
+msgstr ""
+
+#: apps/users/views_account.py:70
+msgid "Email confirmed successfully!"
+msgstr ""
+
+#: apps/users/views_account.py:74
+msgid "Invalid or expired confirmation link."
+msgstr ""
+
+#: templates/400.html:4 templates/400.html:13
+msgid "Bad Request"
+msgstr ""
+
+#: templates/400.html:22 templates/403.html:22 templates/404.html:22
+#: templates/405.html:22 templates/408.html:22 templates/429.html:22
+#: templates/500.html:26
+msgid "Go Home"
+msgstr ""
+
+#: templates/400.html:25 templates/403.html:25 templates/404.html:25
+#: templates/405.html:25 templates/500.html:29
+msgid "Go Back"
+msgstr ""
+
+#: templates/400.html:28 templates/403.html:28 templates/404.html:28
+#: templates/405.html:28 templates/408.html:28 templates/429.html:28
+#: templates/bug_report.html:10
+msgid "Report a Bug"
+msgstr ""
+
+#: templates/400.html:35
+msgid "What does this mean?"
+msgstr ""
+
+#: templates/400.html:37
+msgid "This error occurs when:"
+msgstr ""
+
+#: templates/400.html:39
+msgid "The request contains invalid syntax"
+msgstr ""
+
+#: templates/400.html:40
+msgid "Required form fields are missing"
+msgstr ""
+
+#: templates/400.html:41
+msgid "Submitted data doesn't match expected format"
+msgstr ""
+
+#: templates/400.html:42
+msgid "The request was corrupted during transmission"
+msgstr ""
+
+#: templates/400.html:44
+msgid "Try refreshing the page or checking your form inputs."
+msgstr ""
+
+#: templates/403.html:4 templates/403.html:13
+msgid "Access Denied"
+msgstr ""
+
+#: templates/403.html:35 templates/404.html:35 templates/408.html:35
+msgid "What can you try"
+msgstr ""
+
+#: templates/403.html:37
+msgid "Log in to your account if you haven't already"
+msgstr ""
+
+#: templates/403.html:38
+msgid "Check if you have the required permissions"
+msgstr ""
+
+#: templates/403.html:39
+msgid "Contact the administrator if you believe this is an error"
+msgstr ""
+
+#: templates/403.html:40
+msgid "Go back to the previous page and try a different approach"
+msgstr ""
+
+#: templates/404.html:4
+msgid "Not Found"
+msgstr ""
+
+#: templates/404.html:13
+msgid "Page Not Found"
+msgstr ""
+
+#: templates/404.html:37
+msgid "Check the URL for typos"
+msgstr ""
+
+#: templates/404.html:38
+msgid "Go back to the previous page"
+msgstr ""
+
+#: templates/404.html:39
+msgid "Visit our"
+msgstr ""
+
+#: templates/404.html:39
+msgid "homepage"
+msgstr ""
+
+#: templates/404.html:39
+msgid "to find what you need"
+msgstr ""
+
+#: templates/404.html:40
+msgid "Search for content using the navigation menu"
+msgstr ""
+
+#: templates/405.html:4
+msgid "Method Not Allowed"
+msgstr ""
+
+#: templates/405.html:13
+msgid "Maybe you shouldn't be doing that"
+msgstr ""
+
+#: templates/405.html:35
+msgid "What does this mean"
+msgstr ""
+
+#: templates/405.html:37
+msgid "This error occurs when"
+msgstr ""
+
+#: templates/405.html:39
+msgid "You tried to use POST on a GET-only page"
+msgstr ""
+
+#: templates/405.html:40
+msgid "You tried to use GET on a POST-only page"
+msgstr ""
+
+#: templates/405.html:41
+msgid "The server doesn't allow the requested method"
+msgstr ""
+
+#: templates/405.html:43
+msgid "Try refreshing the page or going back to the previous page"
+msgstr ""
+
+#: templates/408.html:4 templates/408.html:13
+msgid "Request Timeout"
+msgstr ""
+
+#: templates/408.html:25 templates/429.html:25 templates/500.html:32
+msgid "Try Again"
+msgstr ""
+
+#: templates/408.html:37
+msgid "Refresh the page and try again"
+msgstr ""
+
+#: templates/408.html:38
+msgid "Check your internet connection"
+msgstr ""
+
+#: templates/408.html:39
+msgid "Try a different browser or device"
+msgstr ""
+
+#: templates/408.html:40
+msgid "Clear your browser cache and cookies"
+msgstr ""
+
+#: templates/408.html:41
+msgid "Contact support if the problem persists"
+msgstr ""
+
+#: templates/429.html:4 templates/429.html:13
+msgid "Too Many Requests"
+msgstr ""
+
+#: templates/429.html:35
+msgid "Why did this happen"
+msgstr ""
+
+#: templates/429.html:37
+msgid "This rate limit helps us"
+msgstr ""
+
+#: templates/429.html:39
+msgid "Maintain system performance"
+msgstr ""
+
+#: templates/429.html:40
+msgid "Prevent abuse and automated attacks"
+msgstr ""
+
+#: templates/429.html:41
+msgid "Ensure fair access for all users"
+msgstr ""
+
+#: templates/429.html:42
+msgid "Protect our servers from overload"
+msgstr ""
+
+#: templates/429.html:44
+msgid ""
+"Wait a few minutes and try again. If you continue to see this error, contact "
+"support"
+msgstr ""
+
+#: templates/500.html:4
+msgid "Our mistake"
+msgstr ""
+
+#: templates/500.html:12
+msgid "Our bad"
+msgstr ""
+
+#: templates/500.html:17
+msgid "Server Error"
+msgstr ""
+
+#: templates/500.html:39
+msgid "Report This Bug"
+msgstr ""
+
+#: templates/500.html:41
+msgid ""
+"Help us improve! Send details about what you were doing when this error "
+"occurred"
+msgstr ""
+
+#: templates/500.html:51
+msgid "What were you trying to do"
+msgstr ""
+
+#: templates/500.html:59 templates/account/login.html:90
+#: templates/account/login.html:109 templates/account/password_reset.html:52
+#: templates/account/signup.html:104 templates/account/signup.html:125
+#: templates/account/signup.html:151 templates/account/signup.html:169
+#: templates/bug_report.html:29 templates/bug_report.html:43
+#: templates/bug_report.html:62 templates/groups/group_form.html:38
+#: templates/groups/group_form.html:106 templates/groups/group_form.html:139
+#: templates/groups/group_settings.html:102
+#: templates/groups/group_settings.html:182
+#: templates/groups/group_settings.html:209 templates/items/item_form.html:40
+msgid "required"
+msgstr ""
+
+#: templates/500.html:61
+msgid "Max 1000 characters. Be as specific as possible"
+msgstr ""
+
+#: templates/500.html:65
+msgid "Your Email (Optional"
+msgstr ""
+
+#: templates/500.html:74
+msgid "We'll use this to follow up if needed"
+msgstr ""
+
+#: templates/500.html:78 templates/bug_report.html:42
+msgid "Severity"
+msgstr ""
+
+#: templates/500.html:82 templates/bug_report.html:45
+msgid "Low - Minor inconvenience"
+msgstr ""
+
+#: templates/500.html:85
+msgid "medium"
+msgstr ""
+
+#: templates/500.html:86
+msgid "Medium - Can't complete task"
+msgstr ""
+
+#: templates/500.html:89
+msgid "high"
+msgstr ""
+
+#: templates/500.html:90
+msgid "High - Critical functionality broken"
+msgstr ""
+
+#: templates/500.html:97
+msgid "Reports are sent to our development team at bugs@comuniza.org"
+msgstr ""
+
+#: templates/500.html:100
+msgid "Send Bug Report"
+msgstr ""
+
+#: templates/500.html:110
+msgid "Having trouble with the form? Contact us directly"
+msgstr ""
+
+#: templates/500.html:113
+msgid "bugs@comuniza.org"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:7
+msgid "Email Confirmation"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:57
+#: templates/account/email/email_confirmation_signup_message.html:57
+#: templates/notifications/email/base_email.html:225
+#: templates/notifications/email/base_email.html:236
+msgid "COMUNIZA"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:58
+#: templates/account/email/email_confirmation_signup_message.html:58
+msgid "Community Resource Sharing Platform"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:62
+#: templates/account/email/email_confirmation_signup_message.html:62
+#: templates/account/email/email_confirmation_subject.txt:2
+msgid "Confirm Your Email Address"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:64
+#: templates/account/email/email_confirmation_message.txt:2
+#: templates/account/email/email_confirmation_signup_message.html:64
+#: templates/account/email/email_confirmation_signup_message.txt:2
+msgid "Hello"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:66
+#: templates/account/email/email_confirmation_message.txt:4
+msgid "Please confirm your email address to complete your account setup"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:71
+#: templates/account/email/email_confirmation_signup_message.html:71
+msgid "CONFIRM EMAIL"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:76
+#: templates/account/email/email_confirmation_signup_message.html:76
+msgid "Or copy this link"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:81
+#: templates/account/email/email_confirmation_signup_message.html:81
+msgid "Important"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:83
+#: templates/account/email/email_confirmation_signup_message.html:83
+msgid "This link will expire in"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:83
+#: templates/account/email/email_confirmation_signup_message.html:83
+#: templates/account/email/email_confirmation_signup_message.html:85
+#: templates/account/email_confirm.html:30 templates/items/item_detail.html:173
+#: templates/items/item_detail.html:246 templates/items/item_list.html:283
+#: templates/loans/loan_detail.html:150
+#: templates/loans/loan_request_form.html:28
+#: templates/loans/loan_request_form.html:78
+#: templates/loans/loan_request_form.html:87
+#: templates/notifications/email/loan_extension_decision/message.html:17
+#: templates/notifications/email/loan_extension_request/message.html:7
+#: templates/notifications/email/loan_extension_request/message.html:18
+#: templates/notifications/email/loan_extension_request/subject.txt:1
+#: templates/notifications/email/loan_overdue/message.html:8
+#: templates/notifications/email/loan_overdue/subject.txt:1
+msgid "days"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:84
+msgid "If you did not request this confirmation, please ignore this email"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:89
+#: templates/account/email/email_confirmation_signup_message.html:90
+msgid "Thank you"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:89
+#: templates/account/email/email_confirmation_signup_message.html:90
+msgid "The Comuniza Team"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:91
+#: templates/account/email/email_confirmation_signup_message.html:92
+msgid "This is an automated message from Comuniza"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.txt:8
+#: templates/account/email/email_confirmation_signup_message.txt:8
+msgid ""
+"If you cannot click the link, please copy and paste this URL into your "
+"browser"
+msgstr ""
+
+#: templates/account/email/email_confirmation_signup_message.html:7
+msgid "Welcome to Comuniza"
+msgstr ""
+
+#: templates/account/email/email_confirmation_signup_message.html:66
+msgid ""
+"Thank you for signing up for Comuniza. To complete your registration and "
+"start sharing items with your community, please confirm your email address"
+msgstr ""
+
+#: templates/account/email/email_confirmation_signup_message.html:84
+msgid "If you did not sign up for this account, please ignore this email"
+msgstr ""
+
+#: templates/account/email/email_confirmation_signup_message.html:85
+msgid "Your account will be deleted if not confirmed within"
+msgstr ""
+
+#: templates/account/email/email_confirmation_signup_message.html:93
+msgid "If you have questions, contact us at support@comuniza.org"
+msgstr ""
+
+#: templates/account/email/email_confirmation_signup_message.txt:4
+msgid ""
+"Thank you for signing up for Comuniza. To complete your registration and "
+"start sharing items with your community, please confirm your email address "
+"by clicking the link below"
+msgstr ""
+
+#: templates/account/email/email_confirmation_signup_subject.txt:2
+msgid "Welcome to Comuniza - Please Confirm Your Email"
+msgstr ""
+
+#: templates/account/email_confirm.html:7
+msgid "EMAIL CONFIRMATION"
+msgstr ""
+
+#: templates/account/email_confirm.html:11
+msgid "Please confirm that you want to verify this email address"
+msgstr ""
+
+#: templates/account/email_confirm.html:23
+msgid "CONFIRM EMAIL ADDRESS"
+msgstr ""
+
+#: templates/account/email_confirm.html:30
+msgid "This link expires in"
+msgstr ""
+
+#: templates/account/email_confirm.html:35
+msgid "INVALID OR EXPIRED LINK"
+msgstr ""
+
+#: templates/account/email_confirm.html:36
+msgid "This confirmation link is no longer valid"
+msgstr ""
+
+#: templates/account/email_confirm.html:37
+msgid "Please request a new confirmation email or contact support"
+msgstr ""
+
+#: templates/account/email_confirm.html:43
+msgid ""
+"If you're having trouble confirming your email, please contact our support "
+"team at"
+msgstr ""
+
+#: templates/account/email_confirm.html:44
+#: templates/account/email_verified.html:35
+#: templates/account/verification_sent.html:41 templates/faq.html:76
+#: templates/faq.html:117 templates/notifications/email/base_email.html:238
+msgid "support@comuniza.org"
+msgstr ""
+
+#: templates/account/email_confirm.html:50
+#: templates/account/verification_sent.html:36
+msgid "RETURN TO LOGIN"
+msgstr ""
+
+#: templates/account/email_verified.html:7
+msgid "EMAIL VERIFIED"
+msgstr ""
+
+#: templates/account/email_verified.html:10
+msgid "Your email has been successfully confirmed"
+msgstr ""
+
+#: templates/account/email_verified.html:14
+msgid "WELCOME TO COMUNIZA"
+msgstr ""
+
+#: templates/account/email_verified.html:15
+msgid ""
+"You can now start sharing items with your community. Your account is fully "
+"activated and ready to use"
+msgstr ""
+
+#: templates/account/email_verified.html:19
+msgid "WHAT YOU CAN DO"
+msgstr ""
+
+#: templates/account/email_verified.html:21
+msgid "Add items to share with your community"
+msgstr ""
+
+#: templates/account/email_verified.html:22
+msgid "Browse items available in your area"
+msgstr ""
+
+#: templates/account/email_verified.html:23
+msgid "Connect with other community members"
+msgstr ""
+
+#: templates/account/email_verified.html:24
+msgid "Build reputation through sharing"
+msgstr ""
+
+#: templates/account/email_verified.html:30
+msgid "START BROWSING ITEMS"
+msgstr ""
+
+#: templates/account/email_verified.html:35
+msgid "Thank you for joining Comuniza! Need help? Contact us at"
+msgstr ""
+
+#: templates/account/login.html:5 templates/base.html:222
+#: templates/groups/group_detail.html:100 templates/users/login.html:9
+#: templates/users/login.html:13
+msgid "Login"
+msgstr ""
+
+#: templates/account/login.html:12 templates/account/login.html:135
+#: templates/account/signup.html:212
+msgid "LOGIN"
+msgstr ""
+
+#: templates/account/login.html:13
+msgid "ACCESS YOUR ACCOUNT"
+msgstr ""
+
+#: templates/account/login.html:20
+msgid "QUICK LOGIN"
+msgstr ""
+
+#: templates/account/login.html:33 templates/account/login.html:46
+#: templates/account/signup.html:25 templates/socialaccount/login.html:44
+msgid "G"
+msgstr ""
+
+#: templates/account/login.html:34 templates/account/login.html:47
+#: templates/socialaccount/login.html:45
+msgid "CONTINUE WITH GOOGLE"
+msgstr ""
+
+#: templates/account/login.html:39
+msgid "GH"
+msgstr ""
+
+#: templates/account/login.html:40
+msgid "CONTINUE WITH GITHUB"
+msgstr ""
+
+#: templates/account/login.html:57 templates/account/signup.html:35
+msgid "OR"
+msgstr ""
+
+#: templates/account/login.html:64
+msgid "EMAIL LOGIN"
+msgstr ""
+
+#: templates/account/login.html:83 templates/account/password_reset.html:45
+msgid "EMAIL"
+msgstr ""
+
+#: templates/account/login.html:102 templates/account/signup.html:118
+msgid "PASSWORD"
+msgstr ""
+
+#: templates/account/login.html:129
+msgid "REMEMBER ME"
+msgstr ""
+
+#: templates/account/login.html:140
+msgid "FORGOT PASSWORD"
+msgstr ""
+
+#: templates/account/login.html:150
+msgid "DON'T HAVE AN ACCOUNT"
+msgstr ""
+
+#: templates/account/login.html:152 templates/account/signup.html:201
+msgid "CREATE ACCOUNT"
+msgstr ""
+
+#: templates/account/logout.html:4 templates/base.html:203
+msgid "Logout"
+msgstr ""
+
+#: templates/account/logout.html:11
+msgid "LOGOUT"
+msgstr ""
+
+#: templates/account/logout.html:12
+msgid "END YOUR SESSION"
+msgstr ""
+
+#: templates/account/logout.html:18
+msgid "CONFIRM LOGOUT"
+msgstr ""
+
+#: templates/account/logout.html:22
+msgid "ARE YOU SURE YOU WANT TO LOGOUT"
+msgstr ""
+
+#: templates/account/logout.html:34
+msgid "YES, LOGOUT"
+msgstr ""
+
+#: templates/account/logout.html:37
+#: templates/messaging/conversation_list.html:157
+msgid "CANCEL"
+msgstr ""
+
+#: templates/account/logout.html:48
+msgid "YOU CAN ALWAYS LOGIN AGAIN ANYTIME"
+msgstr ""
+
+#: templates/account/password_reset.html:4
+msgid "Reset Password"
+msgstr ""
+
+#: templates/account/password_reset.html:11
+msgid "RESET PASSWORD"
+msgstr ""
+
+#: templates/account/password_reset.html:12
+msgid "RECOVER YOUR ACCOUNT"
+msgstr ""
+
+#: templates/account/password_reset.html:18
+msgid "PASSWORD RECOVERY"
+msgstr ""
+
+#: templates/account/password_reset.html:23
+msgid "YOU ARE CURRENTLY LOGGED IN. GO TO YOUR PROFILE TO CHANGE YOUR PASSWORD"
+msgstr ""
+
+#: templates/account/password_reset.html:26
+msgid "GO TO PROFILE"
+msgstr ""
+
+#: templates/account/password_reset.html:30
+msgid ""
+"ENTER YOUR EMAIL ADDRESS AND WE'LL SEND YOU INSTRUCTIONS TO RESET YOUR "
+"PASSWORD"
+msgstr ""
+
+#: templates/account/password_reset.html:64
+msgid "SEND RESET LINK"
+msgstr ""
+
+#: templates/account/password_reset.html:69
+msgid "BACK TO LOGIN"
+msgstr ""
+
+#: templates/account/signup.html:5 templates/base.html:230
+msgid "Sign Up"
+msgstr ""
+
+#: templates/account/signup.html:12
+msgid "SIGN UP"
+msgstr ""
+
+#: templates/account/signup.html:13
+msgid "JOIN THE COMMUNITY AND START SHARING"
+msgstr ""
+
+#: templates/account/signup.html:20
+msgid "QUICK SIGN UP"
+msgstr ""
+
+#: templates/account/signup.html:26
+msgid "SIGN UP WITH GOOGLE"
+msgstr ""
+
+#: templates/account/signup.html:42
+msgid "EMAIL SIGN UP"
+msgstr ""
+
+#: templates/account/signup.html:51
+msgid "ERROR"
+msgstr ""
+
+#: templates/account/signup.html:61
+msgid "USERNAME"
+msgstr ""
+
+#: templates/account/signup.html:75
+msgid "GENERATE"
+msgstr ""
+
+#: templates/account/signup.html:78
+msgid "SUGGESTIONS"
+msgstr ""
+
+#: templates/account/signup.html:92
+msgid "YOUR PUBLIC IDENTIFIER - NEVER YOUR REAL NAME"
+msgstr ""
+
+#: templates/account/signup.html:97
+msgid "EMAIL ADDRESS"
+msgstr ""
+
+#: templates/account/signup.html:113
+msgid "USED FOR LOGIN & NEVER SHARED PUBLICLY"
+msgstr ""
+
+#: templates/account/signup.html:139
+msgid "MIN 8 CHARACTERS - USE MIX OF LETTERS & NUMBERS"
+msgstr ""
+
+#: templates/account/signup.html:144
+msgid "CONFIRM PASSWORD"
+msgstr ""
+
+#: templates/account/signup.html:172
+msgid "I agree to the"
+msgstr ""
+
+#: templates/account/signup.html:172
+msgid "privacy policy"
+msgstr ""
+
+#: templates/account/signup.html:172
+msgid "my email will never be shared publicly"
+msgstr ""
+
+#: templates/account/signup.html:183
+msgid "PRIVACY-FIRST COMMUNITY"
+msgstr ""
+
+#: templates/account/signup.html:184
+msgid "YOUR PRIVACY IS PROTECTED"
+msgstr ""
+
+#: templates/account/signup.html:186
+msgid "EMAILS ARE HASHED & NEVER DISPLAYED"
+msgstr ""
+
+#: templates/account/signup.html:187
+msgid "USERNAME IS YOUR PUBLIC IDENTIFIER"
+msgstr ""
+
+#: templates/account/signup.html:188
+msgid "PROFILE VISIBILITY IS YOUR CHOICE"
+msgstr ""
+
+#: templates/account/signup.html:189
+msgid "ALL COMMUNICATION IS ENCRYPTED"
+msgstr ""
+
+#: templates/account/signup.html:191
+msgid "BY SIGNING UP YOU AGREE TO"
+msgstr ""
+
+#: templates/account/signup.html:193
+msgid "RESPECT COMMUNITY GUIDELINES"
+msgstr ""
+
+#: templates/account/signup.html:194
+msgid "RETURN BORROWED ITEMS ON TIME"
+msgstr ""
+
+#: templates/account/signup.html:195
+msgid "TREAT ITEMS WITH CARE"
+msgstr ""
+
+#: templates/account/signup.html:196
+msgid "COMMUNICATE OPENLY & HONESTLY"
+msgstr ""
+
+#: templates/account/signup.html:210
+msgid "ALREADY HAVE AN ACCOUNT"
+msgstr ""
+
+#: templates/account/verification_sent.html:7
+msgid "CHECK YOUR EMAIL"
+msgstr ""
+
+#: templates/account/verification_sent.html:10
+msgid "We've sent a verification email to"
+msgstr ""
+
+#: templates/account/verification_sent.html:15
+msgid "NEXT STEPS"
+msgstr ""
+
+#: templates/account/verification_sent.html:17
+msgid "Check your email inbox"
+msgstr ""
+
+#: templates/account/verification_sent.html:18
+msgid "Find the email from \\"
+msgstr ""
+
+#: templates/account/verification_sent.html:19
+msgid "Click the \\"
+msgstr ""
+
+#: templates/account/verification_sent.html:20
+msgid "You'll be automatically logged in to your profile"
+msgstr ""
+
+#: templates/account/verification_sent.html:25
+msgid "IMPORTANT"
+msgstr ""
+
+#: templates/account/verification_sent.html:27
+msgid "If you don't receive the email within 5 minutes, check your spam folder"
+msgstr ""
+
+#: templates/account/verification_sent.html:28
+msgid "The verification link expires in 7 days"
+msgstr ""
+
+#: templates/account/verification_sent.html:29
+msgid "Your account will be deleted if not confirmed within 7 days"
+msgstr ""
+
+#: templates/account/verification_sent.html:30
+msgid "If you didn't sign up, please ignore this email"
+msgstr ""
+
+#: templates/account/verification_sent.html:41
+msgid "Need help? Contact us at"
+msgstr ""
+
+#: templates/badges/badge_list.html:3
+msgid "BADGES"
+msgstr ""
+
+#: templates/badges/badge_list.html:8
+msgid "BADGES & ACHIEVEMENTS"
+msgstr ""
+
+#: templates/badges/badge_list.html:9
+msgid "Communist-themed badges for the P2P library revolution"
+msgstr ""
+
+#: templates/badges/badge_list.html:23 templates/badges/leaderboard.html:44
+#: templates/badges/user_badges.html:44
+msgid "pts"
+msgstr ""
+
+#: templates/badges/leaderboard.html:3 templates/badges/leaderboard.html:8
+msgid "LEADERBOARD"
+msgstr ""
+
+#: templates/badges/leaderboard.html:9
+msgid "Top comrades in the P2P library revolution"
+msgstr ""
+
+#: templates/badges/leaderboard.html:12
+msgid "OVERALL"
+msgstr ""
+
+#: templates/badges/leaderboard.html:13
+msgid "LENDING"
+msgstr ""
+
+#: templates/badges/leaderboard.html:14
+msgid "BORROWING"
+msgstr ""
+
+#: templates/badges/leaderboard.html:15
+msgid "REPUTATION"
+msgstr ""
+
+#: templates/badges/leaderboard.html:46
+msgid "items shared"
+msgstr ""
+
+#: templates/badges/leaderboard.html:50 templates/users/profile.html:85
+msgid "Trust Score"
+msgstr ""
+
+#: templates/badges/leaderboard.html:65
+msgid "NO ENTRIES YET"
+msgstr ""
+
+#: templates/badges/leaderboard.html:66
+msgid "Be the first to climb the ranks"
+msgstr ""
+
+#: templates/badges/leaderboard.html:75
+msgid "YOUR RANKS"
+msgstr ""
+
+#: templates/badges/user_badges.html:3 templates/badges/user_badges.html:8
+msgid "MY BADGES"
+msgstr ""
+
+#: templates/badges/user_badges.html:9
+msgid "Your revolutionary achievements"
+msgstr ""
+
+#: templates/badges/user_badges.html:15
+msgid "BADGES EARNED"
+msgstr ""
+
+#: templates/badges/user_badges.html:23
+msgid "TOTAL POINTS"
+msgstr ""
+
+#: templates/badges/user_badges.html:29
+msgid "CATEGORIES"
+msgstr ""
+
+#: templates/badges/user_badges.html:43
+msgid "EARNED"
+msgstr ""
+
+#: templates/badges/user_badges.html:55
+msgid "NO BADGES YET"
+msgstr ""
+
+#: templates/badges/user_badges.html:56
+msgid ""
+"Start your revolutionary journey! Share items, borrow books, and build "
+"community to earn your first badges"
+msgstr ""
+
+#: templates/badges/user_badges.html:57
+#: templates/messaging/conversation_list.html:107
+msgid "BROWSE ITEMS"
+msgstr ""
+
+#: templates/base.html:10
+msgid "Share and borrow items within your community"
+msgstr ""
+
+#: templates/base.html:102
+msgid "MENU"
+msgstr ""
+
+#: templates/base.html:111 templates/base.html:217
+#: templates/items/item_detail.html:10
+msgid "Browse"
+msgstr ""
+
+#: templates/base.html:118 templates/base.html:292
+#: templates/groups/group_list.html:4 templates/groups/group_list.html:20
+#: templates/users/privacy_settings.html:176
+msgid "Groups"
+msgstr ""
+
+#: templates/base.html:125 templates/loans/my_loans.html:5
+#: templates/loans/my_loans.html:10
+msgid "My Loans"
+msgstr ""
+
+#: templates/base.html:135 templates/items/my_items.html:4
+#: templates/items/my_items.html:11 templates/users/profile.html:141
+msgid "My Items"
+msgstr ""
+
+#: templates/base.html:142 templates/messaging/conversation_detail.html:4
+#: templates/messaging/conversation_list.html:4
+msgid "Messages"
+msgstr ""
+
+#: templates/base.html:174 templates/groups/group_form.html:68
+#: templates/groups/group_form.html:162
+#: templates/groups/group_settings.html:156
+#: templates/groups/group_settings.html:157
+#: templates/groups/group_settings.html:158
+#: templates/groups/group_settings.html:228
+#: templates/groups/group_settings.html:229
+#: templates/groups/group_settings.html:230 templates/items/item_form.html:58
+#: templates/items/item_form.html:145 templates/items/item_form.html:274
+#: templates/items/item_form.html:292 templates/items/item_form.html:310
+#: templates/items/item_list.html:50 templates/items/item_list.html:72
+#: templates/items/item_list.html:73 templates/items/item_list.html:83
+msgid "selected"
+msgstr ""
+
+#: templates/base.html:175
+msgid "EN"
+msgstr ""
+
+#: templates/base.html:175
+msgid "DE"
+msgstr ""
+
+#: templates/base.html:175
+msgid "ES"
+msgstr ""
+
+#: templates/base.html:196 templates/users/profile.html:5
+msgid "Profile"
+msgstr ""
+
+#: templates/base.html:216
+msgid "Home"
+msgstr ""
+
+#: templates/base.html:238
+msgid "Toggle dark mode"
+msgstr ""
+
+#: templates/base.html:275
+msgid "SHARE AND BORROW WITHIN YOUR COMMUNITY"
+msgstr ""
+
+#: templates/base.html:279
+msgid "Quick Links"
+msgstr ""
+
+#: templates/base.html:285 templates/items/item_list.html:5
+#: templates/items/item_list.html:12 templates/loans/my_loans.html:427
+msgid "Browse Items"
+msgstr ""
+
+#: templates/base.html:296 templates/base.html:470 templates/faq.html:5
+msgid "FAQ"
+msgstr ""
+
+#: templates/base.html:299 templates/bug_report.html:4
+msgid "Report Bug"
+msgstr ""
+
+#: templates/base.html:306 templates/items/item_form.html:481
+#: templates/items/item_list.html:28 templates/users/profile.html:134
+msgid "Add Item"
+msgstr ""
+
+#: templates/base.html:313
+msgid "About"
+msgstr ""
+
+#: templates/base.html:319
+msgid "Made in Leipzig with love"
+msgstr ""
+
+#: templates/base.html:319
+msgid "We're not affiliated in any way with the company based in Barcelona"
+msgstr ""
+
+#: templates/base.html:470
+msgid "We respect your privacy. <br> Read our"
+msgstr ""
+
+#: templates/bug_report.html:11
+msgid "Help us improve Comuniza by reporting bugs, issues, or suggestions"
+msgstr ""
+
+#: templates/bug_report.html:28 templates/items/item_form.html:49
+#: templates/items/item_list.html:46 templates/loans/loan_detail.html:62
+msgid "Category"
+msgstr ""
+
+#: templates/bug_report.html:30
+msgid "Select a category"
+msgstr ""
+
+#: templates/bug_report.html:31
+msgid "User Interface"
+msgstr ""
+
+#: templates/bug_report.html:32
+msgid "Functionality"
+msgstr ""
+
+#: templates/bug_report.html:33
+msgid "Performance"
+msgstr ""
+
+#: templates/bug_report.html:34
+msgid "Security"
+msgstr ""
+
+#: templates/bug_report.html:35
+msgid "Feature Request"
+msgstr ""
+
+#: templates/bug_report.html:38
+msgid "What type of issue are you reporting"
+msgstr ""
+
+#: templates/bug_report.html:44
+msgid "Select severity"
+msgstr ""
+
+#: templates/bug_report.html:46
+msgid "Medium - Affects usability"
+msgstr ""
+
+#: templates/bug_report.html:47
+msgid "High - Major functionality broken"
+msgstr ""
+
+#: templates/bug_report.html:48
+msgid "Critical - Site unusable"
+msgstr ""
+
+#: templates/bug_report.html:50
+msgid "How severe is this issue"
+msgstr ""
+
+#: templates/bug_report.html:54 templates/groups/group_form.html:47
+#: templates/groups/group_settings.html:111
+#: templates/items/item_detail.html:158 templates/items/item_form.html:70
+msgid "Description"
+msgstr ""
+
+#: templates/bug_report.html:64
+msgid "Maximum 1000 characters. Please include steps to reproduce if possible"
+msgstr ""
+
+#: templates/bug_report.html:67
+msgid "1000 characters"
+msgstr ""
+
+#: templates/bug_report.html:73
+msgid "Your Email"
+msgstr ""
+
+#: templates/bug_report.html:82
+msgid "Optional. We'll use this to follow up if needed"
+msgstr ""
+
+#: templates/bug_report.html:92
+msgid "Reports are sent to our development team"
+msgstr ""
+
+#: templates/bug_report.html:96
+msgid "Send Report"
+msgstr ""
+
+#: templates/bug_report.html:99 templates/groups/group_form.html:216
+#: templates/groups/group_settings.html:274
+#: templates/groups/manage_group.html:311
+#: templates/items/item_confirm_delete.html:82
+#: templates/items/item_confirm_delete.html:111
+#: templates/items/item_form.html:484
+#: templates/loans/loan_request_form.html:117 templates/loans/my_loans.html:120
+#: templates/loans/my_loans.html:159
+#: templates/messaging/start_conversation.html:52
+#: templates/users/edit_profile.html:204
+#: templates/users/privacy_settings.html:184
+msgid "Cancel"
+msgstr ""
+
+#: templates/bug_report.html:109
+msgid "For urgent security issues, please contact us directly at"
+msgstr ""
+
+#: templates/bug_report.html:110
+msgid "security@comuniza.org"
+msgstr ""
+
+#: templates/faq.html:10
+msgid "Frequently Asked Questions"
+msgstr ""
+
+#: templates/faq.html:11
+msgid "Find answers to common questions about using Comuniza"
+msgstr ""
+
+#: templates/faq.html:17
+msgid "Getting Started"
+msgstr ""
+
+#: templates/faq.html:21
+msgid "How do I create an account?"
+msgstr ""
+
+#: templates/faq.html:22
+msgid ""
+"You can sign up using your email address. We'll send you a confirmation "
+"email to verify your account."
+msgstr ""
+
+#: templates/faq.html:26
+msgid "How do I add my first item?"
+msgstr ""
+
+#: templates/faq.html:27
+msgid ""
+"Click on \\\"Add Item\\\" from your profile or the quick actions menu. Fill "
+"in the details about your item and choose its visibility settings."
+msgstr ""
+
+#: templates/faq.html:31
+msgid "What are groups?"
+msgstr ""
+
+#: templates/faq.html:32
+msgid ""
+"Groups are communities where people share items. You can join existing "
+"groups or create your own. Items shared within groups can be borrowed by "
+"group members."
+msgstr ""
+
+#: templates/faq.html:39
+msgid "Borrowing & Lending"
+msgstr ""
+
+#: templates/faq.html:43
+msgid "How do I borrow an item?"
+msgstr ""
+
+#: templates/faq.html:44
+msgid ""
+"Find an available item you want to borrow and click \"Request to Borrow\". "
+"The lender will be notified and can approve or reject your request."
+msgstr ""
+
+#: templates/faq.html:48
+msgid "What if an item is damaged or lost?"
+msgstr ""
+
+#: templates/faq.html:49
+msgid ""
+"Please communicate with the lender immediately. Comuniza encourages honest "
+"communication between users. Check the item's condition notes before "
+"borrowing."
+msgstr ""
+
+#: templates/faq.html:53
+msgid "How do I set loan terms?"
+msgstr ""
+
+#: templates/faq.html:54
+msgid ""
+"As a lender, you can set maximum loan duration and deposit requirements when "
+"creating or editing your item."
+msgstr ""
+
+#: templates/faq.html:61
+msgid "Privacy & Safety"
+msgstr ""
+
+#: templates/faq.html:65
+msgid "How does privacy work?"
+msgstr ""
+
+#: templates/faq.html:66
+msgid ""
+"You control who can see your profile, items, and groups through privacy "
+"settings. Items can be public, private, or restricted to group members."
+msgstr ""
+
+#: templates/faq.html:70
+msgid "Is my information safe?"
+msgstr ""
+
+#: templates/faq.html:71
+msgid ""
+"We take privacy seriously. Your email and other personal information is "
+"protected, and you control who can see your profile and activity. There's "
+"currently email and password hashing, encrypted messaging and database "
+"encryption. We try to follow the highest/latest security standards even in "
+"development. The security mechanisms will be open and detailed in the future."
+msgstr ""
+
+#: templates/faq.html:75
+msgid "What should I do if I have concerns about another user?"
+msgstr ""
+
+#: templates/faq.html:76
+msgid "Contact us through at"
+msgstr ""
+
+#: templates/faq.html:76
+msgid "explaining the situation, or anonymously through the"
+msgstr ""
+
+#: templates/faq.html:76
+msgid "bug report form"
+msgstr ""
+
+#: templates/faq.html:76
+msgid ""
+"This will be currently reviewed by the administrator, but in the future more "
+"decentralized and democratic community safety mechanisms will be implemented."
+msgstr ""
+
+#: templates/faq.html:83
+msgid "Technical Questions"
+msgstr ""
+
+#: templates/faq.html:87
+msgid "How do I upload photos of my items?"
+msgstr ""
+
+#: templates/faq.html:88
+msgid ""
+"When adding or editing an item, you can upload multiple photos. The first "
+"photo will be the primary image shown in listings."
+msgstr ""
+
+#: templates/faq.html:92
+msgid "Can I edit my item after posting?"
+msgstr ""
+
+#: templates/faq.html:93
+msgid ""
+"Yes, you can edit any item you own. Go to \"My Items\" and click the edit "
+"button on your item."
+msgstr ""
+
+#: templates/faq.html:97
+msgid "How do I search for items?"
+msgstr ""
+
+#: templates/faq.html:98
+msgid ""
+"Use the search bar to find items by name, description, or author. You can "
+"also filter by category, status, and group."
+msgstr ""
+
+#: templates/faq.html:104
+msgid "Platforms costs and development"
+msgstr ""
+
+#: templates/faq.html:108
+msgid "Who's developing?"
+msgstr ""
+
+#: templates/faq.html:109
+msgid ""
+"This is currently a one-person-project, being developed by Animalite. I'm "
+"not a professional developer, although I've been writing code since I was a "
+"kid. This intersection between code, community and politics is really "
+"important to me."
+msgstr ""
+
+#: templates/faq.html:112
+msgid "Why is there a donation button"
+msgstr ""
+
+#: templates/faq.html:113
+msgid ""
+"Because of financial reasons as well as the old internet infrastructure in "
+"Germany, I cannot host this site at home, so donations are essential to pay "
+"the monthly VPS rent as well as some small developing tools. Hopefully in "
+"the future, this platform can also serve to share server infrastructure!"
+msgstr ""
+
+#: templates/faq.html:116
+msgid "I have ideas and want to help"
+msgstr ""
+
+#: templates/faq.html:117
+msgid "That's great! You can contact me at"
+msgstr ""
+
+#: templates/faq.html:117
+msgid ""
+"It's currently needed either help with development, localization, web and "
+"graphic design, feature suggestions, security and privacy reviews, legal "
+"advice, community support and integration and so on and so on."
+msgstr ""
+
+#: templates/faq.html:123
+msgid "Still Need Help?"
+msgstr ""
+
+#: templates/faq.html:126
+msgid "If you can't find the answer you're looking for, please"
+msgstr ""
+
+#: templates/faq.html:126
+msgid "contact us"
+msgstr ""
+
+#: templates/faq.html:126
+msgid "with your question."
+msgstr ""
+
+#: templates/groups/accept_invitation.html:5
+#: templates/groups/accept_invitation.html:11
+msgid "Group Invitation"
+msgstr ""
+
+#: templates/groups/accept_invitation.html:12
+msgid "You've been invited to join a community"
+msgstr ""
+
+#: templates/groups/accept_invitation.html:41
+msgid "Invited by"
+msgstr ""
+
+#: templates/groups/accept_invitation.html:45
+msgid "Invited on"
+msgstr ""
+
+#: templates/groups/accept_invitation.html:49
+#: templates/groups/manage_group.html:304
+msgid "Expires"
+msgstr ""
+
+#: templates/groups/accept_invitation.html:64
+msgid "Welcome back"
+msgstr ""
+
+#: templates/groups/accept_invitation.html:64
+msgid "You're logged in as"
+msgstr ""
+
+#: templates/groups/accept_invitation.html:64
+msgid "Click \\"
+msgstr ""
+
+#: templates/groups/accept_invitation.html:68
+msgid "Don't have an account"
+msgstr ""
+
+#: templates/groups/accept_invitation.html:68
+msgid "This invitation is for"
+msgstr ""
+
+#: templates/groups/accept_invitation.html:68
+msgid ""
+"If this is your email, you'll need to create an account first, then return "
+"to accept the invitation"
+msgstr ""
+
+#: templates/groups/accept_invitation.html:76
+#: templates/groups/group_detail.html:45 templates/groups/manage_group.html:180
+msgid "Members"
+msgstr ""
+
+#: templates/groups/accept_invitation.html:80
+#: templates/groups/group_detail.html:51 templates/groups/manage_group.html:172
+#: templates/users/profile.html:59
+msgid "Items Shared"
+msgstr ""
+
+#: templates/groups/accept_invitation.html:84
+#: templates/groups/group_detail.html:63 templates/groups/group_form.html:61
+msgid "Privacy"
+msgstr ""
+
+#: templates/groups/accept_invitation.html:93
+msgid "Accept Invitation"
+msgstr ""
+
+#: templates/groups/accept_invitation.html:96
+msgid "Decline Invitation"
+msgstr ""
+
+#: templates/groups/group_detail.html:35
+msgid "read more"
+msgstr ""
+
+#: templates/groups/group_detail.html:57
+msgid "Founded"
+msgstr ""
+
+#: templates/groups/group_detail.html:73
+msgid "Manage Group"
+msgstr ""
+
+#: templates/groups/group_detail.html:74 templates/groups/group_form.html:152
+#: templates/groups/group_settings.html:68
+#: templates/groups/manage_group.html:144
+msgid "Group Settings"
+msgstr ""
+
+#: templates/groups/group_detail.html:82
+msgid "Join Group"
+msgstr ""
+
+#: templates/groups/group_detail.html:89
+msgid "Request to Join"
+msgstr ""
+
+#: templates/groups/group_detail.html:94
+msgid "This is a private group. Membership is by invitation only"
+msgstr ""
+
+#: templates/groups/group_detail.html:100
+msgid "to join this group and access shared items"
+msgstr ""
+
+#: templates/groups/group_detail.html:108
+msgid "Recently Shared Items"
+msgstr ""
+
+#: templates/groups/group_detail.html:117
+#: templates/groups/group_settings.html:128
+msgid "IMG"
+msgstr ""
+
+#: templates/groups/group_detail.html:147
+msgid "Group Members"
+msgstr ""
+
+#: templates/groups/group_detail.html:162
+#: templates/groups/manage_group.html:238 templates/loans/loan_detail.html:59
+#: templates/loans/loan_request_form.html:27
+msgid "Owner"
+msgstr ""
+
+#: templates/groups/group_detail.html:176
+msgid "No items shared yet"
+msgstr ""
+
+#: templates/groups/group_detail.html:179
+msgid "Be the first to share something with the group"
+msgstr ""
+
+#: templates/groups/group_detail.html:181
+msgid "Join the group to see shared items"
+msgstr ""
+
+#: templates/groups/group_detail.html:185
+msgid "Share an Item"
+msgstr ""
+
+#: templates/groups/group_form.html:11
+msgid "Create a community for sharing items with like-minded people"
+msgstr ""
+
+#: templates/groups/group_form.html:27 templates/groups/group_settings.html:91
+#: templates/items/item_form.html:29 templates/users/edit_profile.html:58
+msgid "Basic Information"
+msgstr ""
+
+#: templates/groups/group_form.html:30 templates/groups/group_settings.html:94
+msgid "Group Name"
+msgstr ""
+
+#: templates/groups/group_form.html:80
+msgid "Group Image (optional"
+msgstr ""
+
+#: templates/groups/group_form.html:88
+msgid "Upload an image to represent your group (max 5MB"
+msgstr ""
+
+#: templates/groups/group_form.html:94 templates/groups/group_settings.html:170
+msgid "Location"
+msgstr ""
+
+#: templates/groups/group_form.html:98 templates/groups/group_settings.html:174
+msgid "City"
+msgstr ""
+
+#: templates/groups/group_form.html:115
+#: templates/groups/group_settings.html:188
+msgid "State/Region"
+msgstr ""
+
+#: templates/groups/group_form.html:131
+#: templates/groups/group_settings.html:201
+msgid "Country"
+msgstr ""
+
+#: templates/groups/group_form.html:147
+msgid "Location helps members find groups near them"
+msgstr ""
+
+#: templates/groups/group_form.html:155
+#: templates/groups/group_settings.html:222
+msgid "Loan Visibility"
+msgstr ""
+
+#: templates/groups/group_form.html:183
+#: templates/groups/group_settings.html:247
+msgid "Allow members to invite others"
+msgstr ""
+
+#: templates/groups/group_form.html:200
+#: templates/groups/group_settings.html:261
+msgid "Require admin approval for new items"
+msgstr ""
+
+#: templates/groups/group_form.html:213 templates/groups/group_list.html:24
+msgid "Create Group"
+msgstr ""
+
+#: templates/groups/group_list.html:21
+msgid "Join communities to share and borrow items"
+msgstr ""
+
+#: templates/groups/group_list.html:32
+msgid "Your Groups"
+msgstr ""
+
+#: templates/groups/group_list.html:67
+msgid "Discover More Groups"
+msgstr ""
+
+#: templates/groups/group_list.html:67
+msgid "Available Groups"
+msgstr ""
+
+#: templates/groups/group_list.html:97
+msgid "View Group"
+msgstr ""
+
+#: templates/groups/group_list.html:102
+msgid "Join"
+msgstr ""
+
+#: templates/groups/group_list.html:107
+msgid "Request"
+msgstr ""
+
+#: templates/groups/group_list.html:123
+msgid "No groups yet"
+msgstr ""
+
+#: templates/groups/group_list.html:125
+msgid "Groups allow you to share items within trusted communities"
+msgstr ""
+
+#: templates/groups/group_list.html:128
+msgid "Create First Group"
+msgstr ""
+
+#: templates/groups/group_list.html:130
+msgid "Login to Create Group"
+msgstr ""
+
+#: templates/groups/group_settings.html:4
+msgid "Settings"
+msgstr ""
+
+#: templates/groups/group_settings.html:69
+msgid "Configure"
+msgstr ""
+
+#: templates/groups/group_settings.html:69
+msgid "settings"
+msgstr ""
+
+#: templates/groups/group_settings.html:72
+#: templates/groups/manage_group.html:143
+msgid "Back to Group"
+msgstr ""
+
+#: templates/groups/group_settings.html:73
+msgid "Manage Members"
+msgstr ""
+
+#: templates/groups/group_settings.html:122
+msgid "Group Image"
+msgstr ""
+
+#: templates/groups/group_settings.html:139
+msgid ""
+"JPG, PNG or GIF. Max size 5MB. Images will be cropped to banner ratio "
+"(1000x300px"
+msgstr ""
+
+#: templates/groups/group_settings.html:147
+msgid "Privacy & Access"
+msgstr ""
+
+#: templates/groups/group_settings.html:150
+msgid "Privacy Level"
+msgstr ""
+
+#: templates/groups/group_settings.html:161
+msgid "Private: Only invited members can view and join the group"
+msgstr ""
+
+#: templates/groups/group_settings.html:162
+msgid "Public: Anyone can view and join the group immediately"
+msgstr ""
+
+#: templates/groups/group_settings.html:163
+msgid ""
+"Request: Anyone can view the group, but admins must approve join requests"
+msgstr ""
+
+#: templates/groups/group_settings.html:214
+msgid "Location helps members find groups near them on the map"
+msgstr ""
+
+#: templates/groups/group_settings.html:219
+msgid "Group Policies"
+msgstr ""
+
+#: templates/groups/group_settings.html:233
+msgid "Control who can see loan activity within this group"
+msgstr ""
+
+#: templates/groups/group_settings.html:249
+msgid "Let regular members send group invitations"
+msgstr ""
+
+#: templates/groups/group_settings.html:263
+msgid "Items shared to the group need admin approval before being visible"
+msgstr ""
+
+#: templates/groups/group_settings.html:271
+#: templates/users/edit_profile.html:201
+msgid "Save Changes"
+msgstr ""
+
+#: templates/groups/group_settings.html:283
+msgid "Danger Zone"
+msgstr ""
+
+#: templates/groups/group_settings.html:286
+#: templates/groups/group_settings.html:295
+msgid "Delete Group"
+msgstr ""
+
+#: templates/groups/group_settings.html:288
+msgid "Once you delete this group, there is no going back. Please be certain"
+msgstr ""
+
+#: templates/groups/group_settings.html:299
+msgid "Only the group owner can delete the group"
+msgstr ""
+
+#: templates/groups/manage_group.html:5 templates/groups/manage_group.html:139
+msgid "Manage"
+msgstr ""
+
+#: templates/groups/manage_group.html:140
+msgid "Manage members and group settings"
+msgstr ""
+
+#: templates/groups/manage_group.html:154
+msgid "Active Members"
+msgstr ""
+
+#: templates/groups/manage_group.html:160
+#: templates/groups/manage_group.html:325
+msgid "Pending Members"
+msgstr ""
+
+#: templates/groups/manage_group.html:166
+#: templates/groups/manage_group.html:292
+msgid "Pending Invitations"
+msgstr ""
+
+#: templates/groups/manage_group.html:200
+msgid "Joined"
+msgstr ""
+
+#: templates/groups/manage_group.html:219
+msgid "Make Admin"
+msgstr ""
+
+#: templates/groups/manage_group.html:225
+msgid "Remove Admin"
+msgstr ""
+
+#: templates/groups/manage_group.html:232
+msgid "Remove from Group"
+msgstr ""
+
+#: templates/groups/manage_group.html:245
+msgid "No members yet"
+msgstr ""
+
+#: templates/groups/manage_group.html:253
+msgid "Invite New Members"
+msgstr ""
+
+#: templates/groups/manage_group.html:271
+msgid "Enter a username or email address to invite"
+msgstr ""
+
+#: templates/groups/manage_group.html:282
+msgid "Send Invitation"
+msgstr ""
+
+#: templates/groups/manage_group.html:283
+msgid "Test Search"
+msgstr ""
+
+#: templates/groups/manage_group.html:300
+msgid "Invited"
+msgstr ""
+
+#: templates/groups/manage_group.html:351 templates/items/item_detail.html:275
+#: templates/loans/my_loans.html:76
+msgid "Approve"
+msgstr ""
+
+#: templates/groups/manage_group.html:356 templates/items/item_detail.html:276
+#: templates/loans/my_loans.html:81
+msgid "Reject"
+msgstr ""
+
+#: templates/groups/manage_group.html:369
+msgid "Recent Activity"
+msgstr ""
+
+#: templates/groups/manage_group.html:379
+msgid "New member joined the group"
+msgstr ""
+
+#: templates/groups/manage_group.html:380
+msgid "2 hours ago"
+msgstr ""
+
+#: templates/groups/manage_group.html:388
+msgid "New item added to the group"
+msgstr ""
+
+#: templates/groups/manage_group.html:389
+msgid "1 day ago"
+msgstr ""
+
+#: templates/groups/manage_group.html:397
+msgid "Loan request approved"
+msgstr ""
+
+#: templates/groups/manage_group.html:398
+msgid "2 days ago"
+msgstr ""
+
+#: templates/home.html:4 templates/home.html:38
+msgid "Share Freely, Receive Freely"
+msgstr ""
+
+#: templates/home.html:5
+msgid ""
+"Join the community lending revolution. Share things with your friends and "
+"neighbors. Buy less, share more."
+msgstr ""
+
+#: templates/home.html:30
+msgid "LUXURY COMMUNISM"
+msgstr ""
+
+#: templates/home.html:45
+msgid ""
+"Build a library of commons. Lend and borrow books and things within your "
+"community."
+msgstr ""
+
+#: templates/home.html:46
+msgid "No money. No fees. Pure sharing economy."
+msgstr ""
+
+#: templates/home.html:55
+msgid "[BROWSE THINGS]"
+msgstr ""
+
+#: templates/home.html:60
+msgid "[SHARE THINGS]"
+msgstr ""
+
+#: templates/home.html:68
+msgid "[JOIN NOW]"
+msgstr ""
+
+#: templates/home.html:74
+msgid "[LOGIN]"
+msgstr ""
+
+#: templates/home.html:83
+msgid "COMMUNITY STATS"
+msgstr ""
+
+#: templates/home.html:103
+msgid "ITEMS SHARED"
+msgstr ""
+
+#: templates/home.html:122
+msgid "AVAILABLE NOW"
+msgstr ""
+
+#: templates/home.html:141
+msgid "ACTIVE GROUPS"
+msgstr ""
+
+#: templates/home.html:159
+msgid "COMRADES"
+msgstr ""
+
+#: templates/home.html:173
+msgid "SHARE"
+msgstr ""
+
+#: templates/home.html:177
+msgid ""
+"Add books and items you own to the commons. Let others benefit from what "
+"sits idle on your shelf."
+msgstr ""
+
+#: templates/home.html:178
+msgid "Contribute with what you can"
+msgstr ""
+
+#: templates/home.html:185
+msgid "2] BORROW"
+msgstr ""
+
+#: templates/home.html:189
+msgid ""
+"Request items from your community. Read books without buying them. Build "
+"knowledge without accumulation"
+msgstr ""
+
+#: templates/home.html:190
+msgid "Receive what you need"
+msgstr ""
+
+#: templates/home.html:197
+msgid "3] GROW"
+msgstr ""
+
+#: templates/home.html:201
+msgid ""
+" Receive badges and reputation from the ecosystem. Create\n"
+"                        groups in your neighborhood. Expand the commons. "
+msgstr ""
+
+#: templates/home.html:203
+msgid "Solidarity over profit"
+msgstr ""
+
+#: templates/home.html:224
+msgid "FIND YOUR COMMUNITY"
+msgstr ""
+
+#: templates/home.html:230
+msgid "Groups are forming across cities. Join one near you or start your own"
+msgstr ""
+
+#: templates/home.html:250
+msgid "Ready to join the movement"
+msgstr ""
+
+#: templates/home.html:256
+msgid "CREATE YOUR ACCOUNT"
+msgstr ""
+
+#: templates/home.html:268
+msgid "HOW IT WORKS"
+msgstr ""
+
+#: templates/home.html:273
+msgid "Simple. No bureaucracy. No capitalism"
+msgstr ""
+
+#: templates/home.html:283
+msgid "FOR LENDERS"
+msgstr ""
+
+#: templates/home.html:291
+msgid "1. Sign up and join/create a group"
+msgstr ""
+
+#: templates/home.html:292
+msgid "2. Add items you want to share"
+msgstr ""
+
+#: templates/home.html:293
+msgid "3. Receive borrow requests"
+msgstr ""
+
+#: templates/home.html:294
+msgid "4. Hand over the item, set return date"
+msgstr ""
+
+#: templates/home.html:295
+msgid "5. Get it back, earn badges & reputation"
+msgstr ""
+
+#: templates/home.html:302
+msgid "FOR BORROWERS"
+msgstr ""
+
+#: templates/home.html:310
+msgid "1. Sign up and join a local group"
+msgstr ""
+
+#: templates/home.html:311
+msgid "2. Browse available things"
+msgstr ""
+
+#: templates/home.html:312
+msgid "3. Request what you want to use or borrow"
+msgstr ""
+
+#: templates/home.html:313
+msgid "4. Pick it up, enjoy it"
+msgstr ""
+
+#: templates/home.html:314
+msgid "5. Return on time, leave a review"
+msgstr ""
+
+#: templates/home.html:334
+msgid "THE COMMONS AWAIT"
+msgstr ""
+
+#: templates/home.html:346
+msgid ""
+" Join people building a post-capitalist library. Share\n"
+"            what you have. Take what you need. "
+msgstr ""
+
+#: templates/home.html:359
+msgid "START SHARING TODAY"
+msgstr ""
+
+#: templates/items/item_confirm_delete.html:4
+#: templates/items/item_detail.html:258 templates/items/my_items.html:158
+#: templates/items/my_items.html:250
+msgid "Delete"
+msgstr ""
+
+#: templates/items/item_confirm_delete.html:10
+msgid "Delete Item"
+msgstr ""
+
+#: templates/items/item_confirm_delete.html:11
+msgid "Please confirm you want to delete this item"
+msgstr ""
+
+#: templates/items/item_confirm_delete.html:40
+#: templates/items/item_detail.html:98 templates/items/my_items.html:321
+msgid "by"
+msgstr ""
+
+#: templates/items/item_confirm_delete.html:67
+msgid "Item Currently Borrowed"
+msgstr ""
+
+#: templates/items/item_confirm_delete.html:68
+msgid "This item is currently borrowed by"
+msgstr ""
+
+#: templates/items/item_confirm_delete.html:68
+msgid "You cannot delete it while it's on loan"
+msgstr ""
+
+#: templates/items/item_confirm_delete.html:69
+msgid ""
+"You can deactivate the item instead, which will hide it from public view but "
+"preserve the loan relationship"
+msgstr ""
+
+#: templates/items/item_confirm_delete.html:79
+msgid "Deactivate Item Instead"
+msgstr ""
+
+#: templates/items/item_confirm_delete.html:92
+msgid "This action cannot be undone"
+msgstr ""
+
+#: templates/items/item_confirm_delete.html:93
+msgid ""
+"Deleting this item will permanently remove it from the system. This includes"
+msgstr ""
+
+#: templates/items/item_confirm_delete.html:95
+msgid "All item information and images"
+msgstr ""
+
+#: templates/items/item_confirm_delete.html:96
+msgid "Loan history and reviews"
+msgstr ""
+
+#: templates/items/item_confirm_delete.html:97
+msgid "Wishlist entries"
+msgstr ""
+
+#: templates/items/item_confirm_delete.html:108
+msgid "Yes, Delete Item"
+msgstr ""
+
+#: templates/items/item_detail.html:59
+msgid "Open Library"
+msgstr ""
+
+#: templates/items/item_detail.html:61
+msgid "Generated"
+msgstr ""
+
+#: templates/items/item_detail.html:115
+msgid "Owned by"
+msgstr ""
+
+#: templates/items/item_detail.html:129 templates/items/item_list.html:196
+#: templates/items/item_list.html:260
+msgid "You"
+msgstr ""
+
+#: templates/items/item_detail.html:149
+msgid "Shared"
+msgstr ""
+
+#: templates/items/item_detail.html:149
+msgid "time"
+msgstr ""
+
+#: templates/items/item_detail.html:165 templates/items/item_form.html:86
+msgid "Item Details"
+msgstr ""
+
+#: templates/items/item_detail.html:168 templates/items/item_form.html:267
+#: templates/loans/loan_detail.html:298 templates/loans/loan_detail.html:337
+#: templates/loans/my_loans.html:317
+#: templates/notifications/email/loan_returned/message.html:21
+#: templates/notifications/email/loan_returned/message.html:54
+#: templates/notifications/email/loan_returned/message.txt:11
+msgid "Condition"
+msgstr ""
+
+#: templates/items/item_detail.html:172
+msgid "Max loan period"
+msgstr ""
+
+#: templates/items/item_detail.html:177
+msgid "ISBN/Serial"
+msgstr ""
+
+#: templates/items/item_detail.html:183
+msgid "Est. Value"
+msgstr ""
+
+#: templates/items/item_detail.html:189
+msgid "Deposit Required"
+msgstr ""
+
+#: templates/items/item_detail.html:200
+msgid "Available in"
+msgstr ""
+
+#: templates/items/item_detail.html:215
+msgid "CURRENT LOAN"
+msgstr ""
+
+#: templates/items/item_detail.html:219
+msgid "Borrowed by"
+msgstr ""
+
+#: templates/items/item_detail.html:223 templates/loans/my_loans.html:191
+#: templates/messaging/partials/loan_actions.html:60
+msgid "Due"
+msgstr ""
+
+#: templates/items/item_detail.html:226 templates/loans/loan_detail.html:108
+#: templates/loans/my_loans.html:195
+#: templates/notifications/email/loan_overdue/message.txt:5
+msgid "days overdue"
+msgstr ""
+
+#: templates/items/item_detail.html:228 templates/loans/loan_detail.html:110
+msgid "days left"
+msgstr ""
+
+#: templates/items/item_detail.html:235 templates/loans/loan_detail.html:27
+msgid "Open Conversation"
+msgstr ""
+
+#: templates/items/item_detail.html:239
+msgid "Message Owner"
+msgstr ""
+
+#: templates/items/item_detail.html:246
+msgid "Extension Requested"
+msgstr ""
+
+#: templates/items/item_detail.html:257 templates/items/item_form.html:11
+msgid "Edit Item"
+msgstr ""
+
+#: templates/items/item_detail.html:260
+#: templates/loans/loan_request_form.html:9
+msgid "Request to Borrow"
+msgstr ""
+
+#: templates/items/item_detail.html:264
+#: templates/notifications/email/loan_approved/message.html:44
+#: templates/notifications/email/loan_approved/message.html:91
+#: templates/notifications/email/loan_extension_decision/message.html:44
+#: templates/notifications/email/loan_extension_request/message.html:25
+#: templates/notifications/email/loan_message/message.html:37
+#: templates/notifications/email/loan_overdue/message.html:24
+#: templates/notifications/email/loan_rejected/message.html:27
+#: templates/notifications/email/loan_rejected/message.html:57
+msgid "View Loan Details"
+msgstr ""
+
+#: templates/items/item_detail.html:266 templates/loans/loan_detail.html:250
+#: templates/loans/loan_detail.html:254 templates/loans/my_loans.html:212
+#: templates/messaging/partials/loan_actions.html:33
+msgid "Request Extension"
+msgstr ""
+
+#: templates/items/item_detail.html:269 templates/loans/loan_detail.html:217
+#: templates/loans/my_loans.html:217
+#: templates/messaging/partials/loan_actions.html:23
+#: templates/messaging/partials/loan_actions.html:31
+#: templates/notifications/email/loan_overdue/message.html:16
+msgid "Mark as Returned"
+msgstr ""
+
+#: templates/items/item_detail.html:279 templates/loans/loan_detail.html:221
+#: templates/loans/loan_detail.html:226 templates/loans/my_loans.html:310
+#: templates/loans/my_loans.html:327
+#: templates/notifications/email/loan_return_request/message.html:25
+msgid "Confirm Return"
+msgstr ""
+
+#: templates/items/item_detail.html:282 templates/items/my_items.html:38
+msgid "Currently Borrowed"
+msgstr ""
+
+#: templates/items/item_detail.html:284
+msgid "Add to Wishlist"
+msgstr ""
+
+#: templates/items/item_detail.html:288
+msgid "Login to Borrow"
+msgstr ""
+
+#: templates/items/item_detail.html:298 templates/loans/loan_detail.html:311
+msgid "Reviews"
+msgstr ""
+
+#: templates/items/item_form.html:5 templates/items/my_items.html:152
+#: templates/items/my_items.html:244
+msgid "Edit"
+msgstr ""
+
+#: templates/items/item_form.html:5 templates/items/item_form.html:11
+#: templates/items/my_items.html:57
+msgid "Add New Item"
+msgstr ""
+
+#: templates/items/item_form.html:12 templates/users/profile.html:135
+msgid "Share something with your community"
+msgstr ""
+
+#: templates/items/item_form.html:32 templates/items/item_form.html:189
+msgid "Title"
+msgstr ""
+
+#: templates/items/item_form.html:56
+msgid "Select a category (optional"
+msgstr ""
+
+#: templates/items/item_form.html:66
+msgid "Choose a category to show relevant fields"
+msgstr ""
+
+#: templates/items/item_form.html:92
+msgid "Author / Brand"
+msgstr ""
+
+#: templates/items/item_form.html:107 templates/items/item_form.html:195
+msgid "Publisher"
+msgstr ""
+
+#: templates/items/item_form.html:117
+msgid "Publishing company"
+msgstr ""
+
+#: templates/items/item_form.html:122 templates/items/item_form.html:201
+msgid "Languages"
+msgstr ""
+
+#: templates/items/item_form.html:132
+msgid "Comma-separated list of languages"
+msgstr ""
+
+#: templates/items/item_form.html:137
+msgid "Book Format"
+msgstr ""
+
+#: templates/items/item_form.html:143
+msgid "Select format"
+msgstr ""
+
+#: templates/items/item_form.html:155 templates/items/item_form.html:204
+msgid "Subjects"
+msgstr ""
+
+#: templates/items/item_form.html:165
+msgid "Subjects/topics for books (comma-separated"
+msgstr ""
+
+#: templates/items/item_form.html:170
+msgid "ISBN / Serial Number"
+msgstr ""
+
+#: templates/items/item_form.html:186
+msgid "Found Book Information"
+msgstr ""
+
+#: templates/items/item_form.html:192
+msgid "Author"
+msgstr ""
+
+#: templates/items/item_form.html:198 templates/items/item_form.html:231
+msgid "Year"
+msgstr ""
+
+#: templates/items/item_form.html:208
+msgid "Use This Data"
+msgstr ""
+
+#: templates/items/item_form.html:211
+msgid "Set as Cover"
+msgstr ""
+
+#: templates/items/item_form.html:214
+msgid "Use Original"
+msgstr ""
+
+#: templates/items/item_form.html:219
+msgid "Cover preview"
+msgstr ""
+
+#: templates/items/item_form.html:226
+msgid "Enter ISBN-10 or ISBN-13. Book data will be auto-fetched"
+msgstr ""
+
+#: templates/items/item_form.html:242
+msgid "Year of publication/manufacture"
+msgstr ""
+
+#: templates/items/item_form.html:247
+msgid "Estimated Value"
+msgstr ""
+
+#: templates/items/item_form.html:258
+msgid "Approximate replacement value for insurance purposes"
+msgstr ""
+
+#: templates/items/item_form.html:264
+msgid "Condition & Status"
+msgstr ""
+
+#: templates/items/item_form.html:303
+msgid "Maximum Loan Period"
+msgstr ""
+
+#: templates/items/item_form.html:329
+msgid "Allow reservations when item is borrowed"
+msgstr ""
+
+#: templates/items/item_form.html:342
+msgid "Item Privacy"
+msgstr ""
+
+#: templates/items/item_form.html:345
+msgid "Visibility"
+msgstr ""
+
+#: templates/items/item_form.html:365
+msgid "Public: visible to everyone"
+msgstr ""
+
+#: templates/items/item_form.html:366
+msgid "Private: hidden from all users"
+msgstr ""
+
+#: templates/items/item_form.html:367
+msgid "Restricted: only visible to members of selected groups"
+msgstr ""
+
+#: templates/items/item_form.html:381
+msgid "Share with all my groups"
+msgstr ""
+
+#: templates/items/item_form.html:383
+msgid ""
+"Automatically select all groups you belong to (only applies when Restricted "
+"visibility is selected"
+msgstr ""
+
+#: templates/items/item_form.html:391
+msgid "Available in these groups"
+msgstr ""
+
+#: templates/items/item_form.html:413
+msgid "You're not a member of any groups yet"
+msgstr ""
+
+#: templates/items/item_form.html:423
+msgid "Images"
+msgstr ""
+
+#: templates/items/item_form.html:428
+msgid "Current Images"
+msgstr ""
+
+#: templates/items/item_form.html:435
+msgid "Item image"
+msgstr ""
+
+#: templates/items/item_form.html:441
+msgid "Cover"
+msgstr ""
+
+#: templates/items/item_form.html:450
+msgid "Order"
+msgstr ""
+
+#: templates/items/item_form.html:455
+msgid ""
+"Drag to reorder images. The first image will be the cover. Click × to delete"
+msgstr ""
+
+#: templates/items/item_form.html:461
+msgid "Add More Images"
+msgstr ""
+
+#: templates/items/item_form.html:461
+msgid "Upload Images"
+msgstr ""
+
+#: templates/items/item_form.html:470
+msgid "Upload additional images (max 8 total, 5MB each"
+msgstr ""
+
+#: templates/items/item_form.html:470
+msgid "The first image will be used as the cover"
+msgstr ""
+
+#: templates/items/item_form.html:481
+msgid "Update Item"
+msgstr ""
+
+#: templates/items/item_list.html:13
+msgid "Discover what your community has to share"
+msgstr ""
+
+#: templates/items/item_list.html:19 templates/items/my_items.html:50
+msgid "Grid"
+msgstr ""
+
+#: templates/items/item_list.html:22 templates/items/my_items.html:53
+msgid "List"
+msgstr ""
+
+#: templates/items/item_list.html:41 templates/items/item_list.html:58
+msgid "Search"
+msgstr ""
+
+#: templates/items/item_list.html:42
+msgid "Search items..."
+msgstr ""
+
+#: templates/items/item_list.html:48
+msgid "All Categories"
+msgstr ""
+
+#: templates/items/item_list.html:60
+msgid "Clear"
+msgstr ""
+
+#: templates/items/item_list.html:71
+msgid "All"
+msgstr ""
+
+#: templates/items/item_list.html:79
+#: templates/notifications/email/loan_requested/message.html:33
+#: templates/notifications/email/loan_requested/message.txt:8
+msgid "Group"
+msgstr ""
+
+#: templates/items/item_list.html:81
+msgid "All Groups"
+msgstr ""
+
+#: templates/items/item_list.html:92
+msgid "Apply Filters"
+msgstr ""
+
+#: templates/items/item_list.html:100
+msgid "More Filters"
+msgstr ""
+
+#: templates/items/item_list.html:113
+msgid "found"
+msgstr ""
+
+#: templates/items/item_list.html:170 templates/items/my_items.html:132
+#: templates/items/my_items.html:225
+msgid "ISBN"
+msgstr ""
+
+#: templates/items/item_list.html:202
+msgid "x"
+msgstr ""
+
+#: templates/items/item_list.html:268
+msgid "Open"
+msgstr ""
+
+#: templates/items/item_list.html:318
+msgid "First"
+msgstr ""
+
+#: templates/items/item_list.html:319
+#: templates/messaging/conversation_list.html:89
+msgid "Previous"
+msgstr ""
+
+#: templates/items/item_list.html:323
+#: templates/messaging/conversation_list.html:93
+msgid "Page"
+msgstr ""
+
+#: templates/items/item_list.html:323
+#: templates/messaging/conversation_list.html:93
+msgid "of"
+msgstr ""
+
+#: templates/items/item_list.html:327
+#: templates/messaging/conversation_list.html:97
+msgid "Next"
+msgstr ""
+
+#: templates/items/item_list.html:328
+msgid "Last"
+msgstr ""
+
+#: templates/items/item_list.html:336
+msgid "No items found"
+msgstr ""
+
+#: templates/items/item_list.html:339
+msgid "Try adjusting your filters or search terms"
+msgstr ""
+
+#: templates/items/item_list.html:341
+msgid "Be the first to share something with your community"
+msgstr ""
+
+#: templates/items/item_list.html:345 templates/items/my_items.html:265
+msgid "Add Your First Item"
+msgstr ""
+
+#: templates/items/item_list.html:347
+msgid "Login to Add Items"
+msgstr ""
+
+#: templates/items/my_items.html:12 templates/users/profile.html:142
+msgid "Manage your shared items"
+msgstr ""
+
+#: templates/items/my_items.html:22
+msgid "Total Items"
+msgstr ""
+
+#: templates/items/my_items.html:45
+msgid "Active Items"
+msgstr ""
+
+#: templates/items/my_items.html:260
+msgid "No active items yet"
+msgstr ""
+
+#: templates/items/my_items.html:262
+msgid "Start sharing by adding your first item to the community"
+msgstr ""
+
+#: templates/items/my_items.html:274
+msgid "Inactive Items"
+msgstr ""
+
+#: templates/items/my_items.html:311
+msgid "Inactive"
+msgstr ""
+
+#: templates/items/my_items.html:344
+msgid "Reactivate"
+msgstr ""
+
+#: templates/loans/loan_detail.html:6 templates/loans/loan_detail.html:75
+#: templates/notifications/email/loan_approved/message.html:13
+#: templates/notifications/email/loan_approved/message.html:57
+#: templates/notifications/email/loan_return_request/message.html:11
+msgid "Loan Details"
+msgstr ""
+
+#: templates/loans/loan_detail.html:20
+#: templates/messaging/partials/loan_actions.html:63
+msgid "OVERDUE"
+msgstr ""
+
+#: templates/loans/loan_detail.html:49
+msgid "Item Information"
+msgstr ""
+
+#: templates/loans/loan_detail.html:66
+#: templates/notifications/email/loan_approved/message.html:33
+#: templates/notifications/email/loan_approved/message.html:77
+#: templates/notifications/email/loan_approved/message.txt:15
+msgid "Shared via"
+msgstr ""
+
+#: templates/loans/loan_detail.html:78 templates/loans/my_loans.html:64
+msgid "Requested by"
+msgstr ""
+
+#: templates/loans/loan_detail.html:97
+#: templates/notifications/email/loan_approved/message.html:16
+#: templates/notifications/email/loan_approved/message.html:60
+#: templates/notifications/email/loan_approved/message.txt:4
+msgid "Start Date"
+msgstr ""
+
+#: templates/loans/loan_detail.html:103
+#: templates/notifications/email/loan_approved/message.html:20
+#: templates/notifications/email/loan_approved/message.html:64
+#: templates/notifications/email/loan_approved/message.txt:8
+#: templates/notifications/email/loan_return_request/message.html:18
+#: templates/notifications/email/loan_return_request/message.txt:9
+msgid "Due Date"
+msgstr ""
+
+#: templates/loans/loan_detail.html:128
+msgid "Request Message"
+msgstr ""
+
+#: templates/loans/loan_detail.html:137
+msgid "Rejection Reason"
+msgstr ""
+
+#: templates/loans/loan_detail.html:149
+msgid "Additional days"
+msgstr ""
+
+#: templates/loans/loan_detail.html:159
+msgid "Approve Extension"
+msgstr ""
+
+#: templates/loans/loan_detail.html:163
+msgid "Reject Extension"
+msgstr ""
+
+#: templates/loans/loan_detail.html:177
+msgid "Required Action"
+msgstr ""
+
+#: templates/loans/loan_detail.html:182
+msgid "Optional reason"
+msgstr ""
+
+#: templates/loans/loan_detail.html:185
+#: templates/messaging/partials/loan_actions.html:11
+msgid "Approve Loan"
+msgstr ""
+
+#: templates/loans/loan_detail.html:192
+msgid "Rejection reason (optional"
+msgstr ""
+
+#: templates/loans/loan_detail.html:195
+#: templates/messaging/partials/loan_actions.html:15
+msgid "Reject Loan"
+msgstr ""
+
+#: templates/loans/loan_detail.html:199
+msgid "Pick Up Item"
+msgstr ""
+
+#: templates/loans/loan_detail.html:200
+msgid ""
+"The lender has approved your request. Pick up the item to start the loan "
+"period"
+msgstr ""
+
+#: templates/loans/loan_detail.html:204 templates/loans/my_loans.html:208
+#: templates/loans/my_loans.html:256
+msgid "Mark as Picked Up"
+msgstr ""
+
+#: templates/loans/loan_detail.html:208
+msgid "Return Item"
+msgstr ""
+
+#: templates/loans/loan_detail.html:222
+msgid ""
+"The borrower has marked this item as returned. Please confirm you have "
+"received it"
+msgstr ""
+
+#: templates/loans/loan_detail.html:230 templates/loans/loan_detail.html:239
+msgid "Cancel Loan"
+msgstr ""
+
+#: templates/loans/loan_detail.html:231
+msgid "You can cancel this loan if the item hasn't been picked up yet"
+msgstr ""
+
+#: templates/loans/loan_detail.html:236
+msgid "Reason for cancellation (optional"
+msgstr ""
+
+#: templates/loans/loan_detail.html:264
+#: templates/notifications/email/loan_returned/message.html:29
+#: templates/notifications/email/loan_returned/message.html:64
+msgid "Leave a Review"
+msgstr ""
+
+#: templates/loans/loan_detail.html:268
+msgid "Submit Review"
+msgstr ""
+
+#: templates/loans/loan_detail.html:278
+msgid "Loan Timeline"
+msgstr ""
+
+#: templates/loans/loan_detail.html:329
+#: templates/notifications/email/loan_review/message.html:23
+msgid "Communication"
+msgstr ""
+
+#: templates/loans/loan_detail.html:333
+#: templates/notifications/email/loan_review/message.html:27
+msgid "Reliability"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:4
+msgid "Request Loan"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:11
+msgid "You're requesting to borrow"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:11
+msgid "from"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:28
+msgid "Max loan"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:32
+msgid "Extensions"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:32
+msgid "allowed"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:32
+msgid "not allowed"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:34
+msgid "Approval required"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:34
+msgid "Automatic"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:34
+msgid "for extensions"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:46
+msgid "Loan Request Details"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:74
+msgid "Your Default Loan Settings"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:77
+msgid "Default loan duration"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:81
+msgid "Allow extensions"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:82
+#: templates/notifications/email/loan_review/message.html:36
+msgid "Yes"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:82
+#: templates/notifications/email/loan_review/message.html:36
+msgid "No"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:86
+msgid "Max extension days"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:91
+msgid "Default privacy"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:99
+msgid "Loan Terms"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:101
+msgid "You are responsible for the item while borrowed"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:102
+msgid "Return the item by the due date in good condition"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:103
+msgid "The lender may require a deposit"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:104
+msgid "Reviews will be exchanged after the loan is completed"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:106
+msgid "Extensions may be requested if needed"
+msgstr ""
+
+#: templates/loans/loan_request_form.html:114
+msgid "Send Loan Request"
+msgstr ""
+
+#: templates/loans/my_loans.html:11
+msgid "Manage your borrowing and lending activity"
+msgstr ""
+
+#: templates/loans/my_loans.html:19
+msgid "Currently Borrowing"
+msgstr ""
+
+#: templates/loans/my_loans.html:25
+msgid "Currently Lending"
+msgstr ""
+
+#: templates/loans/my_loans.html:31
+msgid "Waiting for Pickup"
+msgstr ""
+
+#: templates/loans/my_loans.html:37
+msgid "Returns to Confirm"
+msgstr ""
+
+#: templates/loans/my_loans.html:43
+msgid "Needs Approval"
+msgstr ""
+
+#: templates/loans/my_loans.html:51
+msgid "NEEDS APPROVAL"
+msgstr ""
+
+#: templates/loans/my_loans.html:61
+#: templates/messaging/partials/loan_message.html:12
+#: templates/notifications/email/loan_message/message.html:27
+#: templates/notifications/email/loan_message/message.txt:11
+msgid "Action Required"
+msgstr ""
+
+#: templates/loans/my_loans.html:95
+msgid "YOU'RE LENDING"
+msgstr ""
+
+#: templates/loans/my_loans.html:106
+msgid "Currently lending to"
+msgstr ""
+
+#: templates/loans/my_loans.html:107
+msgid "picked up"
+msgstr ""
+
+#: templates/loans/my_loans.html:134
+msgid "YOUR REQUESTS"
+msgstr ""
+
+#: templates/loans/my_loans.html:145
+msgid "Waiting for approval from"
+msgstr ""
+
+#: templates/loans/my_loans.html:173
+msgid "YOU'RE BORROWING"
+msgstr ""
+
+#: templates/loans/my_loans.html:184
+msgid "Return Overdue"
+msgstr ""
+
+#: templates/loans/my_loans.html:188
+msgid "Borrowing from"
+msgstr ""
+
+#: templates/loans/my_loans.html:232
+msgid "WAITING FOR PICKUP"
+msgstr ""
+
+#: templates/loans/my_loans.html:242
+msgid "Pick Up"
+msgstr ""
+
+#: templates/loans/my_loans.html:245
+msgid "Approved by"
+msgstr ""
+
+#: templates/loans/my_loans.html:245
+msgid "waiting for you to pick up"
+msgstr ""
+
+#: templates/loans/my_loans.html:270
+msgid "APPROVED - WAITING FOR PICKUP"
+msgstr ""
+
+#: templates/loans/my_loans.html:280
+msgid "Approved for"
+msgstr ""
+
+#: templates/loans/my_loans.html:280
+msgid "waiting for pickup"
+msgstr ""
+
+#: templates/loans/my_loans.html:300
+msgid "RETURNS TO CONFIRM"
+msgstr ""
+
+#: templates/loans/my_loans.html:313
+msgid "marked as returned - awaiting your confirmation"
+msgstr ""
+
+#: templates/loans/my_loans.html:341
+msgid "COMPLETED LOANS"
+msgstr ""
+
+#: templates/loans/my_loans.html:353 templates/loans/my_loans.html:372
+#: templates/messaging/partials/loan_actions.html:39
+msgid "Leave Review"
+msgstr ""
+
+#: templates/loans/my_loans.html:358
+msgid "Borrowed from"
+msgstr ""
+
+#: templates/loans/my_loans.html:360
+msgid "Lent to"
+msgstr ""
+
+#: templates/loans/my_loans.html:386
+msgid "REJECTED LOANS"
+msgstr ""
+
+#: templates/loans/my_loans.html:397
+msgid "Your request was rejected by"
+msgstr ""
+
+#: templates/loans/my_loans.html:399
+msgid "You rejected"
+msgstr ""
+
+#: templates/loans/my_loans.html:399
+msgid "s request"
+msgstr ""
+
+#: templates/loans/my_loans.html:423
+msgid "No loans yet"
+msgstr ""
+
+#: templates/loans/my_loans.html:425
+msgid "Start by browsing items you'd like to borrow"
+msgstr ""
+
+#: templates/messaging/conversation_detail.html:28
+msgid "Back to Messages"
+msgstr ""
+
+#: templates/messaging/conversation_detail.html:36
+msgid "Conversation Context"
+msgstr ""
+
+#: templates/messaging/conversation_detail.html:39
+msgid "Regarding Item"
+msgstr ""
+
+#: templates/messaging/conversation_detail.html:47
+msgid "Regarding Loan"
+msgstr ""
+
+#: templates/messaging/conversation_detail.html:49
+#: templates/messaging/partials/loan_message.html:6
+msgid "Loan"
+msgstr ""
+
+#: templates/messaging/conversation_detail.html:87
+msgid "System"
+msgstr ""
+
+#: templates/messaging/conversation_detail.html:100
+msgid "No messages yet. Start the conversation"
+msgstr ""
+
+#: templates/messaging/conversation_detail.html:119
+#: templates/messaging/start_conversation.html:49
+#: templates/notifications/email/loan_approved/message.html:45
+#: templates/notifications/email/loan_approved/message.html:94
+msgid "Send Message"
+msgstr ""
+
+#: templates/messaging/conversation_list.html:12
+msgid "PRIVATE MESSAGES"
+msgstr ""
+
+#: templates/messaging/conversation_list.html:13
+msgid "SECURE • ENCRYPTED • PRIVATE"
+msgstr ""
+
+#: templates/messaging/conversation_list.html:16
+#: templates/messaging/conversation_list.html:160
+msgid "START CONVERSATION"
+msgstr ""
+
+#: templates/messaging/conversation_list.html:44
+msgid "About item"
+msgstr ""
+
+#: templates/messaging/conversation_list.html:46
+msgid "About loan"
+msgstr ""
+
+#: templates/messaging/conversation_list.html:63
+msgid "Unknown User"
+msgstr ""
+
+#: templates/messaging/conversation_list.html:64
+msgid "unknown"
+msgstr ""
+
+#: templates/messaging/conversation_list.html:72
+msgid "new"
+msgstr ""
+
+#: templates/messaging/conversation_list.html:77
+msgid "VIEW"
+msgstr ""
+
+#: templates/messaging/conversation_list.html:104
+msgid "NO MESSAGES YET"
+msgstr ""
+
+#: templates/messaging/conversation_list.html:105
+msgid "Start sharing items and connect with other community members"
+msgstr ""
+
+#: templates/messaging/conversation_list.html:121
+msgid "START NEW CONVERSATION"
+msgstr ""
+
+#: templates/messaging/conversation_list.html:131
+msgid "FIND USER"
+msgstr ""
+
+#: templates/messaging/conversation_list.html:138
+msgid "Search by username only"
+msgstr ""
+
+#: templates/messaging/conversation_list.html:141
+msgid "SUBJECT"
+msgstr ""
+
+#: templates/messaging/conversation_list.html:144
+msgid "What is this conversation about?"
+msgstr ""
+
+#: templates/messaging/conversation_list.html:147
+msgid "INITIAL MESSAGE"
+msgstr ""
+
+#: templates/messaging/conversation_list.html:150
+msgid "Start the conversation with a message"
+msgstr ""
+
+#: templates/messaging/partials/loan_actions.html:5
+msgid "Loan Action Required"
+msgstr ""
+
+#: templates/messaging/partials/loan_actions.html:17
+#: templates/messaging/partials/loan_actions.html:25
+msgid "View Details"
+msgstr ""
+
+#: templates/messaging/partials/loan_actions.html:37
+msgid "Loan completed on"
+msgstr ""
+
+#: templates/messaging/partials/loan_actions.html:48
+#: templates/notifications/email/loan_message/message.html:19
+#: templates/notifications/email/loan_requested/message.html:20
+msgid "Item"
+msgstr ""
+
+#: templates/messaging/partials/loan_message.html:7
+msgid "Related to"
+msgstr ""
+
+#: templates/messaging/start_conversation.html:4
+msgid "Start Conversation with"
+msgstr ""
+
+#: templates/messaging/start_conversation.html:10
+msgid "Start Conversation"
+msgstr ""
+
+#: templates/messaging/start_conversation.html:11
+msgid "Send a message to"
+msgstr ""
+
+#: templates/messaging/start_conversation.html:28
+msgid "Subject (Optional"
+msgstr ""
+
+#: templates/messaging/start_conversation.html:33
+msgid "Give this conversation a topic"
+msgstr ""
+
+#: templates/messaging/start_conversation.html:38
+msgid "Your Message"
+msgstr ""
+
+#: templates/messaging/start_conversation.html:43
+msgid "This will be your first message in the conversation"
+msgstr ""
+
+#: templates/notifications/email/base_email.html:236
+msgid "Community Resource Sharing"
+msgstr ""
+
+#: templates/notifications/email/base_email.html:237
+msgid "This is an automated message. Please do not reply to this email"
+msgstr ""
+
+#: templates/notifications/email/base_email.html:238
+msgid "If you need help, contact us at"
+msgstr ""
+
+#: templates/notifications/email/base_email.html:239
+msgid "2026 COMUNIZA. All rights reserved"
+msgstr ""
+
+#: templates/notifications/email/loan_approved/message.html:3
+msgid "LOAN APPROVED"
+msgstr ""
+
+#: templates/notifications/email/loan_approved/message.html:7
+msgid "Your Loan Request Has Been Approved"
+msgstr ""
+
+#: templates/notifications/email/loan_approved/message.html:8
+#: templates/notifications/email/loan_approved/message.html:52
+msgid "Congratulations"
+msgstr ""
+
+#: templates/notifications/email/loan_approved/message.html:8
+#: templates/notifications/email/loan_approved/message.html:52
+msgid "has approved your request to borrow"
+msgstr ""
+
+#: templates/notifications/email/loan_approved/message.html:41
+msgid ""
+"You can view all loan details and communicate with lender through your "
+"dashboard"
+msgstr ""
+
+#: templates/notifications/email/loan_approved/message.html:50
+msgid "Your loan request has been approved"
+msgstr ""
+
+#: templates/notifications/email/loan_approved/message.html:88
+msgid ""
+"You can view all loan details and communicate with the borrower through your "
+"dashboard"
+msgstr ""
+
+#: templates/notifications/email/loan_approved/message.txt:1
+msgid "Your loan request for"
+msgstr ""
+
+#: templates/notifications/email/loan_approved/message.txt:1
+msgid "has been approved"
+msgstr ""
+
+#: templates/notifications/email/loan_approved/message.txt:18
+msgid ""
+"You can view all loan details and communicate with the other party through "
+"your dashboard"
+msgstr ""
+
+#: templates/notifications/email/loan_approved/subject.txt:1
+msgid "Request Approved"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_decision/message.html:3
+#: templates/notifications/email/loan_extension_decision/message.txt:1
+msgid "EXTENSION DECISION"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_decision/message.html:8
+msgid "Extension Approved"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_decision/message.html:9
+msgid "Good news"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_decision/message.html:9
+msgid "has approved your extension request for"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_decision/message.html:13
+msgid "Extension Details"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_decision/message.html:16
+msgid "Extension Days"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_decision/message.html:20
+msgid "Original Due"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_decision/message.html:24
+msgid "New Due"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_decision/message.html:30
+msgid "Extension Rejected"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_decision/message.html:31
+#: templates/notifications/email/loan_rejected/message.html:8
+#: templates/notifications/email/loan_rejected/message.html:34
+msgid "Unfortunately"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_decision/message.html:31
+msgid "has rejected your extension request for"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_decision/message.html:41
+msgid ""
+"You can continue to communicate with the lender through your dashboard if "
+"needed"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_decision/message.html:45
+#: templates/notifications/email/loan_extension_request/message.html:26
+#: templates/notifications/email/loan_extension_request/message.txt:16
+#: templates/notifications/email/loan_overdue/message.html:25
+msgid "Message Lender"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_decision/message.txt:5
+#: templates/notifications/email/loan_return_request/message.html:14
+msgid "Loan ID"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_decision/message.txt:6
+msgid "Decision"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_decision/message.txt:7
+msgid "New due date"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_decision/message.txt:9
+#: templates/notifications/email/loan_return_request/message.txt:11
+msgid "View loan"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_request/message.html:3
+#: templates/notifications/email/loan_extension_request/message.txt:1
+msgid "EXTENSION REQUEST"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_request/message.html:6
+msgid "Extension Request For"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_request/message.html:7
+#: templates/notifications/email/loan_extension_request/message.txt:3
+msgid "is requesting an extension of"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_request/message.html:7
+msgid "for this loan"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_request/message.html:17
+#: templates/notifications/email/loan_extension_request/message.txt:6
+msgid "New Due Date"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_request/message.html:21
+#: templates/notifications/email/loan_rejected/message.html:18
+#: templates/notifications/email/loan_rejected/message.html:44
+msgid "What happens next"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_request/message.html:22
+msgid ""
+"The lender will review this request and either approve or reject the "
+"extension. You will be notified of their decision via email and in your "
+"dashboard"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_request/message.txt:3
+msgid "days for the loan of"
+msgstr ""
+
+#: templates/notifications/email/loan_extension_request/message.txt:5
+msgid "Current Due Date"
+msgstr ""
+
+#: templates/notifications/email/loan_message/message.html:3
+#: templates/notifications/email/loan_message/message.txt:1
+msgid "LOAN MESSAGE"
+msgstr ""
+
+#: templates/notifications/email/loan_message/message.html:6
+msgid "Sent You A Message"
+msgstr ""
+
+#: templates/notifications/email/loan_message/message.html:7
+msgid "Regarding"
+msgstr ""
+
+#: templates/notifications/email/loan_message/message.html:10
+msgid "Message Preview"
+msgstr ""
+
+#: templates/notifications/email/loan_message/message.html:16
+msgid "Related Loan"
+msgstr ""
+
+#: templates/notifications/email/loan_message/message.html:34
+msgid "You can reply to this message or view loan details"
+msgstr ""
+
+#: templates/notifications/email/loan_message/message.html:38
+msgid "Reply to Message"
+msgstr ""
+
+#: templates/notifications/email/loan_message/message.txt:3
+msgid "sent you a message regarding"
+msgstr ""
+
+#: templates/notifications/email/loan_message/message.txt:14
+msgid "View conversation"
+msgstr ""
+
+#: templates/notifications/email/loan_message/message.txt:15
+#: templates/notifications/email/loan_overdue/message.txt:14
+#: templates/notifications/email/loan_rejected/message.txt:17
+#: templates/notifications/email/loan_review/message.txt:13
+msgid "View loan details"
+msgstr ""
+
+#: templates/notifications/email/loan_message/subject.txt:1
+msgid "Loan Message from"
+msgstr ""
+
+#: templates/notifications/email/loan_overdue/message.html:3
+msgid "LOAN OVERDUE"
+msgstr ""
+
+#: templates/notifications/email/loan_overdue/message.html:7
+msgid "Your Loan Is Overdue"
+msgstr ""
+
+#: templates/notifications/email/loan_overdue/message.html:8
+msgid "The loan for"
+msgstr ""
+
+#: templates/notifications/email/loan_overdue/message.html:8
+#: templates/notifications/email/loan_overdue/message.txt:5
+msgid "was due on"
+msgstr ""
+
+#: templates/notifications/email/loan_overdue/message.html:8
+#: templates/notifications/email/loan_overdue/message.txt:5
+msgid "and is now"
+msgstr ""
+
+#: templates/notifications/email/loan_overdue/message.html:8
+msgid "overdue"
+msgstr ""
+
+#: templates/notifications/email/loan_overdue/message.html:13
+msgid "Immediate Action Required"
+msgstr ""
+
+#: templates/notifications/email/loan_overdue/message.html:14
+msgid ""
+"Please return the item as soon as possible and mark it as returned in your "
+"dashboard"
+msgstr ""
+
+#: templates/notifications/email/loan_overdue/message.html:21
+msgid "Need help? Contact the lender or view your loan details"
+msgstr ""
+
+#: templates/notifications/email/loan_overdue/message.txt:15
+msgid "Send message to"
+msgstr ""
+
+#: templates/notifications/email/loan_overdue/subject.txt:1
+msgid "URGENT: Loan Overdue"
+msgstr ""
+
+#: templates/notifications/email/loan_rejected/message.html:3
+msgid "LOAN REJECTED"
+msgstr ""
+
+#: templates/notifications/email/loan_rejected/message.html:7
+msgid "Your Loan Request Has Been Declined"
+msgstr ""
+
+#: templates/notifications/email/loan_rejected/message.html:8
+#: templates/notifications/email/loan_rejected/message.html:34
+#: templates/notifications/email/loan_rejected/message.txt:5
+msgid "has declined your request to borrow"
+msgstr ""
+
+#: templates/notifications/email/loan_rejected/message.html:13
+msgid "Reason Provided"
+msgstr ""
+
+#: templates/notifications/email/loan_rejected/message.html:20
+msgid "You can look for other items to borrow in community"
+msgstr ""
+
+#: templates/notifications/email/loan_rejected/message.html:21
+msgid "Consider reaching out to lender to understand the decision"
+msgstr ""
+
+#: templates/notifications/email/loan_rejected/message.html:22
+#: templates/notifications/email/loan_rejected/message.html:48
+msgid "Update your profile to improve future loan requests"
+msgstr ""
+
+#: templates/notifications/email/loan_rejected/message.html:26
+#: templates/notifications/email/loan_rejected/message.html:54
+msgid "Browse More Items"
+msgstr ""
+
+#: templates/notifications/email/loan_rejected/message.html:32
+msgid "Your loan request has been declined"
+msgstr ""
+
+#: templates/notifications/email/loan_rejected/message.html:39
+#: templates/notifications/email/loan_rejected/message.txt:8
+msgid "Reason provided"
+msgstr ""
+
+#: templates/notifications/email/loan_rejected/message.html:46
+msgid "You can look for other items to borrow in the community"
+msgstr ""
+
+#: templates/notifications/email/loan_rejected/message.html:47
+msgid "Consider reaching out to the lender to understand the decision"
+msgstr ""
+
+#: templates/notifications/email/loan_requested/message.html:3
+#: templates/notifications/email/loan_requested/message.txt:1
+msgid "LOAN REQUEST"
+msgstr ""
+
+#: templates/notifications/email/loan_requested/message.html:6
+msgid "Wants To Borrow Your Item"
+msgstr ""
+
+#: templates/notifications/email/loan_requested/message.html:11
+msgid "Message From Borrower"
+msgstr ""
+
+#: templates/notifications/email/loan_requested/message.html:41
+msgid "Message Borrower"
+msgstr ""
+
+#: templates/notifications/email/loan_requested/message.html:42
+#: templates/notifications/email/loan_requested/message.txt:16
+msgid "Manage Loan"
+msgstr ""
+
+#: templates/notifications/email/loan_requested/message.txt:3
+msgid "wants to borrow your item"
+msgstr ""
+
+#: templates/notifications/email/loan_requested/message.txt:12
+msgid "Message from borrower"
+msgstr ""
+
+#: templates/notifications/email/loan_requested/message.txt:17
+#: templates/notifications/email/loan_returned/message.html:34
+#: templates/notifications/email/loan_returned/message.html:72
+#: templates/notifications/email/loan_returned/message.txt:16
+msgid "View Item Details"
+msgstr ""
+
+#: templates/notifications/email/loan_return_request/message.html:3
+#: templates/notifications/email/loan_return_request/message.txt:1
+msgid "RETURN REQUESTED"
+msgstr ""
+
+#: templates/notifications/email/loan_return_request/message.html:6
+msgid "Item Marked As Returned"
+msgstr ""
+
+#: templates/notifications/email/loan_return_request/message.html:7
+#: templates/notifications/email/loan_return_request/message.txt:3
+msgid "has marked"
+msgstr ""
+
+#: templates/notifications/email/loan_return_request/message.html:7
+msgid "as returned"
+msgstr ""
+
+#: templates/notifications/email/loan_return_request/message.html:8
+msgid ""
+"Please review the item and confirm the return when you have received it back"
+msgstr ""
+
+#: templates/notifications/email/loan_return_request/subject.txt:1
+msgid "Return Request"
+msgstr ""
+
+#: templates/notifications/email/loan_returned/message.html:3
+msgid "LOAN RETURNED"
+msgstr ""
+
+#: templates/notifications/email/loan_returned/message.html:7
+msgid "Loan Completed Successfully"
+msgstr ""
+
+#: templates/notifications/email/loan_returned/message.html:8
+#: templates/notifications/email/loan_returned/message.html:41
+#: templates/notifications/email/loan_returned/message.txt:5
+msgid "has returned"
+msgstr ""
+
+#: templates/notifications/email/loan_returned/message.html:8
+#: templates/notifications/email/loan_returned/message.html:41
+#: templates/notifications/email/loan_returned/message.txt:5
+msgid "to"
+msgstr ""
+
+#: templates/notifications/email/loan_returned/message.html:13
+#: templates/notifications/email/loan_returned/message.html:46
+msgid "Return Details"
+msgstr ""
+
+#: templates/notifications/email/loan_returned/message.html:16
+#: templates/notifications/email/loan_returned/message.html:49
+msgid "Returned on"
+msgstr ""
+
+#: templates/notifications/email/loan_returned/message.html:30
+msgid ""
+"Your feedback helps build trust in community. Please share your experience "
+"with this loan"
+msgstr ""
+
+#: templates/notifications/email/loan_returned/message.html:33
+#: templates/notifications/email/loan_returned/message.html:69
+msgid "Leave Review for"
+msgstr ""
+
+#: templates/notifications/email/loan_returned/message.html:39
+msgid "Loan completed successfully"
+msgstr ""
+
+#: templates/notifications/email/loan_returned/message.html:66
+msgid ""
+"Your feedback helps build trust in the community. Please share your "
+"experience with this loan"
+msgstr ""
+
+#: templates/notifications/email/loan_returned/message.txt:15
+msgid "Leave a Review for"
+msgstr ""
+
+#: templates/notifications/email/loan_returned/subject.txt:1
+msgid "Loan Returned"
+msgstr ""
+
+#: templates/notifications/email/loan_review/message.html:3
+#: templates/notifications/email/loan_review/message.txt:1
+msgid "LOAN REVIEW"
+msgstr ""
+
+#: templates/notifications/email/loan_review/message.html:6
+msgid "Left A Review"
+msgstr ""
+
+#: templates/notifications/email/loan_review/message.html:7
+msgid "For"
+msgstr ""
+
+#: templates/notifications/email/loan_review/message.html:10
+msgid "Overall Rating"
+msgstr ""
+
+#: templates/notifications/email/loan_review/message.html:15
+msgid "Review Comment"
+msgstr ""
+
+#: templates/notifications/email/loan_review/message.html:20
+msgid "Detailed Ratings"
+msgstr ""
+
+#: templates/notifications/email/loan_review/message.html:31
+#: templates/notifications/email/loan_review/message.txt:10
+msgid "Item Condition"
+msgstr ""
+
+#: templates/notifications/email/loan_review/message.html:35
+msgid "Would lend/borrow again"
+msgstr ""
+
+#: templates/notifications/email/loan_review/message.html:41
+msgid "Thank you for contributing to the trust and reputation system"
+msgstr ""
+
+#: templates/notifications/email/loan_review/message.html:44
+msgid "Visit"
+msgstr ""
+
+#: templates/notifications/email/loan_review/message.txt:3
+msgid "left a review for"
+msgstr ""
+
+#: templates/notifications/email/loan_review/message.txt:6
+msgid "Review"
+msgstr ""
+
+#: templates/notifications/email/loan_review/message.txt:11
+msgid "Timeliness"
+msgstr ""
+
+#: templates/notifications/email/loan_review/message.txt:14
+msgid "View item details"
+msgstr ""
+
+#: templates/notifications/email/loan_review/subject.txt:1
+msgid "New Review for"
+msgstr ""
+
+#: templates/socialaccount/login.html:5
+msgid "Google Login"
+msgstr ""
+
+#: templates/socialaccount/login.html:12
+msgid "GOOGLE LOGIN"
+msgstr ""
+
+#: templates/socialaccount/login.html:13
+msgid "CONNECT WITH GOOGLE ACCOUNT"
+msgstr ""
+
+#: templates/socialaccount/login.html:20
+msgid "OAUTH AUTHENTICATION"
+msgstr ""
+
+#: templates/socialaccount/login.html:25
+msgid "YOU ARE ALREADY LOGGED IN AS"
+msgstr ""
+
+#: templates/socialaccount/login.html:30
+msgid "GO TO DASHBOARD"
+msgstr ""
+
+#: templates/socialaccount/login.html:33
+msgid "LOGOUT FIRST"
+msgstr ""
+
+#: templates/socialaccount/login.html:51
+msgid "BACK TO EMAIL LOGIN"
+msgstr ""
+
+#: templates/socialaccount/login.html:68
+msgid "PRIVACY & SECURITY"
+msgstr ""
+
+#: templates/socialaccount/login.html:75
+msgid "NO PASSWORD STORAGE"
+msgstr ""
+
+#: templates/socialaccount/login.html:75
+msgid "We never store your Google password"
+msgstr ""
+
+#: templates/socialaccount/login.html:81
+msgid "LIMITED ACCESS"
+msgstr ""
+
+#: templates/socialaccount/login.html:81
+msgid "We only request basic profile information"
+msgstr ""
+
+#: templates/socialaccount/login.html:87
+msgid "SECURE CONNECTION"
+msgstr ""
+
+#: templates/socialaccount/login.html:87
+msgid "All authentication is encrypted and secure"
+msgstr ""
+
+#: templates/socialaccount/login.html:93
+msgid "EASY DISCONNECT"
+msgstr ""
+
+#: templates/socialaccount/login.html:93
+msgid "Revoke access anytime from your Google account"
+msgstr ""
+
+#: templates/users/edit_profile.html:4 templates/users/edit_profile.html:10
+#: templates/users/profile.html:46
+msgid "Edit Profile"
+msgstr ""
+
+#: templates/users/edit_profile.html:11
+msgid "Update your personal information and preferences"
+msgstr ""
+
+#: templates/users/edit_profile.html:27
+msgid "Profile Picture"
+msgstr ""
+
+#: templates/users/edit_profile.html:41
+msgid "Upload New Picture"
+msgstr ""
+
+#: templates/users/edit_profile.html:51
+msgid "JPG, PNG or GIF. Max size 5MB. Square images work best."
+msgstr ""
+
+#: templates/users/edit_profile.html:62
+msgid "First Name"
+msgstr ""
+
+#: templates/users/edit_profile.html:75
+msgid "Last Name"
+msgstr ""
+
+#: templates/users/edit_profile.html:89
+msgid "Current Username"
+msgstr ""
+
+#: templates/users/edit_profile.html:97
+msgid "This is how others currently identify you."
+msgstr ""
+
+#: templates/users/edit_profile.html:101
+msgid "New Username (Optional"
+msgstr ""
+
+#: templates/users/edit_profile.html:110
+msgid ""
+"Leave blank to keep current username. Changing requires email confirmation."
+msgstr ""
+
+#: templates/users/edit_profile.html:114
+msgid "Current Password"
+msgstr ""
+
+#: templates/users/edit_profile.html:122
+msgid "Required when changing username, email, or phone number."
+msgstr ""
+
+#: templates/users/edit_profile.html:126
+msgid "Email"
+msgstr ""
+
+#: templates/users/edit_profile.html:136
+msgid "Email cannot be changed here for security reasons."
+msgstr ""
+
+#: templates/users/edit_profile.html:142
+msgid "Contact Information"
+msgstr ""
+
+#: templates/users/edit_profile.html:145
+msgid "Phone Number"
+msgstr ""
+
+#: templates/users/edit_profile.html:155
+msgid "Optional. Only visible to group members when you participate in loans."
+msgstr ""
+
+#: templates/users/edit_profile.html:161
+#: templates/users/privacy_settings.html:4
+#: templates/users/privacy_settings.html:9 templates/users/profile.html:47
+msgid "Privacy Settings"
+msgstr ""
+
+#: templates/users/edit_profile.html:162
+msgid "Control who can see your profile information, groups, and activity."
+msgstr ""
+
+#: templates/users/edit_profile.html:165
+msgid "Manage Privacy Settings"
+msgstr ""
+
+#: templates/users/edit_profile.html:171
+msgid "Notification Settings"
+msgstr ""
+
+#: templates/users/edit_profile.html:180
+msgid "Email notifications for loans"
+msgstr ""
+
+#: templates/users/edit_profile.html:182
+msgid ""
+"Receive email notifications for loan requests, approvals, rejections, and "
+"returns"
+msgstr ""
+
+#: templates/users/edit_profile.html:191
+msgid "Email notifications for messages"
+msgstr ""
+
+#: templates/users/edit_profile.html:193
+msgid "Receive email notifications for new private messages"
+msgstr ""
+
+#: templates/users/login.html:6
+msgid "Login - Comuniza"
+msgstr ""
+
+#: templates/users/privacy_settings.html:10
+msgid "Control who can see your profile information and activity"
+msgstr ""
+
+#: templates/users/privacy_settings.html:19
+msgid "Profile Visibility"
+msgstr ""
+
+#: templates/users/privacy_settings.html:20
+msgid "Who can view your profile page and basic information"
+msgstr ""
+
+#: templates/users/privacy_settings.html:23
+msgid "Profile visibility"
+msgstr ""
+
+#: templates/users/privacy_settings.html:33
+#: templates/users/privacy_settings.html:74
+#: templates/users/privacy_settings.html:115
+msgid "Groups - Only group members"
+msgstr ""
+
+#: templates/users/privacy_settings.html:53
+#: templates/users/privacy_settings.html:135
+msgid "Private - Only users you've transacted with"
+msgstr ""
+
+#: templates/users/privacy_settings.html:60
+msgid "Groups Visibility"
+msgstr ""
+
+#: templates/users/privacy_settings.html:61
+msgid "Who can see which groups you belong to"
+msgstr ""
+
+#: templates/users/privacy_settings.html:64
+msgid "Groups visibility"
+msgstr ""
+
+#: templates/users/privacy_settings.html:94
+msgid "Private - Only users you've transacted with in that group"
+msgstr ""
+
+#: templates/users/privacy_settings.html:101
+msgid "Location Visibility"
+msgstr ""
+
+#: templates/users/privacy_settings.html:102
+msgid "Who can see your location information"
+msgstr ""
+
+#: templates/users/privacy_settings.html:105
+msgid "Location visibility"
+msgstr ""
+
+#: templates/users/privacy_settings.html:142
+msgid "Default Item Visibility"
+msgstr ""
+
+#: templates/users/privacy_settings.html:143
+msgid "Default visibility setting for new items you create"
+msgstr ""
+
+#: templates/users/privacy_settings.html:146
+msgid "Default item visibility"
+msgstr ""
+
+#: templates/users/privacy_settings.html:183
+msgid "Save Settings"
+msgstr ""
+
+#: templates/users/profile.html:10
+msgid "My Profile"
+msgstr ""
+
+#: templates/users/profile.html:11
+msgid "Manage your account and reputation"
+msgstr ""
+
+#: templates/users/profile.html:55
+msgid "Activity"
+msgstr ""
+
+#: templates/users/profile.html:63
+msgid "Times Lent"
+msgstr ""
+
+#: templates/users/profile.html:69
+msgid "Times Borrowed"
+msgstr ""
+
+#: templates/users/profile.html:96
+msgid "Recent Badges"
+msgstr ""
+
+#: templates/users/profile.html:111
+msgid "No badges earned yet"
+msgstr ""
+
+#: templates/users/profile.html:116
+msgid "View All Badges"
+msgstr ""
+
+#: templates/users/profile.html:121
+msgid "Start lending and borrowing to build your reputation"
+msgstr ""
+
+#: templates/users/profile.html:129
+msgid "Quick Actions"
+msgstr ""
+
+#: templates/users/profile.html:148 templates/users/profile.html:183
+msgid "My Groups"
+msgstr ""
+
+#: templates/users/profile.html:149
+msgid "Join or create groups"
+msgstr ""
+
+#: templates/users/profile.html:159
+msgid "My Public Items"
+msgstr ""
+
+#: templates/users/profile.html:160 templates/users/profile.html:184
+msgid "View All"
+msgstr ""
+
+#: templates/users/profile.html:169
+msgid "Uncategorized"
+msgstr ""
+
+#: templates/users/register.html:5
+msgid "Register - Comuniza"
+msgstr ""
+
+#: templates/users/register.html:8 templates/users/register.html:12
+msgid "Register"
+msgstr ""

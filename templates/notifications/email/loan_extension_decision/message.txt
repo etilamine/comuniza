@@ -1,0 +1,10 @@
+{% translate "EXTENSION DECISION" %}
+
+{{ item.title }}
+
+{% translate "Loan ID" %}: #{{ loan.id }}
+{% translate "Decision" %}: {% if extension_approved %}{% translate "Approved" %}{% else %}{% translate "Rejected" %}{% endif %}
+{% if extension_approved %}{% translate "New due date" %}: {{ new_due_date }}{% endif %}
+
+{% translate "View loan" %}: {{ loan_url }}
+{% translate "Message" %} {{ lender.get_display_name }}: {{ messages_url }}

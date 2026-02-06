@@ -1,0 +1,23 @@
+{% load messaging_tags %}
+{% load i18n %}
+<!-- Loan system message display -->
+<div class="loan-system-message bg-secondary rounded p-md" style="color: var(--text-color);">
+    <div class="flex items-center gap-sm mb-xs">
+        <span class="badge badge-info">{% translate "Loan" %}</span>
+        <span class="text-sm font-medium" style="color: var(--text-color);">{% translate "Related to" %}: {{ message|loan_context_item_title }}</span>
+    </div>
+
+    {% if message|loan_context_action_required %}
+        <div class="mt-xs">
+            <p class="text-sm text-secondary mb-xs">{% translate "Action Required" %}:</p>
+            <div class="loan-actions">
+                {% include 'messaging/partials/loan_actions.html' with loan=message|loan_context_loan user=request.user %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+// Helper to extract loan context from message (simplified)
+// In production, this should be handled in the view
+</script>

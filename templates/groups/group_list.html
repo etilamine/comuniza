@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load thumbnail %}
+{% block title %}{% translate "Groups" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.card-thumbnail {
+    max-width: 100%;
+    height: auto;
+}
+.link-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: var(--text-primary);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    transition:var(--transition);
+}
+.link-button:hover {
+    text-decoration-thickness: 3px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="mb-xl">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="mb-sm">{% translate "Groups" %}</h1>
+                <p class="text-secondary">{% translate "Join communities to share and borrow items" %}</p>
+            </div>
+            {% if user.is_authenticated %}
+                <a href="{% url 'groups:create' %}" class="btn btn-primary">{% translate "Create Group" %}</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- User's Groups -->
+    {% if user_groups %}
+        <div class="mb-xl">
+            <h2 class="mb-lg">{% translate "Your Groups" %}</h2>
+            <div class="grid grid-cols-1 grid-md-2 grid-lg-3 gap-md">
+                {% for group in user_groups %}
+                    <a href="{% url 'groups:detail' group.slug %}" class="card" style="text-decoration: none;">
+                        <div class="card-body">
+                            <div class="flex items-center gap-md mb-md">
+                                {% if group.image %}
+                                    <img src="{{ group.image.group_detail.url }}" alt="{{ group.name }}" class="card-thumbnail rounded mb-md">
+                                {% else %}
+                                    <div class="card-thumbnail bg-primary rounded flex items-center justify-center text-white font-bold mb-md">
+                                        {{ group.name|first|upper }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <h4 class="mb-xs">{{ group.name }}</h4>
+                                <p class="text-sm text-secondary">{{ group.city }}, {{ group.country }}</p>
+                                {% if group.description %}
+                                    {% if group.description|length > 100 %}
+                                        <div x-data="{ expanded: false }">
+                                            <p class="text-sm text-secondary line-clamp-2" x-show="!expanded">
+                                                {{ group.description|truncatechars:100 }}
+                                            <button @click.prevent.stop="expanded = true" class="link-button">{% translate "read more" %}</button>
+                                            </p>
+                                            <p class="text-sm text-secondary line-clamp-2" x-show="expanded" x-cloak>
+                                                {{ group.description }}
+                                            <button @click.prevent.stop="expanded = false" class="link-button">{% translate "read less" %}</button>
+                                            </p>
+                                        </div>
+                                    {% else %}
+                                        <p class="text-sm text-secondary line-clamp-2">{{ group.description }}</p>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                            <div class="flex justify-between text-sm mt-auto">
+                                <span>{{ group.member_count }} {% translate "members" %}</span>
+                                <span>{{ group.item_count }} {% translate "items" %}</span>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- All Available Groups -->
+    {% if groups %}
+        <div class="mb-xl">
+            <h2 class="mb-lg">{% if user_groups %}{% translate "Discover More Groups" %}{% else %}{% translate "Available Groups" %}{% endif %}</h2>
+            <div class="grid grid-cols-1 grid-md-2 grid-lg-3 gap-md">
+                {% for group in groups %}
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="flex items-center gap-md mb-md">
+                                {% if group.image %}
+                                    <img src="{{ group.image.group_detail.url }}" alt="{{ group.name }}" class="card-thumbnail rounded mb-md">
+                                {% else %}
+                                    <div class="card-thumbnail bg-primary rounded flex items-center justify-center text-white font-bold mb-md">
+                                        {{ group.name|first|upper }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <h4 class="mb-xs">{{ group.name }}</h4>
+                                <p class="text-sm text-secondary">{{ group.city }}, {{ group.country }}</p>
+                                {% if group.description %}
+                                    {% if group.description|length > 100 %}
+                                        <div x-data="{ expanded: false }">
+                                            <p class="text-sm text-secondary line-clamp-2" x-show="!expanded">
+                                                {{ group.description|truncatechars:100 }}
+                                                <a href="#" @click.prevent="expanded = true" class="text-primary">{% translate "read more" %}</a>
+                                            </p>
+                                            <p class="text-sm text-secondary line-clamp-2" x-show="expanded" x-cloak>
+                                                {{ group.description }}
+                                                <a href="#" @click.prevent="expanded = false" class="text-primary">{% translate "read less" %}</a>
+                                            </p>
+                                        </div>
+                                    {% else %}
+                                        <p class="text-sm text-secondary line-clamp-2">{{ group.description }}</p>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                            <div class="flex justify-between text-sm mt-auto">
+                                <div>
+                                    <span>{{ group.member_count }} {% translate "members" %}</span>
+                                    <span class="mx-sm">•</span>
+                                    <span>{{ group.item_count }} {% translate "items" %}</span>
+                                </div>
+                                <span class="badge badge-secondary">{{ group.privacy|title }}</span>
+                            </div>
+                             <div class="flex gap-sm mt-md">
+                                  <a href="{% url 'groups:detail' group.slug %}" class="btn btn-primary btn-sm">{% translate "View Group" %}</a>
+                                  {% if user.is_authenticated and not group.is_member %}
+                                      {% if group.privacy == 'public' %}
+                                          <form method="post" action="{% url 'groups:join' group.slug %}" class="inline">
+                                              {% csrf_token %}
+                                              <button type="submit" class="btn btn-outline btn-sm">{% translate "Join" %}</button>
+                                          </form>
+                                      {% elif group.privacy == 'request' %}
+                                          <form method="post" action="{% url 'groups:join' group.slug %}" class="inline">
+                                              {% csrf_token %}
+                                              <button type="submit" class="btn btn-outline btn-sm">{% translate "Request" %}</button>
+                                          </form>
+                                      {% endif %}
+                                  {% endif %}
+                             </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Empty State -->
+    {% if not groups and not user_groups %}
+        <div class="empty-state">
+            <div class="empty-state-icon">[ * ]</div>
+            <h3 class="mb-sm">{% translate "No groups yet" %}</h3>
+            <p class="text-secondary mb-lg">
+                {% translate "Groups allow you to share items within trusted communities" %}.
+            </p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'groups:create' %}" class="btn btn-primary">{% translate "Create First Group" %}</a>
+            {% else %}
+                <a href="{% url 'account_login' %}" class="btn btn-primary">{% translate "Login to Create Group" %}</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

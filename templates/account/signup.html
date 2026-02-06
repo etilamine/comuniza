@@ -1,0 +1,439 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load socialaccount %}
+{% load i18n %}
+{% block title %}{% translate "Sign Up" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container container-sm">
+    <div class="py-xl">
+        <!-- Header -->
+        <div class="text-center mb-2xl">
+            <h1 class="mb-sm">[{% translate "SIGN UP" %} ]</h1>
+            <p class="text-secondary">{% translate "JOIN THE COMMUNITY AND START SHARING" %}</p>
+        </div>
+
+         <div class="grid grid-cols-1 gap-lg" style="max-width: 520px; margin: 0 auto">
+             <!-- Social Sign Up Options -->
+             <div class="card">
+                 <div class="card-header">
+                     <h3 class="mb-0 text-sm">▸ {% translate "QUICK SIGN UP" %}</h3>
+                 </div>
+                  <div class="card-body">
+                      <div class="flex flex-col gap-sm">
+                          <a href="{% provider_login_url 'google' method='oauth2' %}" class="btn btn-primary btn-block">
+                              <span style="margin-right: var(--space-sm)">[{% translate "G" %}]</span>
+                              <span>{% translate "SIGN UP WITH GOOGLE" %}</span>
+                          </a>
+                      </div>
+                  </div>
+             </div>
+
+            <!-- Divider -->
+            <div class="flex items-center gap-md">
+                <div class="divider" style="flex: 1; margin: 0"></div>
+                <span class="text-sm text-muted uppercase">[{% translate "OR" %} ]</span>
+                <div class="divider" style="flex: 1; margin: 0"></div>
+            </div>
+
+            <!-- Email Sign Up Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0 text-sm">▸ {% translate "EMAIL SIGN UP" %}</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'account_signup' %}" id="signupForm">
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger mb-lg">
+                            {% for error in form.non_field_errors %}
+                            <p class="mb-0">[{% translate "ERROR" %} ] {{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                        {% endif %}
+
+                         <div class="form-group">
+                             <label for="id_username" class="form-label">{% translate "USERNAME" %}</label>
+                             <div class="username-generator">
+                                 <input
+                                     type="text"
+                                     name="username"
+                                     id="id_username"
+                                     class="form-control {% if form.username.errors %}is-invalid{% endif %}"
+                                     placeholder="{% translate 'Choose or generate below' %}"
+                                     autocomplete="username"
+                                     value="{{ form.username.value|default:'' }}"
+                                 />
+
+                             </div>
+                             <button type="button" id="generateUsername" class="btn btn-sm btn-outline">
+                                 [{% translate "GENERATE" %} ]
+                             </button>
+                             <div id="usernameSuggestions" class="username-suggestions" style="display: none;">
+                                 <small class="form-help">[{% translate "SUGGESTIONS" %} ]</small>
+                                 <div class="suggestion-buttons">
+                                     {% for suggestion in form.username_suggestions %}
+                                     <button type="button" class="suggestion-btn" data-username="{{ suggestion }}">
+                                         {{ suggestion }}
+                                     </button>
+                                     {% endfor %}
+                                 </div>
+                             </div>
+                             {% if form.username.errors %}
+                             {% for error in form.username.errors %}
+                             <div class="form-error">[ ! ] {{ error }}</div>
+                             {% endfor %}
+                             {% else %}
+                             <small class="form-help">[{% translate "YOUR PUBLIC IDENTIFIER - NEVER YOUR REAL NAME" %} ]</small>
+                             {% endif %}
+                         </div>
+
+                         <div class="form-group">
+                             <label for="id_email" class="form-label form-label-required">{% translate "EMAIL ADDRESS" %}</label>
+                             <input
+                                 type="email"
+                                 name="email"
+                                 id="id_email"
+                                 class="form-control {% if form.email.errors %}is-invalid{% endif %}"
+                                 placeholder="{% translate 'your@email.com' %}"
+                                 required
+                                 autocomplete="email"
+                                 value="{{ form.email.value|default:'' }}"
+                             />
+                             {% if form.email.errors %}
+                             {% for error in form.email.errors %}
+                             <div class="form-error">[ ! ] {{ error }}</div>
+                             {% endfor %}
+                             {% else %}
+                             <small class="form-help">[{% translate "USED FOR LOGIN & NEVER SHARED PUBLICLY" %} ]</small>
+                             {% endif %}
+                          </div>
+
+                          <div class="form-group">
+                              <label for="id_password1" class="form-label form-label-required">{% translate "PASSWORD" %}</label>
+                              <input
+                                  type="password"
+                                  name="password1"
+                                  id="id_password1"
+                                  class="form-control {% if form.password1.errors %}is-invalid{% endif %}"
+                                  placeholder="••••••••"
+                                  required
+                                  autocomplete="new-password"
+                              />
+                              {% if form.password1.errors %}
+                              {% for error in form.password1.errors %}
+                              <div class="form-error">[ ! ] {{ error }}</div>
+                              {% endfor %}
+                              {% else %}
+                              <div id="passwordStrength" class="password-strength" style="display: none">
+                                  <div class="password-strength-bar">
+                                      <div id="strengthBar" class="password-strength-fill"></div>
+                                  </div>
+                                  <small id="strengthText" class="form-help"></small>
+                              </div>
+                              <small class="form-help">[{% translate "MIN 8 CHARACTERS - USE MIX OF LETTERS & NUMBERS" %} ]</small>
+                              {% endif %}
+                          </div>
+
+                          <div class="form-group">
+                              <label for="id_password2" class="form-label form-label-required">{% translate "CONFIRM PASSWORD" %}</label>
+                              <input
+                                  type="password"
+                                  name="password2"
+                                  id="id_password2"
+                                  class="form-control {% if form.password2.errors %}is-invalid{% endif %}"
+                                  placeholder="••••••••"
+                                  required
+                                  autocomplete="new-password"
+                              />
+                              {% if form.password2.errors %}
+                              {% for error in form.password2.errors %}
+                              <div class="form-error">[ ! ] {{ error }}</div>
+                              {% endfor %}
+                              {% endif %}
+                              <small id="passwordMatch" class="form-help" style="display: none"></small>
+                          </div>
+
+                          <div class="form-group">
+                             <div class="form-check">
+                                 <input
+                                     type="checkbox"
+                                     name="privacy_agreement"
+                                     id="id_privacy_agreement"
+                                     class="form-check-input {% if form.privacy_agreement.errors %}is-invalid{% endif %}"
+                                     required
+                                 />
+                                 <label for="id_privacy_agreement" class="form-check-label">
+                                     {% translate "I agree to the" %} <a href="#" target="_blank">{% translate "privacy policy" %}</a> - {% translate "my email will never be shared publicly" %}
+                                 </label>
+                                 {% if form.privacy_agreement.errors %}
+                                 {% for error in form.privacy_agreement.errors %}
+                                 <div class="form-error">[ ! ] {{ error }}</div>
+                                 {% endfor %}
+                                 {% endif %}
+                             </div>
+                         </div>
+
+                         <div class="alert alert-info mb-lg" style="font-size: var(--font-size-xs); line-height: 1.6;">
+                             <p class="mb-xs"><strong>[{% translate "PRIVACY-FIRST COMMUNITY" %} ]</strong></p>
+                             <p class="mb-xs text-xs">{% translate "YOUR PRIVACY IS PROTECTED" %}:</p>
+                             <ul style="margin-left: var(--space-lg); margin-bottom: 0; margin-top: var(--space-xs);">
+                                 <li>▸ {% translate "EMAILS ARE HASHED & NEVER DISPLAYED" %}</li>
+                                 <li>▸ {% translate "USERNAME IS YOUR PUBLIC IDENTIFIER" %}</li>
+                                 <li>▸ {% translate "PROFILE VISIBILITY IS YOUR CHOICE" %}</li>
+                                 <li>▸ {% translate "ALL COMMUNICATION IS ENCRYPTED" %}</li>
+                             </ul>
+                             <p class="mb-xs text-xs mt-xs">{% translate "BY SIGNING UP YOU AGREE TO" %}:</p>
+                             <ul style="margin-left: var(--space-lg); margin-bottom: 0; margin-top: var(--space-xs);">
+                                 <li>▸ {% translate "RESPECT COMMUNITY GUIDELINES" %}</li>
+                                 <li>▸ {% translate "RETURN BORROWED ITEMS ON TIME" %}</li>
+                                 <li>▸ {% translate "TREAT ITEMS WITH CARE" %}</li>
+                                 <li>▸ {% translate "COMMUNICATE OPENLY & HONESTLY" %}</li>
+                             </ul>
+                         </div>
+
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">
+                            [{% translate "CREATE ACCOUNT" %} ]
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Login Link -->
+            <div class="card" style="background: var(--bg-secondary)">
+                <div class="card-body text-center">
+                    <p class="mb-sm text-sm">[{% translate "ALREADY HAVE AN ACCOUNT" %}? ]</p>
+                    <a href="{% url 'account_login' %}" class="btn btn-outline">
+                        {% translate "LOGIN" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+ {% block extra_css %}
+<style>
+    .form-control:focus {
+        transform: translate(-2px, -2px);
+        box-shadow: 3px 3px 0 var(--primary);
+    }
+
+    .btn-block + .btn-block {
+        margin-top: var(--space-sm);
+    }
+
+    .alert ul {
+        list-style: none;
+    }
+
+    .alert li {
+        margin-bottom: var(--space-xs);
+    }
+
+    .password-strength {
+        margin-top: var(--space-sm);
+        margin-bottom: var(--space-xs);
+    }
+
+    .password-strength-bar {
+        height: 4px;
+        background: var(--border);
+        border: 1px solid var(--border);
+        margin-bottom: var(--space-xs);
+        position: relative;
+    }
+
+    .password-strength-fill {
+        height: 100%;
+        width: 0%;
+        transition: width 0.3s ease, background-color 0.3s ease;
+    }
+
+    .password-strength-fill.weak {
+        width: 33%;
+        background-color: #ff4444;
+    }
+
+    .password-strength-fill.medium {
+        width: 66%;
+        background-color: #ffaa00;
+    }
+
+    .password-strength-fill.strong {
+        width: 100%;
+        background-color: #00ff00;
+    }
+
+    .form-error {
+        color: #ff4444;
+        font-weight: bold;
+    }
+
+    .match-success {
+        color: #00ff00 !important;
+    }
+
+    .match-error {
+        color: #ff4444 !important;
+    }
+
+    .username-generator {
+        display: flex;
+        gap: var(--space-sm);
+        align-items: flex-start;
+    }
+
+    .username-generator .form-control {
+        flex: 1;
+    }
+
+    .username-suggestions {
+        margin-top: var(--space-sm);
+        padding: var(--space-sm);
+        background: var(--bg-secondary);
+        border: 1px solid var(--border);
+        border-radius: var(--border-radius);
+    }
+
+    .suggestion-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-xs);
+        margin-top: var(--space-xs);
+    }
+
+    .suggestion-btn {
+        padding: var(--space-xs) var(--space-sm);
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+        font-size: var(--font-size-sm);
+        transition: all 0.2s ease;
+    }
+
+    .suggestion-btn:hover {
+        background: var(--primary-dark);
+        transform: translate(-1px, -1px);
+        box-shadow: 2px 2px 0 var(--primary);
+    }
+</style>
+{% endblock %}
+
+ {% block extra_js %}
+<script>
+    const password1 = document.getElementById("id_password1");
+    const password2 = document.getElementById("id_password2");
+    const strengthBar = document.getElementById("strengthBar");
+    const strengthText = document.getElementById("strengthText");
+    const passwordStrength = document.getElementById("passwordStrength");
+    const passwordMatch = document.getElementById("passwordMatch");
+
+    function checkPasswordStrength(password) {
+        let strength = 0;
+        if (password.length >= 8) strength++;
+        if (password.length >= 12) strength++;
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+        if (/\d/.test(password)) strength++;
+        if (/[^a-zA-Z0-9]/.test(password)) strength++;
+        return strength;
+    }
+
+    password1.addEventListener("input", function () {
+        const password = this.value;
+
+        if (password.length === 0) {
+            passwordStrength.style.display = "none";
+            return;
+        }
+
+        passwordStrength.style.display = "block";
+        const strength = checkPasswordStrength(password);
+        strengthBar.className = "password-strength-fill";
+
+        if (strength <= 2) {
+            strengthBar.classList.add("weak");
+            strengthText.textContent = "[ WEAK - ADD MORE CHARACTERS & VARIETY ]";
+            strengthText.style.color = "#ff4444";
+        } else if (strength <= 3) {
+            strengthBar.classList.add("medium");
+            strengthText.textContent = "[ MEDIUM - CONSIDER ADDING SPECIAL CHARACTERS ]";
+            strengthText.style.color = "#ffaa00";
+        } else {
+            strengthBar.classList.add("strong");
+            strengthText.textContent = "[ STRONG PASSWORD ✓ ]";
+            strengthText.style.color = "#00ff00";
+        }
+
+        if (password2.value.length > 0) {
+            checkPasswordMatch();
+        }
+    });
+
+    function checkPasswordMatch() {
+        if (password2.value.length === 0) {
+            passwordMatch.style.display = "none";
+            return;
+        }
+
+        passwordMatch.style.display = "block";
+
+        if (password1.value === password2.value && password2.value.length > 0) {
+            passwordMatch.textContent = "[ ✓ PASSWORDS MATCH ]";
+            passwordMatch.className = "form-help match-success";
+        } else {
+            passwordMatch.textContent = "[ ✗ PASSWORDS DO NOT MATCH ]";
+            passwordMatch.className = "form-help match-error";
+        }
+    }
+
+    password2.addEventListener("input", checkPasswordMatch);
+
+    // Username generation functionality
+    const generateBtn = document.getElementById("generateUsername");
+    const usernameInput = document.getElementById("id_username");
+    const usernameSuggestions = document.getElementById("usernameSuggestions");
+    const suggestionButtons = document.querySelectorAll(".suggestion-btn");
+
+    generateBtn.addEventListener("click", function() {
+        // Show suggestions
+        usernameSuggestions.style.display = "block";
+
+        // If no username entered, pick a random suggestion
+        if (!usernameInput.value.trim()) {
+            const randomSuggestion = suggestionButtons[Math.floor(Math.random() * suggestionButtons.length)];
+            usernameInput.value = randomSuggestion.dataset.username;
+        }
+    });
+
+    // Handle suggestion button clicks
+    suggestionButtons.forEach(btn => {
+        btn.addEventListener("click", function() {
+            usernameInput.value = this.dataset.username;
+            usernameSuggestions.style.display = "none";
+        });
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener("click", function(e) {
+        if (!usernameSuggestions.contains(e.target) && e.target !== generateBtn) {
+            usernameSuggestions.style.display = "none";
+        }
+    });
+
+    const form = document.getElementById("signupForm");
+    form.addEventListener("submit", function (e) {
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.textContent = "[ CREATING ACCOUNT... ]";
+        submitBtn.disabled = true;
+    });
+</script>
+{% endblock %}

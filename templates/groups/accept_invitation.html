@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load i18n %}
+{% load thumbnail %}
+{% block title %}{% translate "Group Invitation" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container container-md">
+    <!-- Header -->
+    <div class="mb-xl text-center">
+        <h1 class="mb-sm">{% translate "Group Invitation" %}</h1>
+        <p class="text-secondary">{% translate "You've been invited to join a community" %}</p>
+    </div>
+
+    <!-- Invitation Card -->
+    <div class="card">
+        <div class="card-body">
+            <!-- Group Info -->
+            <div class="flex items-center gap-lg mb-lg">
+                {% if group.image %}
+                    <img src="{{ group.image.group_list.url }}" alt="{{ group.name }}" class="w-16 h-16 object-cover rounded">
+                {% else %}
+                    <div class="w-16 h-16 bg-primary rounded flex items-center justify-center text-white font-bold text-xl">
+                        {{ group.name|first|upper }}
+                    </div>
+                {% endif %}
+                <div class="flex-1">
+                    <h2 class="mb-sm">{{ group.name }}</h2>
+                    <p class="text-secondary">{{ group.city }}, {{ group.country }}</p>
+                    {% if group.description %}
+                        <p class="text-lg mt-sm">{{ group.description }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Invitation Details -->
+            <div class="bg-secondary p-lg rounded mb-lg">
+                <h3 class="mb-md">{% translate "Invitation Details" %}</h3>
+                <div class="space-y-sm">
+                    <div class="flex justify-between">
+                        <span class="text-secondary">{% translate "Invited by" %}:</span>
+                        <span class="font-medium">{{ invitation.invited_by.get_display_name }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-secondary">{% translate "Invited on" %}:</span>
+                        <span class="font-medium">{{ invitation.created_at|date:"M j, Y" }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-secondary">{% translate "Expires" %}:</span>
+                        <span class="font-medium">{{ invitation.expires_at|date:"M j, Y" }}</span>
+                    </div>
+                    {% if invitation.message %}
+                        <div>
+                            <span class="text-secondary">{% translate "Message" %}:</span>
+                            <p class="mt-xs p-sm bg-main border rounded">"{{ invitation.message }}"</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Account Status Notice -->
+            {% if user.is_authenticated %}
+                <div class="alert alert-info mb-lg">
+                    <strong>{% translate "Welcome back" %}!</strong> {% translate "You're logged in as" %} {{ user.get_display_name }}. {% translate "Click \"Accept Invitation\" to join the group" %}.
+                </div>
+            {% else %}
+                <div class="alert alert-warning mb-lg">
+                    <strong>{% translate "Don't have an account" %}?</strong> {% translate "This invitation is for" %} {{ invitation.email }}. {% translate "If this is your email, you'll need to create an account first, then return to accept the invitation" %}.
+                </div>
+            {% endif %}
+
+            <!-- Group Stats -->
+            <div class="grid grid-cols-3 gap-md mb-lg">
+                <div class="text-center">
+                    <h4 class="mb-xs">{{ group.member_count }}</h4>
+                    <p class="text-sm text-secondary">{% translate "Members" %}</p>
+                </div>
+                <div class="text-center">
+                    <h4 class="mb-xs">{{ group.item_count }}</h4>
+                    <p class="text-sm text-secondary">{% translate "Items Shared" %}</p>
+                </div>
+                <div class="text-center">
+                    <h4 class="mb-xs">{{ group.privacy|title }}</h4>
+                    <p class="text-sm text-secondary">{% translate "Privacy" %}</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <form method="post">
+                {% csrf_token %}
+                <div class="flex gap-md justify-center">
+                    <button type="submit" name="accept" value="1" class="btn btn-primary btn-lg">
+                        {% translate "Accept Invitation" %}
+                    </button>
+                    <button type="submit" name="decline" value="1" class="btn btn-outline btn-lg">
+                        {% translate "Decline Invitation" %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% translate "LOAN REVIEW" %}
+
+{{ reviewer.get_display_name }} {% translate "left a review for" %} {{ item.title }}
+
+{% translate "Rating" %}: {{ "★" * rating }}
+{% translate "Review" %}: {{ comment }}
+
+{% translate "Detailed Ratings:
+- Communication" %}: {{ "★" * communication_rating }}
+- {% translate "Item Condition" %}: {{ "★" * condition_rating }}
+- {% translate "Timeliness" %}: {{ "★" * timeliness_rating }}
+
+{% translate "View loan details" %}: {{ loan_url }}
+{% translate "View item details" %}: {{ item_url }}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block content %}
+<div class="container">
+    <div style="max-width: 600px; margin: 0 auto; border: 2px solid #000; background: #fff;">
+        <div style="padding: 40px;">
+            <h1 style="font-family: monospace; font-size: 32px; margin-bottom: 20px;">✉️ {% translate "CHECK YOUR EMAIL" %}</h1>
+
+            <div style="border: 1px solid #000; padding: 20px; margin: 20px 0; background: #f0f0f0;">
+                <p style="margin: 0 0 10px 0; font-size: 18px;">{% translate "We've sent a verification email to" %}:</p>
+                <p style="margin: 10px 0; font-size: 20px; font-weight: bold;">{{ signup_email|default:"your email address" }}</p>
+            </div>
+
+            <div style="margin: 30px 0;">
+                <h2 style="font-family: monospace; font-size: 20px; margin-bottom: 15px;">{% translate "NEXT STEPS" %}:</h2>
+                <ol style="font-family: monospace; padding-left: 20px; line-height: 1.8;">
+                    <li>{% translate "Check your email inbox" %}</li>
+                    <li>{% translate "Find the email from \"Comuniza" %}"</li>
+                    <li>{% translate "Click the \"CONFIRM EMAIL\" button" %}</li>
+                    <li>{% translate "You'll be automatically logged in to your profile" %}</li>
+                </ol>
+            </div>
+
+            <div style="border: 1px solid #000; padding: 20px; margin: 20px 0;">
+                <p style="margin: 0 0 10px 0; font-weight: bold;">🚨 {% translate "IMPORTANT" %}:</p>
+                <ul style="font-family: monospace; padding-left: 20px; line-height: 1.6;">
+                    <li>{% translate "If you don't receive the email within 5 minutes, check your spam folder" %}</li>
+                    <li>{% translate "The verification link expires in 7 days" %}</li>
+                    <li>{% translate "Your account will be deleted if not confirmed within 7 days" %}</li>
+                    <li>{% translate "If you didn't sign up, please ignore this email" %}</li>
+                </ul>
+            </div>
+
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{% url 'account_login' %}" style="display: inline-block; padding: 15px 30px; background: #000; color: #fff; text-decoration: none; border: 2px solid #000; font-family: monospace; font-weight: bold;">
+                    {% translate "RETURN TO LOGIN" %}
+                </a>
+            </div>
+
+            <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #000;">
+                <p style="margin: 0; font-size: 14px; color: #666;">{% translate "Need help? Contact us at" %} <a href="mailto:support@comuniza.org" style="color: #000; text-decoration: underline;">{% translate "support@comuniza.org" %}</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

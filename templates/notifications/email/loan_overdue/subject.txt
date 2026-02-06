@@ -1,0 +1,1 @@
+{% translate "URGENT: Loan Overdue" %} - {{ days_overdue }} {% translate "days" %}

@@ -1,0 +1,84 @@
+# docker-compose.dev.yml - Enhanced development configuration
+# This file extends the base docker-compose.yml with development-specific optimizations
+
+services:
+  app:
+    extends:
+      file: docker-compose.yml
+      service: app
+    # Override with development-specific settings
+    environment:
+      # Development-specific additions
+      - DEBUG=True
+      - DJANGO_AUTORELOAD=True
+      - COLLECTSTATIC_ON_DEPLOY=False
+      - DJANGO_WATCHFILES=1
+      - DEV_WATCHFILES_ENABLED=true
+    # Use Django runserver with django-watchfiles for enhanced file watching
+    command: python manage.py runserver 0.0.0.0:8000
+    # Add development-specific volumes for better file watching
+    volumes:
+      - ${APP_VOLUMES:-./:/app}
+      - ${STATIC_VOLUME:-/var/www/comuniza/storage/assets}:/app/staticfiles
+      - ${MEDIA_VOLUME:-/var/www/comuniza/storage/media}:/app/media
+      - ${LOGS_VOLUME:-/var/www/comuniza/storage/logs}:/app/logs
+    # Development-specific healthcheck
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  celery:
+    extends:
+      file: docker-compose.yml
+      service: celery
+    # Development-specific overrides
+    environment:
+      # Development-specific additions
+      - CELERY_WORKER=true
+      - CELERY_WORKER=true
+      - DJANGO_SETTINGS_MODULE=core.settings.${DJANGO_ENV:-development}
+      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - REDIS_URL=redis://redis:6379/0
+    # Standard celery command (no watchfiles wrapper)
+    # Celery has built-in worker reload capability
+    command: celery -A core worker --loglevel=debug --concurrency=1
+    # Development-friendly volume mounting
+    volumes:
+      - ${APP_VOLUMES:-./:/app}
+      - ${MEDIA_VOLUME:-/var/www/comuniza/storage/media}:/app/media
+      - ${LOGS_VOLUME:-/var/www/comuniza/storage/logs}:/app/logs
+    networks:
+      - comuniza-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  # Development-specific mailcatcher (override existing if any)
+  mailcatcher:
+    image: sj26/mailcatcher
+    container_name: comuniza-mailcatcher-dev
+    restart: unless-stopped
+    ports:
+      - "1080:1080"  # Web interface
+      - "1025:1025"  # SMTP server
+    networks:
+      - comuniza-network
+    # Development-only label
+    labels:
+      - "com.comuniza.environment=development"
+
+networks:
+  comuniza-network:
+    driver: bridge
+  proxy:
+    external: false

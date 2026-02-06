@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{% translate "Request Timeout" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container container-sm">
+    <div class="py-2xl">
+        <div class="text-center">
+
+            <!-- Error Message -->
+            <h1 class="mb-lg" style="font-size: 3rem; font-weight: 700;">408</h1>
+            <h2 class="mb-md text-secondary">{% translate "Request Timeout" %}</h2>
+            <p class="mb-xl text-muted" style="max-width: 500px; margin: 0 auto; line-height: 1.6;">
+                {% blocktranslate %}The server waited too long for a response from your browser.<br>
+                Your request may have been interrupted or took too long to complete.{% endblocktranslate %}
+            </p>
+
+            <!-- Actions -->
+            <div class="flex justify-center gap-md mb-xl">
+                <a href="{% url 'home' %}" class="btn btn-primary btn-lg">
+                    {% translate "Go Home" %}
+                </a>
+                <button onclick="location.reload()" class="btn btn-outline btn-lg">
+                    🔄 {% translate "Try Again" %}
+                </button>
+                <a href="{% url 'bug_report_page' %}" class="btn btn-outline btn-lg">
+                    {% translate "Report a Bug" %}
+                </a>
+            </div>
+
+            <!-- Additional Help -->
+            <div class="card" style="max-width: 600px; margin: 0 auto;">
+                <div class="card-body">
+                    <h3 class="mb-md">{% translate "What can you try" %}?</h3>
+                    <ul class="text-left space-y-sm" style="padding-left: 1.5rem;">
+                        <li>{% translate "Refresh the page and try again" %}</li>
+                        <li>{% translate "Check your internet connection" %}</li>
+                        <li>{% translate "Try a different browser or device" %}</li>
+                        <li>{% translate "Clear your browser cache and cookies" %}</li>
+                        <li>{% translate "Contact support if the problem persists" %}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

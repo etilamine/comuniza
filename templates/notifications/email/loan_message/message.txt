@@ -1,0 +1,15 @@
+{% translate "LOAN MESSAGE" %}
+
+{{ sender.get_display_name }} {% translate "sent you a message regarding" %} {{ loan.item.title }}
+
+{{ message_content|truncatewords:50 }}
+
+{% if has_loan_context %}
+{% translate "Related Loan:
+- Item" %}: {{ loan_item_title }}
+- {% translate "Status" %}: {{ loan_status }}
+- {% translate "Action Required" %}: {{ action_required|yesno:"Yes" if action_required else "No" }}
+{% endif %}
+
+{% translate "View conversation" %}: {{ messages_url }}
+{% translate "View loan details" %}: {{ loan_url }}

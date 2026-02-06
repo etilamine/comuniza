@@ -1,0 +1,28 @@
+{% extends "notifications/email/base_email.html" %}
+
+{% block header_title %}{% translate "RETURN REQUESTED" %}{% endblock %}
+
+{% block email_content %}
+<h2>{% translate "Item Marked As Returned" %}</h2>
+<p><strong>{{ borrower.get_display_name }}</strong> {% translate "has marked" %} <strong>{{ item.title }}</strong> {% translate "as returned" %}.</p>
+<p>{% translate "Please review the item and confirm the return when you have received it back" %}.</p>
+
+<div class="data-box">
+    <h3>{% translate "Loan Details" %}:</h3>
+    <table class="data-table">
+        <tr>
+            <td>{% translate "Loan ID" %}:</td>
+            <td>#{{ loan.id }}</td>
+        </tr>
+        <tr>
+            <td>{% translate "Due Date" %}:</td>
+            <td>{{ due_date|date:"F j, Y" }}</td>
+        </tr>
+    </table>
+</div>
+
+<div class="btn-container">
+    <a href="{{ loan_url }}" class="btn">{% translate "Confirm Return" %}</a>
+    <a href="{{ messages_url }}" class="btn btn-secondary">{% translate "Message" %} {{ borrower.get_display_name }}</a>
+</div>
+{% endblock %}

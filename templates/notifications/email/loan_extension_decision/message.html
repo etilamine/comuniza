@@ -1,0 +1,47 @@
+{% extends "notifications/email/base_email.html" %}
+
+{% block header_title %}{% translate "EXTENSION DECISION" %}{% endblock %}
+
+{% block email_content %}
+{% if extension_approved %}
+    <div class="success-box">
+        <h2>{% translate "Extension Approved" %}!</h2>
+        <p>{% translate "Good news" %}! <strong>{{ lender.get_display_name }}</strong> {% translate "has approved your extension request for" %} <strong>{{ item.title }}</strong>.</p>
+    </div>
+    
+    <div class="data-box">
+        <h3>{% translate "Extension Details" %}:</h3>
+        <table class="data-table">
+            <tr>
+                <td>{% translate "Extension Days" %}:</td>
+                <td>{{ extension_days }} {% translate "days" %}</td>
+            </tr>
+            <tr>
+                <td>{% translate "Original Due" %}:</td>
+                <td>{{ original_due_date|date:"F j, Y" }}</td>
+            </tr>
+            <tr>
+                <td>{% translate "New Due" %}:</td>
+                <td>{{ new_due_date|date:"F j, Y" }}</td>
+            </tr>
+        </table>
+    </div>
+{% else %}
+    <h2>{% translate "Extension Rejected" %}</h2>
+    <p>{% translate "Unfortunately" %}, <strong>{{ lender.get_display_name }}</strong> {% translate "has rejected your extension request for" %} <strong>{{ item.title }}</strong>.</p>
+    
+    {% if rejection_reason %}
+        <div class="warning-box">
+            <h3>{% translate "Reason" %}:</h3>
+            <p>{{ rejection_reason }}</p>
+        </div>
+    {% endif %}
+{% endif %}
+
+<p>{% translate "You can continue to communicate with the lender through your dashboard if needed" %}.</p>
+
+<div class="btn-container">
+    <a href="{{ loan_url }}" class="btn">{% translate "View Loan Details" %}</a>
+    <a href="{{ messages_url }}" class="btn btn-secondary">{% translate "Message Lender" %}</a>
+</div>
+{% endblock %}

@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}[{% translate "MY BADGES" %} ]{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="section">
+        <h1 class="glow-text">[{% translate "MY BADGES" %} ]</h1>
+        <p class="subtitle">{% translate "Your revolutionary achievements" %}</p>
+
+        {% if user_badges %}
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ user_badges.count }}</div>
+                <div class="stat-label">{% translate "BADGES EARNED" %}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">
+                    {% for badge in user_badges %}
+                        {{ badge.badge.points }}{% if not forloop.last %}+{% endif %}
+                    {% endfor %}
+                </div>
+                <div class="stat-label">{% translate "TOTAL POINTS" %}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">
+                    {{ user_badges|selectattr:'badge.badge_type'|selectattr:'badge.badge_type'|list|length }}
+                </div>
+                <div class="stat-label">{% translate "CATEGORIES" %}</div>
+            </div>
+        </div>
+
+        <div class="my-badges-grid">
+            {% for user_badge in user_badges %}
+            <div class="earned-badge {{ user_badge.badge.badge_type }}-border">
+                <div class="earned-badge-icon">
+                    <i class="{{ user_badge.badge.icon }}"></i>
+                </div>
+                <div class="earned-badge-info">
+                    <h3 class="earned-badge-name">{{ user_badge.badge.name }}</h3>
+                    <p class="earned-badge-description">{{ user_badge.badge.description }}</p>
+                    <div class="earned-badge-meta">
+                        <span class="earned-date">{% translate "EARNED" %}: {{ user_badge.earned_at|date:"M d, Y" }}</span>
+                        <span class="badge-points">+{{ user_badge.badge.points }} {% translate "pts" %}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <h2>[{% translate "NO BADGES YET" %} ]</h2>
+            <p>{% translate "Start your revolutionary journey! Share items, borrow books, and build community to earn your first badges" %}.</p>
+            <a href="{% url 'items:list' %}" class="btn primary">{% translate "BROWSE ITEMS" %}</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    border: 3px solid var(--accent-color);
+    padding: 1.5rem;
+    text-align: center;
+    background: var(--bg-color);
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-color);
+}
+
+.my-badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.earned-badge {
+    border: 3px solid;
+    padding: 1.5rem;
+    background: var(--bg-color);
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    position: relative;
+}
+
+.earned-badge::before {
+    content: "✓";
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 30px;
+    height: 30px;
+    background: var(--accent-color);
+    color: var(--bg-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.earned-badge-icon {
+    font-size: 2.5rem;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.earned-badge-info {
+    flex: 1;
+}
+
+.earned-badge-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin: 0 0 0.5rem 0;
+    color: var(--text-color);
+}
+
+.earned-badge-description {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin: 0 0 1rem 0;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+.earned-badge-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.earned-date {
+    font-size: 0.8rem;
+    color: var(--text-color);
+    opacity: 0.6;
+}
+
+.badge-points {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+    background: var(--accent-color);
+    color: var(--bg-color);
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    border: 3px solid var(--accent-color);
+    background: var(--bg-color);
+}
+
+.empty-icon {
+    font-size: 4rem;
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+}
+
+.empty-state h2 {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+    color: var(--text-color);
+}
+
+.empty-state p {
+    margin-bottom: 2rem;
+    color: var(--text-color);
+    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    .my-badges-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .earned-badge {
+        padding: 1rem;
+    }
+
+    .earned-badge-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+    }
+}
+</style>
+{% endblock %}

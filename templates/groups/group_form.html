@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{{ title }} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container container-md">
+    <!-- Page Header -->
+    <div class="mb-xl">
+        <h1 class="mb-sm">{{ title }}</h1>
+        <p class="text-secondary">{% translate "Create a community for sharing items with like-minded people" %}</p>
+    </div>
+
+    <!-- Form -->
+    <form action="" method="post" enctype="multipart/form-data" class="card">
+        <div class="card-body">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger mb-lg">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <!-- Basic Information -->
+            <div class="mb-xl">
+                <h3 class="mb-lg">{% translate "Basic Information" %}</h3>
+
+                <div class="form-group">
+                    <label for="id_name" class="form-label form-label-required">{% translate "Group Name" %}</label>
+                    <input
+                        type="text"
+                        name="name"
+                        id="id_name"
+                        class="form-control {% if form.name.errors %}is-invalid{% endif %}"
+                        value="{{ form.name.value|default:'' }}"
+                        maxlength="100"
+                        required
+                        placeholder="{{ form.name.field.widget.attrs.placeholder }}"
+                    >
+                    {% if form.name.errors %}
+                        <div class="form-error">{{ form.name.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_description" class="form-label">{% translate "Description" %}</label>
+                    <textarea
+                        name="description"
+                        id="id_description"
+                        class="form-control {% if form.description.errors %}is-invalid{% endif %}"
+                        rows="{{ form.description.field.widget.attrs.rows }}"
+                        placeholder="{{ form.description.field.widget.attrs.placeholder }}"
+                    >{{ form.description.value|default:'' }}</textarea>
+                    {% if form.description.errors %}
+                        <div class="form-error">{{ form.description.errors.0 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_privacy" class="form-label">{% translate "Privacy" %}</label>
+                    <select
+                        name="privacy"
+                        id="id_privacy"
+                        class="form-control {% if form.privacy.errors %}is-invalid{% endif %}"
+                    >
+                        {% for choice in form.privacy.field.choices %}
+                            <option value="{{ choice.0 }}" {% if form.privacy.value == choice.0 %}{% translate "selected" %}{% endif %}>
+                                {{ choice.1 }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if form.privacy.errors %}
+                        <div class="form-error">{{ form.privacy.errors.0 }}</div>
+                    {% endif %}
+                    <small class="form-help">{{ form.privacy.help_text }}</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_image" class="form-label">{% translate "Group Image (optional" %})</label>
+                    <input
+                        type="file"
+                        name="image"
+                        id="id_image"
+                        class="form-control"
+                        accept="image/*"
+                    >
+                    <small class="form-help">{% translate "Upload an image to represent your group (max 5MB" %})</small>
+                </div>
+            </div>
+
+            <!-- Location -->
+            <div class="mb-xl">
+                <h3 class="mb-lg">{% translate "Location" %}</h3>
+
+                <div class="grid grid-cols-1 grid-md-3 gap-md">
+                    <div class="form-group">
+                        <label for="id_city" class="form-label form-label-required">{% translate "City" %}</label>
+                        <input
+                            type="text"
+                            name="city"
+                            id="id_city"
+                            class="form-control {% if form.city.errors %}is-invalid{% endif %}"
+                            value="{{ form.city.value|default:'' }}"
+                            maxlength="100"
+                            required
+                            placeholder="{{ form.city.field.widget.attrs.placeholder }}"
+                        >
+                        {% if form.city.errors %}
+                            <div class="form-error">{{ form.city.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_state" class="form-label">{% translate "State/Region" %}</label>
+                        <input
+                            type="text"
+                            name="state"
+                            id="id_state"
+                            class="form-control {% if form.state.errors %}is-invalid{% endif %}"
+                            value="{{ form.state.value|default:'' }}"
+                            maxlength="100"
+                            placeholder="{{ form.state.field.widget.attrs.placeholder }}"
+                        >
+                        {% if form.state.errors %}
+                            <div class="form-error">{{ form.state.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_country" class="form-label form-label-required">{% translate "Country" %}</label>
+                        <input
+                            type="text"
+                            name="country"
+                            id="id_country"
+                            class="form-control {% if form.country.errors %}is-invalid{% endif %}"
+                            value="{{ form.country.value|default:'' }}"
+                            maxlength="100"
+                            required
+                            placeholder="{{ form.country.field.widget.attrs.placeholder }}"
+                        >
+                        {% if form.country.errors %}
+                            <div class="form-error">{{ form.country.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <small class="form-help">{% translate "Location helps members find groups near them" %}</small>
+            </div>
+
+            <!-- Group Settings -->
+            <div class="mb-xl">
+                <h3 class="mb-lg">{% translate "Group Settings" %}</h3>
+
+                <div class="form-group">
+                    <label for="id_loan_visibility" class="form-label">{% translate "Loan Visibility" %}</label>
+                    <select
+                        name="loan_visibility"
+                        id="id_loan_visibility"
+                        class="form-control {% if form.loan_visibility.errors %}is-invalid{% endif %}"
+                    >
+                        {% for choice in form.loan_visibility.field.choices %}
+                            <option value="{{ choice.0 }}" {% if form.loan_visibility.value == choice.0 %}{% translate "selected" %}{% endif %}>
+                                {{ choice.1 }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if form.loan_visibility.errors %}
+                        <div class="form-error">{{ form.loan_visibility.errors.0 }}</div>
+                    {% endif %}
+                    <small class="form-help">{{ form.loan_visibility.help_text }}</small>
+                </div>
+
+                <div class="space-y-md">
+                    <div class="form-check">
+                        <input
+                            type="checkbox"
+                            name="allow_member_invites"
+                            id="id_allow_member_invites"
+                            class="form-check-input {% if form.allow_member_invites.errors %}is-invalid{% endif %}"
+                            {% if form.allow_member_invites.value %}checked{% endif %}
+                        >
+                        <label class="form-check-label" for="id_allow_member_invites">
+                            {% translate "Allow members to invite others" %}
+                        </label>
+                        {% if form.allow_member_invites.errors %}
+                            <div class="form-error">{{ form.allow_member_invites.errors.0 }}</div>
+                        {% endif %}
+                        <small class="form-help">{{ form.allow_member_invites.help_text }}</small>
+                    </div>
+
+                    <div class="form-check">
+                        <input
+                            type="checkbox"
+                            name="require_approval_for_items"
+                            id="id_require_approval_for_items"
+                            class="form-check-input {% if form.require_approval_for_items.errors %}is-invalid{% endif %}"
+                            {% if form.require_approval_for_items.value %}checked{% endif %}
+                        >
+                        <label class="form-check-label" for="id_require_approval_for_items">
+                            {% translate "Require admin approval for new items" %}
+                        </label>
+                        {% if form.require_approval_for_items.errors %}
+                            <div class="form-error">{{ form.require_approval_for_items.errors.0 }}</div>
+                        {% endif %}
+                        <small class="form-help">{{ form.require_approval_for_items.help_text }}</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="flex gap-sm">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    {% translate "Create Group" %}
+                </button>
+                <a href="{% url 'groups:list' %}" class="btn btn-ghost btn-lg">
+                    {% translate "Cancel" %}
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

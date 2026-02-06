@@ -1,0 +1,12 @@
+{% translate "RETURN REQUESTED" %}
+
+{{ borrower.get_display_name }} {% translate "has marked" %} {{ item.title }} {% translate "as returned.
+
+Please review the item and confirm the return when you have received it back.
+
+Loan Details:
+- Loan ID" %}: #{{ loan.id }}
+- {% translate "Due Date" %}: {{ due_date|date:"F j, Y" }}
+
+{% translate "View loan" %}: {{ loan_url }}
+{% translate "Message" %} {{ borrower.get_display_name }}: {{ messages_url }}

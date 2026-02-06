@@ -1,0 +1,641 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load thumbnail %}
+{% block title %}{% translate "My Items" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <!-- Page Header -->
+    <div class="mb-xl">
+        <h1 class="mb-sm">{% translate "My Items" %}</h1>
+        <p class="text-secondary">{% translate "Manage your shared items" %}</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-3 gap-md mb-xl">
+        <div class="card">
+            <div class="card-body text-center grow-text">
+                <div class="text-3xl font-bold text-primary mb-sm">
+                    {{ total_items }}
+                </div>
+                <div class="text-secondary">{% translate "Total Items" %}</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body text-center grow-text">
+                <div class="text-3xl font-bold text-success mb-sm">
+                    {{ available_items }}
+                </div>
+                <div class="text-secondary">{% translate "Available" %}</div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body text-center grow-text">
+                <div class="text-3xl font-bold text-warning mb-sm">
+                    {{ borrowed_items }}
+                </div>
+                <div class="text-secondary">{% translate "Currently Borrowed" %}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="flex justify-between items-center mb-lg">
+        <h2 class="mb-0">{% translate "Active Items" %}</h2>
+        <div class="flex items-center gap-md">
+            <!-- View Toggle -->
+            <div class="view-toggle">
+                <button type="button" class="view-btn active" data-view="grid">
+                    <span>⊞</span> {% translate "Grid" %}
+                </button>
+                <button type="button" class="view-btn" data-view="list">
+                    <span>☰</span> {% translate "List" %}
+                </button>
+            </div>
+            <a href="{% url 'items:create' %}" class="btn btn-primary">
+                <span class="mr-sm">+</span> {% translate "Add New Item" %}
+            </a>
+        </div>
+    </div>
+
+    <!-- Active Items Container -->
+    {% if items %}
+    <div
+        class="items-container grid-view grid grid-cols-2 grid-md-3 grid-lg-5 gap-lg mb-2xl"
+    >
+        {% for item in items %}
+        <div class="item-card-wrapper">
+            <a
+                href="{% url 'item_detail' item.identifier %}"
+                class="item-card book-card card"
+            >
+                <!-- Item Details -->
+                <div class="item-card-body">
+                    <!-- Item Image -->
+                    <div class="item-card-img-wrapper">
+                        {% if item.images.exists %}
+                        {% with item.images.first as primary_image %}
+                        <img
+                            class="item-card-img"
+                            src="{{ primary_image.image.item_detail.url }}"
+                            alt="{{ item.title }}"
+                            loading="lazy"
+                        />
+                        {% endwith %}
+                        {% else %}
+                        <div
+                            style="
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                height: 100%;
+                                background: var(--gray-100);
+                                color: var(--gray-400);
+                                font-size: 3rem;
+                            "
+                        >
+                            [ ]
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% if item.author %}
+                    <p class="item-card-author">{{ item.author }}</p>
+                    {% endif %}
+
+                    <h3 class="item-card-title">{{ item.title }}</h3>
+
+                     <!-- Status Badge -->
+                     <div class="item-card-status-info">
+                         <span class="badge-{{ item.status }}">
+                             {% if item.status == 'available' %}
+                                 ▸ {% translate "Available" %}
+                             {% elif item.status == 'borrowed' %}
+                                 ◼ {% translate "Borrowed" %}
+                             {% else %}
+                             □ {{item.get_status_display }}
+                             {% endif %}
+                         </span>
+                         {% if item.visibility != 'public' %}
+                         <span class="badge-visibility badge-{{ item.visibility }}">
+                             {% if item.visibility == 'private' %}{% translate "Private" %}{% elif item.visibility == 'restricted' %}{% translate "Restricted" %}{% endif %}
+                         </span>
+                         {% endif %}
+                     </div>
+
+                    <div class="item-card-book-meta">
+                        {% if item.year %}
+                        <span>{{ item.year }}</span>
+                        {% endif %} {% if item.publisher %}
+                        <span>{{ item.publisher }}</span>
+                        {% endif %} {% if item.isbn %}
+                        <span>{% translate "ISBN" %}: {{ item.isbn|truncatechars:15 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="item-card-meta">
+                        {% if item.condition %}
+                        <span class="text-xs"
+                            >{{ item.get_condition_display }}</span
+                        >
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+
+            <!-- Action Buttons (Owner specific) - Outside card -->
+            <div class="item-card-actions">
+                <a
+                    href="{% url 'item_edit' item.identifier %}"
+                    class="btn btn-outline btn-sm"
+                >
+                    {% translate "Edit" %}
+                </a>
+                <a
+                    href="{% url 'item_delete' item.identifier %}"
+                    class="btn btn-danger btn-sm"
+                >
+                    {% translate "Delete" %}
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- List View -->
+    <div class="items-container list-view hidden">
+        {% for item in items %}
+        <div class="list-view-item card">
+            <a href="{% url 'item_detail' item.identifier %}" class="list-view-card-link">
+                <div class="list-view-content">
+                    <!-- Item Image -->
+                    <div class="list-view-image">
+                        {% if item.images.exists %}
+                        {% with item.images.first as primary_image %}
+                        <img
+                            src="{{ primary_image.image.item_detail.url }}"
+                            alt="{{ item.title }}"
+                        />
+                        {% endwith %}
+                        {% else %}
+                        <div class="list-view-image-placeholder">
+                            <span>[ ]</span>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Item Details -->
+                    <div class="list-view-details">
+                        <div class="list-view-header">
+                            <div class="list-view-title-section">
+                                {% if item.author %}
+                                <p class="list-view-author">{{ item.author }}</p>
+                                {% endif %}
+                                <h3 class="list-view-title">{{ item.title }}</h3>
+                            </div>
+                             <span class="badge badge-{{ item.status }}">
+                                 {% if item.status == 'available' %}
+                                     ▸ {% translate "Available" %}
+                                 {% elif item.status == 'borrowed' %}
+                                     ◼ {% translate "Borrowed" %}
+                                 {% else %}
+                                     □
+                                 {{ item.get_status_display }}
+                                 {% endif %}
+                             </span>
+                             {% if item.visibility != 'public' %}
+                             <span class="badge-visibility badge-{{ item.visibility }}">
+                                 {% if item.visibility == 'private' %}{% translate "Private" %}{% elif item.visibility == 'restricted' %}{% translate "Restricted" %}{% endif %}
+                             </span>
+                             {% endif %}
+                        </div>
+
+                        <div class="list-view-meta">
+                            {% if item.category %}
+                            <span class="badge badge-primary">{{ item.category.name }}</span</span>>
+                            {% endif %}
+                            <span class="badge badge-secondary">{{ item.get_condition_display }}</span>
+                            {% if item.year %}
+                            <span class="badge badge-secondary">{{ item.year }}</span>
+                            {% endif %}
+                            {% if item.publisher %}
+                            <span class="badge badge-secondary">{{ item.publisher }}</span>
+                            {% endif %}
+                            {% if item.isbn %}
+                            <span class="badge badge-secondary">{% translate "ISBN" %}: {{ item.isbn|truncatechars:15 }}</span>
+                            {% endif %}
+                        </div>
+
+                        {% if item.description %}
+                        <p class="list-view-description">
+                            {{ item.description|truncatechars:200 }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+
+            <!-- Action Buttons - Outside card link -->
+            <div class="list-view-actions">
+                <a
+                    href="{% url 'item_edit' item.identifier %}"
+                    class="btn btn-outline btn-sm"
+                >
+                    {% translate "Edit" %}
+                </a>
+                <a
+                    href="{% url 'item_delete' item.identifier %}"
+                    class="btn btn-danger btn-sm"
+                >
+                    {% translate "Delete" %}
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <!-- Empty State -->
+    <div class="card text-center py-2xl">
+        <div class="card-body">
+            <h3 class="mb-md">{% translate "No active items yet" %}</h3>
+            <p class="text-secondary mb-lg">
+                {% translate "Start sharing by adding your first item to the community" %}.
+            </p>
+            <a href="{% url 'items:create' %}" class="btn btn-primary btn-lg">
+                {% translate "Add Your First Item" %}
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Inactive Items Section -->
+    {% if inactive_items %}
+    <div class="mt-2xl pt-2xl border-t border-gray-200">
+        <h2 class="mb-lg">{% translate "Inactive Items" %}</h2>
+        <p class="text-secondary mb-lg">
+            {% translate "These items have been deactivated and are not visible to other
+            users" %}.
+        </p>
+
+        <div class="grid grid-cols-1 grid-md-2 grid-lg-3 gap-lg">
+            {% for item in inactive_items %}
+            <div class="card opacity-75">
+                <!-- Item Image -->
+                <div style="position: relative">
+                    {% if item.images.exists %}
+                    {% with item.images.first as primary_image %}
+                    <img
+                        src="{{ primary_image.image.item_detail.url }}"
+                        alt="{{ item.title }}"
+                        class="w-full object-cover grayscale"
+                        style="aspect-ratio: 1; height: 200px"
+                    />
+                    {% endwith %}
+                    {% else %}
+                    <div
+                        class="w-full bg-gray-100 flex items-center justify-center text-gray-400"
+                        style="aspect-ratio: 1; height: 200px"
+                    >
+                        <span class="text-4xl">[ ]</span>
+                    </div>
+                    {% endif %}
+
+                    <!-- Inactive Badge -->
+                    <div
+                        style="
+                            position: absolute;
+                            top: var(--space-md);
+                            right: var(--space-md);
+                        "
+                    >
+                        <span class="badge badge-secondary"> {% translate "Inactive" %} </span>
+                    </div>
+                </div>
+
+                <!-- Item Details -->
+                <div class="card-body">
+                    <h3 class="mb-sm text-gray-600">{{ item.title }}</h3>
+
+                    {% if item.author %}
+                    <p class="text-secondary text-sm mb-sm">
+                        {% translate "by" %} {{ item.author }}
+                    </p>
+                    {% endif %}
+
+                    <div class="flex flex-wrap gap-xs mb-md">
+                        {% if item.category %}
+                        <span class="badge badge-secondary"
+                            >{{ item.category.name }}</span
+                        >
+                        {% endif %}
+                        <span class="badge badge-secondary"
+                            >{{ item.get_condition_display }}</span
+                        >
+                    </div>
+
+                    <!-- Reactivate Button -->
+                    <form
+                        method="post"
+                        action="{% url 'items:item_reactivate' item.identifier %}"
+                        class="inline"
+                    >
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-sm">
+                            {% translate "Reactivate" %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const viewButtons = document.querySelectorAll(".view-btn");
+        const gridView = document.querySelector(".items-container.grid-view");
+        const listView = document.querySelector(".items-container.list-view");
+
+        // Check for saved preference
+        const savedView = localStorage.getItem("myItemsView") || "grid";
+        setActiveView(savedView);
+
+        viewButtons.forEach((button) => {
+            button.addEventListener("click", function () {
+                const view = this.dataset.view;
+                setActiveView(view);
+                localStorage.setItem("myItemsView", view);
+            });
+        });
+
+        function setActiveView(view) {
+            // Update button states
+            viewButtons.forEach((btn) => {
+                btn.classList.toggle("active", btn.dataset.view === view);
+            });
+
+            // Update view visibility
+            if (view === "grid") {
+                gridView.classList.remove("hidden");
+                listView.classList.add("hidden");
+            } else {
+                gridView.classList.add("hidden");
+                listView.classList.remove("hidden");
+            }
+        }
+    });
+</script>
+{% endblock %} {% block extra_css %}
+<style>
+    .grow-text {
+        display: flex;
+        width:100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .view-toggle {
+        display: inline-flex;
+        gap: 0;
+        border: 2px solid var(--border-color);
+        background: var(--bg-main);
+    }
+
+    .view-btn {
+        padding: var(--space-sm) var(--space-md);
+        border: none;
+        background: var(--bg-main);
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: var(--space-xs);
+        font-size: var(--font-size-sm);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-family: var(--font-mono);
+        border-right: 2px solid var(--border-color);
+    }
+
+    .view-btn:last-child {
+        border-right: none;
+    }
+
+    .view-btn:hover {
+        background: var(--bg-secondary);
+        transform: translate(-1px, -1px);
+        box-shadow: 1px 1px 0 var(--border-color);
+    }
+
+    .view-btn.active {
+        background: var(--text-primary);
+        color: var(--bg-main);
+    }
+
+    .view-btn.active:hover {
+        background: var(--text-primary);
+        transform: none;
+        box-shadow: none;
+    }
+
+    .items-container.hidden {
+        display: none;
+    }
+
+    /* Grid view card wrapper */
+    .item-card-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    /* Fix card structure for grid view */
+    .items-container.grid-view .item-card {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .items-container.grid-view .item-card-img-wrapper {
+        height: auto;
+        min-height: 200px;
+        aspect-ratio: 2/3;
+        border-bottom: none;
+        flex-shrink: 0;
+    }
+
+    .items-container.grid-view .item-card-body {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    /* Action buttons styling for grid view */
+    .item-card-actions {
+        display: flex;
+        gap: var(--space-sm);
+        margin-top: var(--space-sm);
+        padding-top: var(--space-sm);
+        border-top: 2px solid var(--border-color);
+    }
+
+    .item-card-actions .btn {
+        flex: 1;
+    }
+
+    /* List view styling */
+    .list-view-item {
+        margin-bottom: var(--space-lg);
+    }
+
+    .list-view-card-link {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        padding: var(--space-lg);
+    }
+
+    .list-view-content {
+        display: flex;
+        gap: var(--space-lg);
+    }
+
+    .list-view-image {
+        flex-shrink: 0;
+        width: 140px;
+        height: 210px;
+        overflow: hidden;
+        background: var(--bg-secondary);
+        border: 2px solid var(--border-color);
+    }
+
+    .list-view-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: var(--transition);
+    }
+
+    .list-view-card-link:hover .list-view-image img {
+        filter: grayscale(100%) contrast(1.1);
+    }
+
+    .list-view-image-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-secondary);
+        color: var(--text-muted);
+        font-size: 3rem;
+    }
+
+    .list-view-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-sm);
+        min-width: 0;
+    }
+
+    .list-view-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: var(--space-md);
+    }
+
+    .list-view-title-section {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .list-view-author {
+        font-size: var(--font-size-xs);
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 600;
+        margin-bottom: var(--space-xs);
+    }
+
+    .list-view-title {
+        font-size: var(--font-size-xl);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    .list-view-card-link:hover .list-view-title {
+        color: var(--primary);
+    }
+
+    .list-view-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-xs);
+    }
+
+    .list-view-description {
+        font-size: var(--font-size-sm);
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .list-view-actions {
+        display: flex;
+        gap: var(--space-sm);
+        padding: 0 var(--space-lg) var(--space-lg);
+        border-top: 2px solid var(--border-color);
+        padding-top: var(--space-md);
+        margin-top: var(--space-md);
+    }
+
+    @media (max-width: 768px) {
+        .view-toggle {
+            display: none; /* Hide toggle on mobile, default to grid */
+        }
+        .list-view {
+            display: none !important; /* Force grid on mobile */
+        }
+        .grid-view {
+            display: block !important;
+        }
+
+        .item-card-actions {
+            flex-direction: column;
+        }
+
+        .item-card-actions .btn {
+            width: 100%;
+        }
+
+        .list-view-content {
+            flex-direction: column;
+        }
+
+        .list-view-image {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 2/3;
+        }
+
+        .list-view-actions {
+            flex-direction: column;
+        }
+
+        .list-view-actions .btn {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}

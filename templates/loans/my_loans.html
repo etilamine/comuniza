@@ -1,0 +1,504 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load i18n %}
+{% block title %}{% translate "My Loans" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="mb-xl">
+        <h1 class="mb-sm">{% translate "My Loans" %}</h1>
+        <p class="text-secondary">{% translate "Manage your borrowing and lending activity" %}</p>
+    </div>
+
+    <!-- Statistics -->
+    <div class="grid grid-cols-2 grid-md-4 gap-md mb-xl">
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="mb-xs">{{ borrowing_count }}</h3>
+                <p class="text-sm text-secondary">{% translate "Currently Borrowing" %}</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="mb-xs">{{ lending_count }}</h3>
+                <p class="text-sm text-secondary">{% translate "Currently Lending" %}</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="mb-xs">{{ waiting_pickup_count }}</h3>
+                <p class="text-sm text-secondary">{% translate "Waiting for Pickup" %}</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="mb-xs">{{ awaiting_return_confirmation_count }}</h3>
+                <p class="text-sm text-secondary">{% translate "Returns to Confirm" %}</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="mb-xs">{{ needs_approval_count }}</h3>
+                <p class="text-sm text-secondary">{% translate "Needs Approval" %}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Needs Approval -->
+    {% if needs_approval %}
+        <div class="mb-xl">
+            <h2 class="mb-md text-warning">[{% translate "NEEDS APPROVAL" %} ]</h2>
+            <div class="grid grid-cols-1 gap-md">
+                {% for loan in needs_approval %}
+                    {% if loan.id %}
+                    <div class="card" style="border-left: 4px solid #ffc107;">
+                        <div class="card-body">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="flex items-center gap-sm mb-xs">
+                                        <h4 class="mb-xs">{{ loan.item.title }}</h4>
+                                        <span class="loan-action-badge">{% translate "Action Required" %}</span>
+                                    </div>
+                                    <p class="text-sm text-secondary mb-xs">
+                                        {% translate "Requested by" %} {{ loan.borrower.get_display_name }} ({{ loan.requested_at|naturaltime }})
+                                    </p>
+                                    {% if loan.request_message %}
+                                        <p class="text-sm mb-xs">{{ loan.request_message|truncatewords:20 }}</p>
+                                    {% endif %}
+                                </div>
+                                <div class="flex flex-wrap gap-sm">
+                                    <a href="{{ loan.conversation_url }}" class="btn btn-outline btn-sm flex-shrink">{% translate "Message" %}</a>
+                                    <a href="{% url 'loans:loan_detail' loan.id %}" class="btn btn-outline btn-sm flex-shrink">{% translate "Details" %}</a>
+                                    <form method="post" action="{% url 'loans:approve' loan.id %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="approve">
+                                        <button type="submit" class="btn btn-success btn-sm flex-shrink">{% translate "Approve" %}</button>
+                                    </form>
+                                    <form method="post" action="{% url 'loans:reject' loan.id %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="reject">
+                                        <button type="submit" class="btn btn-outline btn-sm flex-shrink">{% translate "Reject" %}</button>
+                                    </form>
+                                 </div>
+                           </div>
+                       </div>
+                    {% endif %}
+                  {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- You're Lending -->
+    {% if lending_loans %}
+        <div class="mb-xl">
+             <h2 class="mb-md">[{% translate "YOU'RE LENDING" %} ]</h2>
+             <div class="grid grid-cols-1 gap-md">
+                 {% for loan in lending_loans %}
+                     {% if loan.id %}
+                     <div class="item-card-wrapper">
+                         <div class="item-card card">
+                         <div class="card-body">
+                             <div class="flex items-center justify-between">
+                                 <div>
+                                     <h4 class="mb-xs">{{ loan.item.title }}</h4>
+                                     <p class="text-sm text-secondary mb-xs">
+                                         {% translate "Currently lending to" %} {{ loan.borrower.get_display_name }}
+                                         ({% translate "picked up" %} {{ loan.active_at|naturaltime }})
+                                     </p>
+                                    {% if loan.request_message %}
+                                        <p class="text-sm mb-xs">{{ loan.request_message|truncatewords:20 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-sm">
+                                    <a href="{{ loan.conversation_url }}" class="btn btn-outline btn-sm flex-shrink">{% translate "Message" %}</a>
+                                    <a href="{% url 'loans:loan_detail' loan.id %}" class="btn btn-outline btn-sm flex-shrink">{% translate "Details" %}</a>
+                                    <form method="post" action="{% url 'loans:cancel' loan.id %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="cancel">
+                                        <button type="submit" class="btn btn-outline btn-sm flex-shrink">{% translate "Cancel" %}</button>
+                                    </form>
+                             </div>
+                         </div>
+                     </div>
+                    {% endif %}
+                 {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Your Requests -->
+    {% if pending_requests %}
+        <div class="mb-xl">
+            <h2 class="mb-md">[{% translate "YOUR REQUESTS" %} ]</h2>
+            <div class="items-container grid-view grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+                {% for loan in pending_requests %}
+                    {% if loan.id %}
+                    <div class="item-card-wrapper">
+                        <div class="item-card card">
+                        <div class="card-body">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="mb-xs">{{ loan.item.title }}</h4>
+                                    <p class="text-sm text-secondary mb-xs">
+                                        {% translate "Waiting for approval from" %} {{ loan.lender.get_display_name }}
+                                        ({{ loan.requested_at|naturaltime }})
+                                    </p>
+                                    {% if loan.request_message %}
+                                        <p class="text-sm mb-xs">{{ loan.request_message|truncatewords:20 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-sm">
+                                    <a href="{{ loan.conversation_url }}" class="btn btn-outline btn-sm flex-shrink">{% translate "Message" %}</a>
+                                    <a href="{% url 'loans:loan_detail' loan.id %}" class="btn btn-outline btn-sm flex-shrink">{% translate "Details" %}</a>
+                                    <form method="post" action="{% url 'loans:cancel' loan.id %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="cancel">
+                                        <button type="submit" class="btn btn-outline btn-sm flex-shrink">{% translate "Cancel" %}</button>
+                                    </form>
+                             </div>
+                         </div>
+                     </div>
+                    {% endif %}
+                 {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- You're Borrowing -->
+    {% if borrowing_loans %}
+        <div class="mb-xl">
+            <h2 class="mb-md">[{% translate "YOU'RE BORROWING" %} ]</h2>
+            <div class="grid grid-cols-1 gap-md">
+                {% for loan in borrowing_loans %}
+                    {% if loan.id %}
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="flex items-center justify-between">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-sm mb-xs">
+                                        <h4 class="mb-xs">{{ loan.item.title }}</h4>
+                                        {% if loan.is_overdue %}
+                                            <span class="loan-action-badge">{% translate "Return Overdue" %}</span>
+                                        {% endif %}
+                                    </div>
+                                    <p class="text-sm text-secondary mb-xs">
+                                        {% translate "Borrowing from" %} {{ loan.lender.get_display_name }}
+                                    </p>
+                                    <p class="text-sm text-secondary">
+                                        <span class="font-medium">{% translate "Due" %}:</span>
+                                        <span class="{% if loan.is_overdue %}text-warning{% else %}text-success{% endif %}">
+                                            {{ loan.due_date|date:"M j, Y" }}
+                                            {% if loan.is_overdue %}
+                                                ({{ loan.days_overdue }} {% translate "days overdue" %})
+                                            {% endif %}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                             <div class="flex flex-wrap gap-sm">
+                                   <a href="{{ loan.conversation_url }}" class="btn btn-outline btn-sm flex-shrink">{% translate "Message" %}</a>
+                                   <a href="{% url 'loans:loan_detail' loan.id %}" class="btn btn-outline btn-sm flex-shrink">{% translate "Details" %}</a>
+                                   {% if loan.status == 'approved' %}
+                                       <form method="post" action="{% url 'loans:return' loan.id %}" style="display: inline;">
+                                           {% csrf_token %}
+                                           <input type="hidden" name="action" value="mark_active">
+                                           <button type="submit" class="btn btn-primary btn-sm flex-shrink">{% translate "Mark as Picked Up" %}</button>
+                                       </form>
+                                   {% elif loan.status == 'active' %}
+                                       {% if not loan.extension_requested %}
+                                           <a href="{% url 'loans:request_extension' loan.id %}" class="btn btn-outline btn-sm flex-shrink">{% translate "Request Extension" %}</a>
+                                       {% endif %}
+                                       <form method="post" action="{% url 'loans:return' loan.id %}" style="display: inline;">
+                                           {% csrf_token %}
+                                           <input type="hidden" name="action" value="return">
+                                           <button type="submit" class="btn btn-success btn-sm flex-shrink">{% translate "Mark as Returned" %}</button>
+                                       </form>
+                                   {% endif %}
+                               </div>
+                          </div>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Waiting for Pickup -->
+    {% if waiting_pickup %}
+        <div class="mb-xl">
+            <h2 class="mb-md">[{% translate "WAITING FOR PICKUP" %} ]</h2>
+            <div class="grid grid-cols-1 gap-md">
+                {% for loan in waiting_pickup %}
+                    {% if loan.id %}
+                    <div class="card" style="border-left: 4px solid #10b981;">
+                        <div class="card-body">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="flex items-center gap-sm mb-xs">
+                                        <h4 class="mb-xs">{{ loan.item.title }}</h4>
+                                        <span class="loan-action-badge">{% translate "Pick Up" %}</span>
+                                    </div>
+                                    <p class="text-sm text-secondary mb-xs">
+                                        {% translate "Approved by" %} {{ loan.lender.get_display_name }} - {% translate "waiting for you to pick up" %}
+                                        ({{ loan.approved_at|naturaltime }})
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-sm">
+                                <a href="{{ loan.conversation_url }}" class="btn btn-outline btn-sm flex-shrink">{% translate "Message" %}</a>
+                                <a href="{% url 'loans:loan_detail' loan.id %}" class="btn btn-outline btn-sm flex-shrink">{% translate "Details" %}</a>
+                                <form method="post" action="{% url 'loans:return' loan.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="mark_active">
+                                    <button type="submit" class="btn btn-primary btn-sm flex-shrink">{% translate "Mark as Picked Up" %}</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Approved Loans (Lending) -->
+    {% if approved_loans %}
+        <div class="mb-xl">
+            <h2 class="mb-md">[{% translate "APPROVED - WAITING FOR PICKUP" %} ]</h2>
+            <div class="grid grid-cols-1 gap-md">
+                {% for loan in approved_loans %}
+                    {% if loan.id %}
+                    <div class="card" style="border-left: 4px solid #10b981;">
+                        <div class="card-body">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="mb-xs">{{ loan.item.title }}</h4>
+                                    <p class="text-sm text-secondary mb-xs">
+                                        {% translate "Approved for" %} {{ loan.borrower.get_display_name }} - {% translate "waiting for pickup" %}
+                                        ({{ loan.approved_at|naturaltime }})
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-sm">
+                                <a href="{{ loan.conversation_url }}" class="btn btn-outline btn-sm flex-shrink">{% translate "Message" %}</a>
+                                <a href="{% url 'loans:loan_detail' loan.id %}" class="btn btn-outline btn-sm flex-shrink">{% translate "Details" %}</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Awaiting Return Confirmation -->
+    {% if awaiting_return_confirmation %}
+        <div class="mb-xl">
+            <h2 class="mb-md">[{% translate "RETURNS TO CONFIRM" %} ]</h2>
+            <div class="grid grid-cols-1 gap-md">
+                {% for loan in awaiting_return_confirmation %}
+                    {% if loan.id %}
+                    <div class="card" style="border-left: 4px solid #10b981;">
+                        <div class="card-body">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="flex items-center gap-sm mb-xs">
+                                        <h4 class="mb-xs">{{ loan.item.title }}</h4>
+                                        <span class="loan-action-badge">{% translate "Confirm Return" %}</span>
+                                    </div>
+                                    <p class="text-sm text-secondary mb-xs">
+                                        {{ loan.borrower.get_display_name }} {% translate "marked as returned - awaiting your confirmation" %}
+                                        ({{ loan.updated_at|naturaltime }})
+                                    </p>
+                                    {% if loan.condition_at_return %}
+                                        <p class="text-sm text-muted">{% translate "Condition" %}: {{ loan.condition_at_return }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-sm">
+                                <a href="{{ loan.conversation_url }}" class="btn btn-outline btn-sm flex-shrink">{% translate "Message" %}</a>
+                                <a href="{% url 'loans:loan_detail' loan.id %}" class="btn btn-outline btn-sm flex-shrink">{% translate "Details" %}</a>
+                                <form method="post" action="{% url 'loans:confirm_return' loan.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="confirm_return">
+                                    <button type="submit" class="btn btn-success btn-sm flex-shrink">{% translate "Confirm Return" %}</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Completed Loans -->
+    {% if completed_loans %}
+        <div class="mb-xl">
+            <h2 class="mb-md">[{% translate "COMPLETED LOANS" %} ]</h2>
+            <div class="items-container grid-view grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+                {% for loan in completed_loans %}
+                    {% if loan.id %}
+                    <div class="item-card-wrapper">
+                        <div class="item-card card">
+                        <div class="card-body">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="flex items-center gap-sm mb-xs">
+                                        <h4 class="mb-xs">{{ loan.item.title }}</h4>
+                                        {% if not loan.user_has_reviewed %}
+                                            <span class="loan-action-badge">{% translate "Leave Review" %}</span>
+                                        {% endif %}
+                                    </div>
+                                    <p class="text-sm text-secondary mb-xs">
+                                        {% if loan.borrower == user %}
+                                            {% translate "Borrowed from" %} {{ loan.lender.get_display_name }}
+                                        {% else %}
+                                            {% translate "Lent to" %} {{ loan.borrower.get_display_name }}
+                                        {% endif %}
+                                    </p>
+                                    <p class="text-sm text-secondary">
+                                        {% translate "Returned" %} {{ loan.returned_at|naturaltime }}
+                                    </p>
+                                </div>
+                            </div>
+                             <div class="flex flex-wrap gap-sm">
+                                 <a href="{{ loan.conversation_url }}" class="btn btn-outline btn-sm flex-shrink">{% translate "Message" %}</a>
+                                 <a href="{% url 'loans:loan_detail' loan.id %}" class="btn btn-outline btn-sm flex-shrink">{% translate "Details" %}</a>
+                                 {% if not loan.user_has_reviewed %}
+                                     <a href="{% url 'loans:submit_review' loan.id %}" class="btn btn-primary btn-sm flex-shrink">{% translate "Leave Review" %}</a>
+                                 {% endif %}
+                             </div>
+                          </div>
+                      </div>
+                      {% endif %}
+                  {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Rejected Loans -->
+    {% if rejected_loans %}
+        <div class="mb-xl">
+            <h2 class="mb-md">[{% translate "REJECTED LOANS" %} ]</h2>
+            <div class="grid grid-cols-1 gap-md">
+                {% for loan in rejected_loans %}
+                    {% if loan.id %}
+                    <div class="card" style="border-left: 4px solid #ef4444;">
+                        <div class="card-body">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="mb-xs">{{ loan.item.title }}</h4>
+                                    <p class="text-sm text-secondary mb-xs">
+                                        {% if loan.borrower == user %}
+                                            {% translate "Your request was rejected by" %} {{ loan.lender.get_display_name }}
+                                        {% else %}
+                                            {% translate "You rejected" %} {{ loan.borrower.get_display_name }}'{% translate "s request" %}
+                                        {% endif %}
+                                        ({{ loan.rejected_at|naturaltime }})
+                                    </p>
+                                    {% if loan.rejection_reason %}
+                                        <p class="text-sm text-muted">{% translate "Reason" %}: {{ loan.rejection_reason }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-sm">
+                                <a href="{% url 'loans:loan_detail' loan.id %}" class="btn btn-outline btn-sm flex-shrink">{% translate "Details" %}</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Empty State -->
+    {% if not borrowing_loans and not lending_loans and not pending_requests and not needs_approval and not completed_loans %}
+        <div class="empty-state">
+            <div class="empty-state-icon">[ ]</div>
+            <h3 class="mb-sm">{% translate "No loans yet" %}</h3>
+            <p class="text-secondary mb-lg">
+                {% translate "Start by browsing items you'd like to borrow" %}!
+            </p>
+            <a href="{% url 'items:list' %}" class="btn btn-primary">{% translate "Browse Items" %}</a>
+        </div>
+    {% endif %}
+</div>
+
+{% block extra_css %}
+<style>
+/* Item card wrapper for consistent grid layout */
+.item-card-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Grid view card structure */
+.items-container.grid-view .item-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.items-container.grid-view .item-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Card body should take remaining space */
+.items-container.grid-view .card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+/* Ensure consistent card heights */
+.items-container.grid-view .item-card {
+    min-height: 300px;
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 768px) {
+    .items-container.grid-view .item-card {
+        min-height: 250px;
+    }
+
+    /* Make buttons stack on small screens */
+    .flex.flex-wrap.gap-sm {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .flex.flex-wrap.gap-sm .btn,
+    .flex.flex-wrap.gap-sm form {
+        width: 100%;
+    }
+
+    .flex.flex-wrap.gap-sm form {
+        display: flex !important;
+    }
+
+    .flex.flex-wrap.gap-sm button {
+        width: 100%;
+    }
+
+    .flex.flex-wrap.gap-sm a {
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-sm {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+}
+</style>
+{% endblock %}
+{% endblock %}

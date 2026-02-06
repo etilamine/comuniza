@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+{% load static messaging_tags loan_tags %}
+{% load i18n %}
+{% load thumbnail %}
+{% block title %}{{ other_participant.get_display_name }} - {% translate "Messages" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container container-sm">
+    <div class="py-xl">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-lg">
+            <div class="flex items-center gap-md">
+                <div class="avatar">
+                    {% if other_participant.avatar %}
+                        <img src="{{ other_participant.avatar.avatar_small.url }}" alt="{{ other_participant.username }}">
+                    {% else %}
+                        <div class="avatar-placeholder">{{ other_participant.username|slice:":1"|upper }}</div>
+                    {% endif %}
+                </div>
+                <div>
+                    <h1 class="mb-none">{{ other_participant.get_display_name }}</h1>
+                    <p class="text-sm text-secondary">@{{ other_participant.username }}</p>
+                    {% if conversation.subject %}
+                        <p class="text-sm">{{ conversation.subject }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <a href="{% url 'messaging:conversation_list' %}" class="btn btn-outline btn-sm">
+                {% translate "Back to Messages" %}
+            </a>
+        </div>
+
+        <!-- Conversation Context -->
+        {% if related_item or related_loan %}
+            <div class="card mb-lg">
+                <div class="card-body">
+                    <h4 class="mb-sm">{% translate "Conversation Context" %}</h4>
+                    {% if related_item %}
+                        <p class="text-sm">
+                            <strong>{% translate "Regarding Item" %}:</strong>
+                            <a href="{% url 'item_detail' related_item.identifier %}" class="text-primary">
+                                {{ related_item.title }}
+                            </a>
+                        </p>
+                    {% endif %}
+                    {% if related_loan %}
+                        <p class="text-sm">
+                            <strong>{% translate "Regarding Loan" %}:</strong>
+                            <a href="{% url 'loans:loan_detail' related_loan.id %}" class="text-primary">
+                                {% translate "Loan" %} #{{ related_loan.id }} - {{ related_loan.item.title }}
+                            </a>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Messages -->
+        <div class="card mb-xl">
+            <div class="card-body p-lg" style="max-height: 500px; overflow-y: auto;">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="mb-lg {% if message.sender == request.user %}text-right{% else %}text-left{% endif %}">
+                            <div class="inline-block max-w-md">
+                                <!-- Sender info -->
+                                <div class="flex items-center gap-sm mb-xs {% if message.sender == request.user %}justify-end{% else %}justify-start{% endif %}">
+<div class="avatar avatar-sm">
+                                        {% if message.sender.avatar %}
+                                            <img src="{{ message.sender.avatar.avatar_small.url }}" alt="{{ message.sender.username }}">
+                                        {% else %}
+                                            <div class="avatar-placeholder">{{ message.sender.username|slice:":1"|upper }}</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="text-xs text-secondary">
+                                        {{ message.sender.get_display_name }} • {{ message.created_at|date:"H:i" }}
+                                        {% if message.is_read and message.sender == request.user %}• ✓{% endif %}
+                                    </div>
+                                </div>
+
+                                  <!-- Message content -->
+                                  <div class="p-md rounded {% if message.sender == request.user %}bg-primary white{% else %}bg-secondary{% endif %}">
+                                      {% if message.message_type == 'system' %}
+                                          <!-- Handle loan system messages -->
+                                          {% if 'LOAN_CONTEXT:' in message.decrypt_content %}
+                                              {% include 'messaging/partials/loan_message.html' with message=message %}
+                                          {% else %}
+                                              <div class="text-sm">
+                                                  <span class="badge badge-info">{% translate "System" %}</span>
+                                                  <em>{{ message.decrypt_content|truncatewords:20 }}</em>
+                                              </div>
+                                          {% endif %}
+                                      {% else %}
+                                          <div class="text-sm">{{ message.decrypt_content|linebreaksbr }}</div>
+                                      {% endif %}
+                                  </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center text-secondary py-xl">
+                        <p>{% translate "No messages yet. Start the conversation" %}!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Loan Actions Banner -->
+        {% if conversation.has_loan_context %}
+            {% include 'messaging/partials/loan_actions.html' with loan=conversation.related_loan user=request.user %}
+        {% endif %}
+
+        <!-- Reply Form -->
+        <div class="card">
+            <div class="card-body">
+                <form method="post" id="message-form">
+                    {% csrf_token %}
+                    {{ form.content }}
+                    <div class="flex justify-between items-center mt-md">
+                        <button type="submit" class="btn btn-primary">
+                            {% translate "Send Message" %}
+                        </button>
+                        {% if form.content.help_text %}
+                            <span class="text-sm text-secondary">{{ form.content.help_text }}</span>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+
+.badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.badge-info {
+    background: #17a2b8;
+    color: white;
+}
+
+.max-w-md {
+    max-width: 28rem;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.justify-start {
+    justify-content: flex-start;
+}
+
+.bg-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.bg-secondary {
+    background: var(--bg-secondary);
+}
+
+.p-md {
+    padding: 1rem;
+}
+
+.p-lg {
+    padding: 1.5rem;
+}
+
+.mb-lg {
+    margin-bottom: 1.5rem;
+}
+
+.mb-md {
+    margin-bottom: 1rem;
+}
+
+.mb-sm {
+    margin-bottom: 0.5rem;
+}
+
+.mb-none {
+    margin-bottom: 0;
+}
+
+.mt-md {
+    margin-top: 1rem;
+}
+
+.max-h-500 {
+    max-height: 500px;
+    .overflow-y-auto {
+        overflow-y: auto;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-scroll to bottom of messages
+document.addEventListener('DOMContentLoaded', function() {
+    const messagesContainer = document.querySelector('.card-body[style*="max-height"]');
+    if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+});
+
+// Handle form submission
+document.getElementById('message-form').addEventListener('submit', function(e) {
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+});
+</script>
+{% endblock %}

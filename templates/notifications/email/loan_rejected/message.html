@@ -1,0 +1,60 @@
+{% extends "notifications/email/base_email.html" %}
+
+{% block header_title %}{% translate "LOAN REJECTED" %}{% endblock %}
+
+{% block email_content %}
+<div class="warning-box">
+    <h2>{% translate "Your Loan Request Has Been Declined" %}</h2>
+    <p>{% translate "Unfortunately" %}, <strong>{{ lender.get_display_name }}</strong> {% translate "has declined your request to borrow" %} <strong>{{ item.title }}</strong>.</p>
+</div>
+
+{% if rejection_reason %}
+    <div class="warning-box">
+        <h3>{% translate "Reason Provided" %}:</h3>
+        <p>{{ rejection_reason }}</p>
+    </div>
+{% endif %}
+
+<h3>{% translate "What happens next" %}?</h3>
+<ul>
+    <li>{% translate "You can look for other items to borrow in community" %}</li>
+    <li>{% translate "Consider reaching out to lender to understand the decision" %}</li>
+    <li>{% translate "Update your profile to improve future loan requests" %}</li>
+</ul>
+
+<div class="btn-container">
+    <a href="{{ item_url }}" class="btn">{% translate "Browse More Items" %}</a>
+    <a href="{{ loan_url }}" class="btn btn-secondary">{% translate "View Loan Details" %}</a>
+</div>
+{% endblock %}
+
+    <div style="color: #333; margin-bottom: 20px;">
+        <h2 style="color: #dc3545; font-size: 18px; margin-bottom: 10px;">{% translate "Your loan request has been declined" %}</h2>
+        <p style="font-size: 16px; line-height: 1.5;">
+            {% translate "Unfortunately" %}, <strong>{{ lender.get_display_name }}</strong> {% translate "has declined your request to borrow" %} <strong>{{ item.title }}</strong>.
+        </p>
+
+        {% if rejection_reason %}
+            <div style="background: #f8d7da; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                <h3 style="color: #721c24; margin-top: 0; font-size: 16px;">{% translate "Reason provided" %}:</h3>
+                <p style="margin: 0; font-size: 14px; color: #666;">{{ rejection_reason }}</p>
+            </div>
+        {% endif %}
+
+        <h3 style="color: #495057; margin-top: 20px; font-size: 16px;">{% translate "What happens next" %}?</h3>
+        <ul style="font-size: 14px; line-height: 1.6; color: #666;">
+            <li>{% translate "You can look for other items to borrow in the community" %}</li>
+            <li>{% translate "Consider reaching out to the lender to understand the decision" %}</li>
+            <li>{% translate "Update your profile to improve future loan requests" %}</li>
+        </ul>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="{{ site_url }}" style="display: inline-block; background: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            {% translate "Browse More Items" %}
+        </a>
+        <a href="{{ loan_url }}" style="display: inline-block; background: #6c757d; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; margin-left: 10px;">
+            {% translate "View Loan Details" %}
+        </a>
+    </div>
+</div>

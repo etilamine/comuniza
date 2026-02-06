@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load thumbnail %}
+{% block title %}{% translate "Delete" %} {{ item.title }} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container container-sm">
+    <!-- Page Header -->
+    <div class="mb-xl">
+        <h1 class="mb-sm">{% translate "Delete Item" %}</h1>
+        <p class="text-secondary">{% translate "Please confirm you want to delete this item" %}</p>
+    </div>
+
+    <!-- Item Preview Card -->
+    <div class="card mb-xl">
+        <div class="card-body">
+            <div class="grid grid-cols-1 grid-md-2 gap-lg">
+                <!-- Item Image -->
+                <div>
+                    {% if item.images.exists %}
+                        {% with item.images.first as primary_image %}
+                            <img
+                                src="{{ primary_image.image.item_detail.url }}"
+                                alt="{{ item.title }}"
+                                class="w-full rounded-lg object-cover"
+                                style="aspect-ratio: 1; max-height: 300px;"
+                            >
+                        {% endwith %}
+                    {% else %}
+                        <div class="w-full bg-gray-100 rounded-lg flex items-center justify-center text-gray-400" style="aspect-ratio: 1; max-height: 300px;">
+                            <span class="text-4xl">[   ]</span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Item Details -->
+                <div>
+                    <h2 class="mb-sm">{{ item.title }}</h2>
+                    {% if item.author %}
+                        <p class="text-lg text-secondary mb-md">{% translate "by" %} {{ item.author }}</p>
+                    {% endif %}
+
+                    <div class="space-y-sm mb-lg">
+                        {% if item.category %}
+                            <span class="badge badge-primary">{{ item.category.name }}</span>
+                        {% endif %}
+                        <span class="badge badge-secondary">{{ item.get_condition_display }} {% translate "condition" %}</span>
+                        {% if item.year %}
+                            <span class="badge badge-secondary">{{ item.year }}</span>
+                        {% endif %}
+                    </div>
+
+                    {% if item.description %}
+                        <p class="text-secondary">{{ item.description|truncatechars:150 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loan Status Warning -->
+    {% if item.current_borrower %}
+        <div class="alert alert-warning mb-xl">
+            <div class="flex items-start gap-md">
+                <div class="text-warning text-xl">⚠️</div>
+                <div>
+                    <h3 class="mb-sm">{% translate "Item Currently Borrowed" %}</h3>
+                    <p class="mb-0">{% translate "This item is currently borrowed by" %} <strong>{{ item.current_borrower.first_name|default:item.current_borrower.username }}</strong>. {% translate "You cannot delete it while it's on loan" %}.</p>
+                    <p class="mb-0 mt-sm">{% translate "You can deactivate the item instead, which will hide it from public view but preserve the loan relationship" %}.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deactivate Form -->
+        <form method="post" action="{% url 'items:item_deactivate' item.identifier %}">
+            {% csrf_token %}
+            <div class="flex gap-sm">
+                <button type="submit" class="btn btn-warning btn-lg">
+                    {% translate "Deactivate Item Instead" %}
+                </button>
+                <a href="{% url 'item_detail' item.identifier %}" class="btn btn-ghost btn-lg">
+                    {% translate "Cancel" %}
+                </a>
+            </div>
+        </form>
+    {% else %}
+        <!-- Delete Warning -->
+        <div class="alert alert-danger mb-xl">
+            <div class="flex items-start gap-md">
+                <div class="text-danger text-xl">🗑️</div>
+                <div>
+                    <h3 class="mb-sm">{% translate "This action cannot be undone" %}</h3>
+                    <p class="mb-0">{% translate "Deleting this item will permanently remove it from the system. This includes" %}:</p>
+                    <ul class="mt-sm mb-0">
+                        <li>{% translate "All item information and images" %}</li>
+                        <li>{% translate "Loan history and reviews" %}</li>
+                        <li>{% translate "Wishlist entries" %}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Form -->
+        <form method="post">
+            {% csrf_token %}
+            <div class="flex gap-sm">
+                <button type="submit" class="btn btn-danger btn-lg">
+                    {% translate "Yes, Delete Item" %}
+                </button>
+                <a href="{% url 'item_detail' item.identifier %}" class="btn btn-ghost btn-lg">
+                    {% translate "Cancel" %}
+                </a>
+            </div>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}

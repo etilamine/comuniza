@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{% translate "Bad Request" %} - {{ SITE_NAME }}"{% endblock %}
+
+{% block content %}
+<div class="container container-sm">
+    <div class="py-2xl">
+        <div class="text-center">
+
+            <!-- Error Message -->
+            <h1 class="mb-lg" style="font-size: 3rem; font-weight: 700;">400</h1>
+            <h2 class="mb-md text-secondary">{% translate "Bad Request" %}</h2>
+            <p class="mb-xl text-muted" style="max-width: 500px; margin: 0 auto; line-height: 1.6;">
+                {% blocktranslate %}The server couldn't understand your request.<br>
+                This might be due to malformed syntax or invalid data.{% endblocktranslate %}
+            </p>
+
+            <!-- Actions -->
+            <div class="flex justify-center gap-md mb-xl">
+                <a href="{% url 'home' %}" class="btn btn-primary btn-lg">
+                    {% translate "Go Home" %}
+                </a>
+                <button onclick="history.back()" class="btn btn-outline btn-lg">
+                    ← {% translate "Go Back" %}
+                </button>
+                <a href="{% url 'bug_report_page' %}" class="btn btn-outline btn-lg">
+                    {% translate "Report a Bug" %}
+                </a>
+            </div>
+
+            <!-- Technical Details -->
+            <div class="card" style="max-width: 600px; margin: 0 auto;">
+                <div class="card-body">
+                    <h3 class="mb-md">{% translate "What does this mean?" %}</h3>
+                    <div class="text-left space-y-sm">
+                        <p>{% translate "This error occurs when:" %}</p>
+                        <ul style="padding-left: 1.5rem;">
+                            <li>{% translate "The request contains invalid syntax" %}</li>
+                            <li>{% translate "Required form fields are missing" %}</li>
+                            <li>{% translate "Submitted data doesn't match expected format" %}</li>
+                            <li>{% translate "The request was corrupted during transmission" %}</li>
+                        </ul>
+                        <p class="mt-md">{% translate "Try refreshing the page or checking your form inputs." %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

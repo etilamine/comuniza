@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load thumbnail %}
+{% block title %}{% translate "Edit Profile" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container container-md">
+    <!-- Page Header -->
+    <div class="mb-xl">
+        <h1 class="mb-sm">{% translate "Edit Profile" %}</h1>
+        <p class="text-secondary">{% translate "Update your personal information and preferences" %}</p>
+    </div>
+
+    <!-- Form -->
+    <form action="" method="post" enctype="multipart/form-data" class="card">
+        <div class="card-body">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger mb-lg">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <!-- Profile Picture -->
+            <div class="mb-xl">
+                <h3 class="mb-lg">{% translate "Profile Picture" %}</h3>
+
+                <div class="flex items-center gap-lg mb-md">
+                    <div class="avatar avatar-xl" id="avatar-preview">
+                        {% if user.avatar %}
+                            <img src="{{ user.avatar.avatar_large.url }}" alt="{{ user.username }}">
+                        {% else %}
+                            <div class="avatar-placeholder">
+                                {{ user.username|first|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <div class="form-group mb-sm">
+                            <label for="id_avatar" class="form-label">{% translate "Upload New Picture" %}</label>
+                            <input
+                                type="file"
+                                name="avatar"
+                                id="id_avatar"
+                                class="form-control"
+                                accept="image/*"
+                                onchange="previewAvatar(event)"
+                            >
+                        </div>
+                        <small class="form-help">{% translate "JPG, PNG or GIF. Max size 5MB. Square images work best." %}</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Basic Information -->
+            <div class="mb-xl">
+                <h3 class="mb-lg">{% translate "Basic Information" %}</h3>
+
+                <div class="grid grid-cols-1 grid-md-2 gap-md">
+                    <div class="form-group">
+                        <label for="id_first_name" class="form-label">{% translate "First Name" %}</label>
+                        <input
+                            type="text"
+                            name="first_name"
+                            id="id_first_name"
+                            class="form-control"
+                            value="{{ user.first_name|default:'' }}"
+                            maxlength="30"
+                            placeholder="{% translate 'e.g., Shevek' %}"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_last_name" class="form-label">{% translate "Last Name" %}</label>
+                        <input
+                            type="text"
+                            name="last_name"
+                            id="id_last_name"
+                            class="form-control"
+                            value="{{ user.last_name|default:'' }}"
+                            maxlength="30"
+                            placeholder="{% translate 'e.g., Bakunin' %}"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">{% translate "Current Username" %}</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        value="{{ user.username }}"
+                        readonly
+                        disabled
+                    >
+                    <small class="form-help">{% translate "This is how others currently identify you." %}</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_new_username" class="form-label">{% translate "New Username (Optional" %})</label>
+                    <input
+                        type="text"
+                        name="new_username"
+                        id="id_new_username"
+                        class="form-control"
+                        placeholder="{% translate 'Enter new username' %}"
+                        maxlength="50"
+                    >
+                    <small class="form-help">{% translate "Leave blank to keep current username. Changing requires email confirmation." %}</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_current_password" class="form-label">{% translate "Current Password" %} <span class="text-danger">*</span></label>
+                    <input
+                        type="password"
+                        name="current_password"
+                        id="id_current_password"
+                        class="form-control"
+                        placeholder="{% translate 'Enter current password to confirm changes' %}"
+                    >
+                    <small class="form-help">{% translate "Required when changing username, email, or phone number." %}</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_email" class="form-label">{% translate "Email" %}</label>
+                    <input
+                        type="email"
+                        name="email"
+                        id="id_email"
+                        class="form-control"
+                        value="{{ user.email }}"
+                        readonly
+                        disabled
+                    >
+                    <small class="form-help">{% translate "Email cannot be changed here for security reasons." %}</small>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="mb-xl">
+                <h3 class="mb-lg">{% translate "Contact Information" %}</h3>
+
+                <div class="form-group">
+                    <label for="id_phone" class="form-label">{% translate "Phone Number" %}</label>
+                    <input
+                        type="tel"
+                        name="phone"
+                        id="id_phone"
+                        class="form-control"
+                        value="{{ user.phone|default:'' }}"
+                        maxlength="20"
+                        placeholder="{% translate 'e.g., +49 123 4567890' %}"
+                    >
+                    <small class="form-help">{% translate "Optional. Only visible to group members when you participate in loans." %}</small>
+                </div>
+            </div>
+
+             <!-- Privacy Settings -->
+             <div class="mb-xl">
+                 <h3 class="mb-lg">{% translate "Privacy Settings" %}</h3>
+                 <p class="text-secondary mb-md">{% translate "Control who can see your profile information, groups, and activity." %}</p>
+
+                 <a href="{% url 'users:privacy_settings' %}" class="btn btn-primary">
+                     {% translate "Manage Privacy Settings" %}
+                 </a>
+             </div>
+
+            <!-- Notification Settings -->
+            <div class="mb-xl">
+                <h3 class="mb-lg">{% translate "Notification Settings" %}</h3>
+
+                <div class="space-y-md">
+                    <div class="form-group">
+                        <label class="form-check">
+                            <input type="checkbox"
+                                   name="email_notifications"
+                                   {% if loan_settings.email_notifications %}checked{% endif %}
+                                   class="form-check-input">
+                            <span class="form-check-label">{% translate "Email notifications for loans" %}</span>
+                        </label>
+                        <small class="form-help">{% translate "Receive email notifications for loan requests, approvals, rejections, and returns" %}</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-check">
+                            <input type="checkbox"
+                                   name="message_notifications"
+                                   {% if loan_settings.message_notifications %}checked{% endif %}
+                                   class="form-check-input">
+                            <span class="form-check-label">{% translate "Email notifications for messages" %}</span>
+                        </label>
+                        <small class="form-help">{% translate "Receive email notifications for new private messages" %}</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit -->
+            <div class="flex gap-sm">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    {% translate "Save Changes" %}
+                </button>
+                <a href="{% url 'users:profile' %}" class="btn btn-ghost btn-lg">
+                    {% translate "Cancel" %}
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function previewAvatar(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('avatar-preview');
+            if (preview.tagName === 'IMG') {
+                preview.src = e.target.result;
+            } else {
+                // Replace the div with an img
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = '{{ user.username }}';
+                img.id = 'avatar-preview';
+                img.style.cssText = 'width: 100%; height: 100%; object-fit: cover;';
+                preview.parentNode.replaceChild(img, preview);
+            }
+        }
+        reader.readAsDataURL(file);
+    }
+}
+</script>
+{% endblock %}

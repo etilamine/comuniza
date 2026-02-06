@@ -1,0 +1,371 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load loan_tags %}
+{% load humanize %}
+{% load i18n %}
+{% load thumbnail %}
+{% block title %}{{ loan.item.title }} - {% translate "Loan Details" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="mb-xl">
+        <!-- Loan Header -->
+        <div class="flex items-center justify-between mb-lg">
+            <div>
+                <h1 class="mb-xs">{{ loan.item.title }}</h1>
+                <div class="flex items-center gap-md text-sm text-secondary">
+                    <span class="badge badge-{{ loan.status }}">
+                        {{ loan.get_status_display }}
+                    </span>
+                    {% if loan.is_overdue %}
+                        <span class="badge badge-warning">{% translate "OVERDUE" %}</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div>
+                {% if existing_loan_conversation %}
+                    <a href="{% url 'messaging:conversation_detail' existing_loan_conversation.id %}" class="btn btn-outline">
+                        {% translate "Open Conversation" %}
+                    </a>
+                {% else %}
+                    {% if user == loan.lender %}
+                        <a href="{% url 'messaging:start_conversation_loan' loan.borrower.username loan.id %}" class="btn btn-outline">
+                            {% translate "Message" %} {{ loan.borrower.get_display_name }}
+                        </a>
+                    {% else %}
+                        <a href="{% url 'messaging:start_conversation_loan' loan.lender.username loan.id %}" class="btn btn-outline">
+                            {% translate "Message" %} {{ loan.lender.get_display_name }}
+                        </a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Loan Info Card -->
+        <div class="card mb-xl">
+            <div class="card-body">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+                    <!-- Item Info -->
+                    <div>
+                        <h3 class="mb-md">{% translate "Item Information" %}</h3>
+                         <div class="flex gap-md mb-md">
+                             {% if loan.item.images.exists %}
+{% with loan.item.images.first as primary_image %}
+                                      <img src="{{ primary_image.image.item_list.url }}" alt="{{ loan.item.title }}" class="w-24 h-24 object-cover rounded">
+                                  {% endwith %}
+                             {% endif %}
+                            <div>
+                                <h4 class="mb-xs">{{ loan.item.title }}</h4>
+                                <p class="text-sm text-secondary">
+                                    {% translate "Owner" %}: {{ loan.item.owner.get_display_name }}
+                                </p>
+                                <p class="text-sm text-secondary">
+                                    {% translate "Category" %}: {{ loan.item.get_category_display }}
+                                </p>
+                                {% if loan.group %}
+                                    <p class="text-sm text-secondary">
+                                        {% translate "Shared via" %}: {{ loan.group.name }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loan Details -->
+                    <div>
+                        <h3 class="mb-md">{% translate "Loan Details" %}</h3>
+                        <div class="space-y-sm">
+                            <div class="flex justify-between">
+                                <span class="text-sm">{% translate "Requested by" %}:</span>
+                                <span class="text-sm font-medium">{{ loan.borrower.get_display_name }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-sm">{% translate "Lender" %}:</span>
+                                <span class="text-sm font-medium">{{ loan.lender.get_display_name }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-sm">{% translate "Requested" %}:</span>
+                                <span class="text-sm font-medium">{{ loan.requested_at|date:"M j, Y" }}</span>
+                            </div>
+                            {% if loan.approved_at %}
+                                <div class="flex justify-between">
+                                    <span class="text-sm">{% translate "Approved" %}:</span>
+                                    <span class="text-sm font-medium">{{ loan.approved_at|date:"M j, Y" }}</span>
+                                </div>
+                            {% endif %}
+                            {% if loan.start_date %}
+                                <div class="flex justify-between">
+                                    <span class="text-sm">{% translate "Start Date" %}:</span>
+                                    <span class="text-sm font-medium">{{ loan.start_date|date:"M j, Y" }}</span>
+                                </div>
+                            {% endif %}
+                            {% if loan.due_date %}
+                                <div class="flex justify-between">
+                                    <span class="text-sm">{% translate "Due Date" %}:</span>
+                                    <span class="text-sm font-medium
+                                        {% if loan.is_overdue %}text-warning{% endif %}">
+                                        {{ loan.due_date|date:"M j, Y" }}
+                                        {% if loan.is_overdue %}
+                                            ({{ loan.days_overdue }} {% translate "days overdue" %})
+                                        {% elif loan.days_until_due is not None %}
+                                            ({{ loan.days_until_due }} {% translate "days left" %})
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            {% endif %}
+                            {% if loan.returned_at %}
+                                <div class="flex justify-between">
+                                    <span class="text-sm">{% translate "Returned" %}:</span>
+                                    <span class="text-sm font-medium">{{ loan.returned_at|date:"M j, Y" }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Messages -->
+                {% if loan.request_message %}
+                    <div class="mt-lg">
+                        <h3 class="mb-sm">{% translate "Request Message" %}</h3>
+                        <div class="p-md bg-secondary rounded">
+                            <p class="text-sm">{{ loan.request_message }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if loan.rejection_reason %}
+                    <div class="mt-lg">
+                        <h3 class="mb-sm">{% translate "Rejection Reason" %}</h3>
+                        <div class="p-md bg-secondary rounded">
+                            <p class="text-sm">{{ loan.rejection_reason }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Extension Request -->
+                {% if loan.extension_requested %}
+                    <div class="mt-lg" style="border-left: 4px solid #ffc107; padding-left: 1rem;">
+                        <h3 class="mb-sm text-warning">{% translate "Extension Request" %}</h3>
+                        <div class="flex justify-between mb-xs">
+                            <span class="text-sm">{% translate "Additional days" %}:</span>
+                            <span class="text-sm font-medium">+{{ loan.extension_days }} {% translate "days" %}</span>
+                        </div>
+                        {% if loan.extension_reason %}
+                            <p class="text-sm text-secondary mb-xs">{{ loan.extension_reason }}</p>
+                        {% endif %}
+                        {% if loan.lender == user %}
+                            <div class="flex gap-sm mt-md">
+                                <form method="post" action="{% url 'loans:approve_extension' loan.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-success btn-sm">{% translate "Approve Extension" %}</button>
+                                </form>
+                                <form method="post" action="{% url 'loans:reject_extension' loan.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline btn-sm">{% translate "Reject Extension" %}</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        {% if action_form or lender_action_form %}
+            <div class="card mb-xl">
+                <div class="card-body">
+                    {% if loan.status == 'requested' and loan.lender == user %}
+                        <h3 class="mb-md">{% translate "Required Action" %}</h3>
+                        <form method="post" action="{% url 'loans:approve' loan.id %}" class="space-y-sm">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="approve">
+                            <div class="form-group">
+                                <label for="approve-reason">{% translate "Optional reason" %}</label>
+                                <textarea name="reason" id="approve-reason" class="form-control" rows="2"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success">{% translate "Approve Loan" %}</button>
+                        </form>
+
+                        <form method="post" action="{% url 'loans:reject' loan.id %}" class="space-y-sm">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="reject">
+                            <div class="form-group">
+                                <label for="reject-reason">{% translate "Rejection reason (optional" %})</label>
+                                <textarea name="reason" id="reject-reason" class="form-control" rows="2"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-outline">{% translate "Reject Loan" %}</button>
+                        </form>
+
+                    {% elif loan.status == 'approved' and loan.borrower == user %}
+                        <h3 class="mb-md">{% translate "Pick Up Item" %}</h3>
+                        <p class="text-sm text-secondary mb-md">{% translate "The lender has approved your request. Pick up the item to start the loan period" %}.</p>
+                        <form method="post" action="{% url 'loans:return' loan.id %}" class="space-y-sm">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="mark_active">
+                            <button type="submit" class="btn btn-primary">{% translate "Mark as Picked Up" %}</button>
+                        </form>
+
+                    {% elif loan.status == 'active' and loan.borrower == user %}
+                        <h3 class="mb-md">{% translate "Return Item" %}</h3>
+                        <form method="post" action="{% url 'loans:return' loan.id %}" class="space-y-sm">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="return">
+                            <div class="form-group">
+                                <label for="condition-at-return">{% translate "Condition at return" %}</label>
+                                <input type="text" name="condition_at_return" id="condition-at-return"
+                                       class="form-control" placeholder="{% translate 'e.g., Good condition' %}">
+                            </div>
+                            <button type="submit" class="btn btn-success">{% translate "Mark as Returned" %}</button>
+                        </form>
+
+                    {% elif loan.status == 'borrower_returned' and loan.lender == user %}
+                        <h3 class="mb-md">{% translate "Confirm Return" %}</h3>
+                        <p class="text-sm text-secondary mb-md">{% translate "The borrower has marked this item as returned. Please confirm you have received it" %}.</p>
+                        <form method="post" action="{% url 'loans:confirm_return' loan.id %}" class="space-y-sm">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="confirm_return">
+                            <button type="submit" class="btn btn-success">{% translate "Confirm Return" %}</button>
+                        </form>
+
+                    {% elif loan.status in 'approved,active' and loan.lender == user %}
+                        <h3 class="mb-md">{% translate "Cancel Loan" %}</h3>
+                        <p class="text-sm text-secondary mb-md">{% translate "You can cancel this loan if the item hasn't been picked up yet" %}.</p>
+                        <form method="post" action="{% url 'loans:cancel' loan.id %}" class="space-y-sm">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="cancel">
+                            <div class="form-group">
+                                <label for="cancel-reason">{% translate "Reason for cancellation (optional" %})</label>
+                                <textarea name="reason" id="cancel-reason" class="form-control" rows="2"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-outline">{% translate "Cancel Loan" %}</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Extension Request Form -->
+        {% if extension_form %}
+            <div class="card mb-xl">
+                <div class="card-body">
+                    <h3 class="mb-md">{% translate "Request Extension" %}</h3>
+                    <form method="post" action="{% url 'loans:request_extension' loan.id %}" class="space-y-sm">
+                        {% csrf_token %}
+                        {{ extension_form }}
+                        <button type="submit" class="btn btn-primary">{% translate "Request Extension" %}</button>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Review Form -->
+        {% if review_form %}
+            <div class="card mb-xl">
+                <div class="card-body">
+                    <h3 class="mb-md">{% translate "Leave a Review" %}</h3>
+                    <form method="post" action="{% url 'loans:submit_review' loan.id %}" class="space-y-sm">
+                        {% csrf_token %}
+                        {{ review_form }}
+                        <button type="submit" class="btn btn-primary">{% translate "Submit Review" %}</button>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Loan History -->
+        {% if loan.status in 'returned,rejected,cancelled' %}
+            <div class="card mb-xl">
+                <div class="card-body">
+                    <h3 class="mb-md">{% translate "Loan Timeline" %}</h3>
+                    <div class="space-y-md">
+                        <div class="flex gap-md">
+                            <span class="text-sm text-secondary">{% translate "Requested" %}:</span>
+                            <span class="text-sm">{{ loan.requested_at|date:"M j, Y H:i" }}</span>
+                        </div>
+                        {% if loan.approved_at %}
+                            <div class="flex gap-md">
+                                <span class="text-sm text-secondary">{% translate "Approved" %}:</span>
+                                <span class="text-sm">{{ loan.approved_at|date:"M j, Y H:i" }}</span>
+                            </div>
+                        {% endif %}
+                        {% if loan.returned_at %}
+                            <div class="flex gap-md">
+                                <span class="text-sm text-secondary">{% translate "Returned" %}:</span>
+                                <span class="text-sm">{{ loan.returned_at|date:"M j, Y H:i" }}</span>
+                            </div>
+                        {% endif %}
+                        {% if loan.condition_at_return %}
+                            <div class="flex gap-md">
+                                <span class="text-sm text-secondary">{% translate "Condition" %}:</span>
+                                <span class="text-sm">{{ loan.condition_at_return }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Reviews -->
+        {% if loan.reviews.all %}
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="mb-md">{% translate "Reviews" %}</h3>
+                    <div class="space-y-lg">
+                        {% for review in loan.reviews.all %}
+                            {% if review.is_public %}
+                                <div class="border-bottom pb-md">
+                                    <div class="flex items-center justify-between mb-xs">
+                                        <div class="flex items-center gap-md">
+                                            <h4 class="mb-none">{{ review.reviewer.get_display_name }}</h4>
+                                            <span class="text-warning">{{ review.rating|stars }}</span>
+                                            <span class="text-sm text-secondary">({{ review.reviewer_role }})</span>
+                                        </div>
+                                        <span class="text-sm text-secondary">{{ review.created_at|naturaltime }}</span>
+                                    </div>
+                                    {% if review.comment %}
+                                        <p class="text-sm mb-xs">{{ review.comment }}</p>
+                                    {% endif %}
+                                    <div class="grid grid-cols-3 gap-md text-sm">
+                                        <div>
+                                            <span class="text-secondary">{% translate "Communication" %}:</span>
+                                            <span class="text-warning">{{ review.communication_rating|stars }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-secondary">{% translate "Reliability" %}:</span>
+                                            <span class="text-warning">{{ review.reliability_rating|stars }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-secondary">{% translate "Condition" %}:</span>
+                                            <span class="text-warning">{{ review.condition_rating|stars }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.badge-requested { background: #6c757d; color: white; }
+.badge-approved { background: #28a745; color: white; }
+.badge-active { background: #007bff; color: white; }
+.badge-returned { background: #6f42c1; color: white; }
+.badge-rejected { background: #dc3545; color: white; }
+.badge-cancelled { background: #6c757d; color: white; }
+.badge-overdue { background: #ffc107; color: black; }
+</style>
+{% endblock %}

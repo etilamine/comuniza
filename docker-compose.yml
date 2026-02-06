@@ -1,0 +1,151 @@
+x-common: &common
+  build:
+    context: .
+    target: ${DOCKER_TARGET:-production}
+    args:
+      - HOST_UID=${HOST_UID:-1000}
+      - HOST_GID=${HOST_GID:-1000}
+  restart: ${RESTART_POLICY:-unless-stopped}
+  networks:
+    - comuniza-network
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: comuniza-db
+    restart: unless-stopped
+    environment:
+      env_file: ~/.env.${DJANGO_ENV:-production}
+      POSTGRES_DB: ${DB_NAME:-comuniza123}
+      POSTGRES_USER: ${DB_USER:-comuniza123}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-comuniza123} -d ${DB_NAME:-comuniza123}"]
+      timeout: 10s
+      retries: 5
+    command: >
+      postgres
+      -c max_connections=200
+      -c shared_buffers=256MB
+      -c effective_cache_size=1GB
+      -c work_mem=4MB
+      -c maintenance_work_mem=64MB
+    networks:
+      - comuniza-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: comuniza-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 128mb
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 5s
+      retries: 5
+      interval: 10s
+      start_period: 30s
+    networks:
+      - comuniza-network
+
+  app:
+    <<: *common
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    env_file: ~/.env.${DJANGO_ENV:-production}
+    container_name: comuniza-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - DJANGO_SETTINGS_MODULE=core.settings.${DJANGO_ENV:-production}
+      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - REDIS_URL=redis://redis:6379
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG:-0}
+      # Internal port configuration
+      - INTERNAL_DEV_PORT=${INTERNAL_DEV_PORT:-8000}
+      - INTERNAL_PROD_PORT=${INTERNAL_PROD_PORT:-4002}
+    volumes:
+      - ${APP_VOLUMES:-./:/app}
+      - ${STATIC_VOLUME:-/var/www/comuniza/storage/assets}:/app/staticfiles
+      - ${MEDIA_VOLUME:-/var/www/comuniza/storage/media}:/app/media
+      - ${LOGS_VOLUME:-/var/www/comuniza/storage/logs}:/app/logs
+    ports:
+      # Development port mapping (can be overridden)
+      - "${EXTERNAL_DEV_PORT:-8000}:${INTERNAL_DEV_PORT:-8000}"
+      # Production port mapping (can be overridden)
+      - "${EXTERNAL_PROD_PORT:-4002}:${INTERNAL_PROD_PORT:-4002}"
+    command: ${APP_COMMAND:-python manage.py runserver 0.0.0.0:4002}
+    networks:
+      - comuniza-network
+      - proxy
+
+  celery:
+    <<: *common
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    env_file: ~/.env.${DJANGO_ENV:-production}
+    container_name: comuniza-celery
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    environment:
+      - DJANGO_SETTINGS_MODULE=core.settings.${DJANGO_ENV:-production}
+      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - REDIS_URL=redis://redis:6379/0
+      # Email configuration for Celery
+      - EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_USE_TLS=${EMAIL_USE_TLS}
+      - EMAIL_USE_SSL=${EMAIL_USE_SSL}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+      - DEFAULT_FROM_EMAIL=${DEFAULT_FROM_EMAIL}
+      - SERVER_EMAIL=${SERVER_EMAIL}
+      - EMAIL_TIMEOUT=${EMAIL_TIMEOUT}
+    volumes:
+      - ${APP_VOLUMES:-./:/app}
+      - ${MEDIA_VOLUME:-/var/www/comuniza/storage/media}:/app/media
+    command: celery -A core worker --loglevel=info ${CELERY_CONCURRENCY:---concurrency=4}
+    networks:
+      - comuniza-network
+
+  mailcatcher:
+    image: sj26/mailcatcher
+    container_name: comuniza-mailcatcher
+    restart: unless-stopped
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+    networks:
+      - comuniza-network
+
+networks:
+  comuniza-network:
+    driver: bridge
+  proxy:
+    external: true
+
+volumes:
+  postgres_data:
+  redis_data:

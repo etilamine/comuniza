@@ -1,0 +1,15 @@
+{% translate "LOAN OVERDUE
+
+Your loan is overdue!
+
+The loan for" %} {{ item.title }} {% translate "was due on" %} {{ due_date|date:"F j, Y" }} {% translate "and is now" %} {{ days_overdue }} {% translate "days overdue" %}.
+
+{% if borrower %}
+{% translate "Immediate Action Required:
+Please return the item as soon as possible and mark it as returned in your dashboard.
+
+Mark as Returned" %}: {{ loan_url }}
+{% endif %}
+
+{% translate "View loan details" %}: {{ loan_url }}
+{% translate "Send message to" %} {{ lender.get_display_name }}: {{ messages_url }}

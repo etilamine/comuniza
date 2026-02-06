@@ -1,0 +1,403 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load thumbnail %}
+{% block title %}{{ item.title }} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Breadcrumb -->
+    <nav class="mb-lg" style="font-size: var(--font-size-sm);">
+        <a href="{% url 'items:list' %}" class="text-secondary">{% translate "Browse" %}</a>
+        <span class="text-muted"> / </span>
+        {% if item.category %}
+            <span class="text-secondary">{{ item.category.name }}</span>
+            <span class="text-muted"> / </span>
+        {% endif %}
+        <span class="text-primary">{{ item.title }}</span>
+    </nav>
+
+    <div class="grid grid-cols-1 grid-md-2 gap-xl">
+        <!-- Image Gallery -->
+        <div>
+            <div class="card">
+                <!-- Main Image -->
+                <div style="position: relative; width: 100%; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius-lg);">
+                    {% if item.images.exists %}
+                        {% with item.images.first as main_image %}
+                            <img
+                                id="mainImage"
+                                src="{{ main_image.image.item_large.url }}"
+                                alt="{{ item.title }}"
+                                style="width: 100%; height: 100%; object-fit: cover;"
+                            >
+                        {% endwith %}
+                    {% else %}
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--gray-100); color: var(--gray-400); font-size: 5rem;">
+                            [   ]
+                        </div>
+                    {% endif %}
+
+                    <!-- Status Badge -->
+                    <div style="position: absolute; top: var(--space-md); right: var(--space-md);">
+                         <span class="badge item-card-status-info badge-status badge-{{ item.status }}" style="padding: var(--space-sm) var(--space-lg); font-size: var(--font-size-sm);">
+                             {% if item.status == 'available' %}
+                                 ▸ {% translate "Available" %}
+                             {% elif item.status == 'borrowed' %}
+                                 ◼ {% translate "Borrowed" %}
+                             {% else %}
+                                 □ {{ item.get_status_display }}
+                             {% endif %}
+                         </span>
+                         {% if item.visibility != 'public' %}
+                         <span class="badge badge-lg badge-visibility badge-{{ item.visibility }}" style="padding: var(--space-sm) var(--space-lg); font-size: var(--font-size-sm); margin-top: var(--space-sm);">
+                             {% if item.visibility == 'private' %}{% translate "Private" %}{% elif item.visibility == 'restricted' %}{% translate "Restricted" %}{% endif %}
+                         </span>
+                         {% endif %}
+                        {% if item.cover_source %}
+                            <span class="cover-source-badge cover-source-{{ item.cover_source }}" style="position: absolute; top: 60px; right: -20px; padding: 4px 8px; font-size: 0.7rem; border-radius: 50%;">
+                                {% if item.cover_source == 'openlibrary' %}
+                                    📚 {% translate "Open Library" %}
+                                {% elif item.cover_source == 'generated' %}
+                                    🎨 {% translate "Generated" %}
+                                {% endif %}
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Thumbnail Gallery -->
+                {% if item.images.count > 1 %}
+                    <div class="p-md">
+                        <div class="flex gap-sm" style="overflow-x: auto;">
+                            {% for image in item.images.all %}
+                                <button
+                                    onclick="changeImage('{{ image.image.item_large.url }}')"
+                                    style="flex-shrink: 0; width: 80px; height: 80px; border: 2px solid var(--border); border-radius: var(--radius-md); overflow: hidden; cursor: pointer; background: none; padding: 0; transition: border-color var(--transition-fast);"
+                                    onmouseover="this.style.borderColor='var(--primary)'"
+                                    onmouseout="this.style.borderColor='var(--border)'"
+                                >
+                                    <img
+                                        src="{{ image.image.item_list.url }}"
+                                        alt="{{ item.title }}"
+                                        style="width: 100%; height: 100%; object-fit: cover;"
+                                        loading="lazy"
+                                    >
+                                </button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Item Details -->
+        <div>
+            <div class="mb-lg">
+                <h1 class="mb-sm">{{ item.title }}</h1>
+                {% if item.author %}
+                    <p class="text-lg text-secondary mb-md">{% translate "by" %} {{ item.author }}</p>
+                {% endif %}
+
+                <!-- Meta Info -->
+                <div class="flex flex-wrap gap-sm mb-lg">
+                    {% if item.category %}
+                        <span class="badge badge-primary">{{ item.category.name }}</span>
+                    {% endif %}
+                    <span class="badge badge-secondary">{{ item.get_condition_display }} {% translate "condition" %}</span>
+                    {% if item.year %}
+                        <span class="badge badge-secondary">{{ item.year }}</span>
+                    {% endif %}
+                </div>
+
+                <!-- Owner Info -->
+                <div class="card mb-lg">
+                    <div class="card-body">
+                        <p class="text-sm text-secondary mb-sm">{% translate "Owned by" %}</p>
+                        <div class="flex items-center gap-md">
+                            <div class="avatar avatar-lg">
+                                {% if item.owner.avatar %}
+                                    <img src="{{ item.owner.avatar.avatar_small.url }}" alt="{{ item.owner.username }}">
+                                {% else %}
+                                    <div class="avatar-placeholder">
+                                        {{ item.owner.username|first|upper }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <p class="font-semibold mb-0">
+                                    {% if item.owner == user %}
+                                        {% translate "You" %}
+                                    {% else %}
+                                        {{ item.owner.first_name|default:item.owner.username }}
+                                    {% endif %}
+                                </p>
+                                {% if item.owner.reputation %}
+                                    <div class="rating">
+                                        {% with rating=item.owner.reputation.overall_rating %}
+                                            {% for i in "12345" %}
+                                                {% if forloop.counter <= rating %}
+                                                    ★
+                                                {% else %}
+                                                    ☆
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endwith %}
+                                        <span class="rating-count">({{ item.owner.reputation.total_reviews }})</span>
+                                    </div>
+                                {% endif %}
+                                {% if item.borrow_count > 0 %}
+                                    <p class="text-xs text-muted m-0">{% translate "Shared" %} {{ item.borrow_count }} {% translate "time" %}{{ item.borrow_count|pluralize }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-lg">
+                    <h3 class="mb-sm">{% translate "Description" %}</h3>
+                    <p class="text-secondary">{{ item.description|linebreaks }}</p>
+                </div>
+
+                <!-- Additional Details -->
+                <div class="card mb-lg">
+                    <div class="card-body">
+                        <h4 class="mb-md">{% translate "Item Details" %}</h4>
+                        <div class="grid grid-cols-2 gap-md text-sm">
+                            <div>
+                                <p class="text-muted mb-xs">{% translate "Condition" %}</p>
+                                <p class="font-semibold">{{ item.get_condition_display }}</p>
+                            </div>
+                            <div>
+                                <p class="text-muted mb-xs">{% translate "Max loan period" %}</p>
+                                <p class="font-semibold">{{ item.max_loan_days }} {% translate "days" %}</p>
+                            </div>
+                            {% if item.isbn %}
+                                <div>
+                                    <p class="text-muted mb-xs">{% translate "ISBN/Serial" %}</p>
+                                    <p class="font-semibold">{{ item.isbn }}</p>
+                                </div>
+                            {% endif %}
+                            {% if item.estimated_value %}
+                                <div>
+                                    <p class="text-muted mb-xs">{% translate "Est. Value" %}</p>
+                                    <p class="font-semibold">${{ item.estimated_value }}</p>
+                                </div>
+                            {% endif %}
+                            {% if item.requires_deposit %}
+                                <div>
+                                    <p class="text-muted mb-xs">{% translate "Deposit Required" %}</p>
+                                    <p class="font-semibold">${{ item.deposit_amount }}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Available in Groups -->
+                {% if item.groups.exists %}
+                    <div class="mb-lg">
+                        <h4 class="mb-sm">{% translate "Available in" %}</h4>
+                        <div class="flex flex-wrap gap-sm">
+                            {% for group in item.groups.all %}
+                                <a href="{% url 'groups:detail' group.slug %}" class="badge badge-primary" style="padding: var(--space-sm) var(--space-md);">
+                                    {{ group.name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Current Loan Status -->
+                {% if current_loan %}
+                    <div class="card mb-lg" style="border-left: 4px solid var(--primary);">
+                        <div class="card-body">
+                            <h4 class="mb-sm text-primary">[{% translate "CURRENT LOAN" %} ]</h4>
+                            <div class="flex items-center justify-between mb-sm">
+                                <div>
+                                    <p class="text-sm">
+                                        <span class="font-medium">{% translate "Borrowed by" %}:</span>
+                                        {{ current_loan.borrower.get_display_name }}
+                                    </p>
+                                    <p class="text-sm">
+                                        <span class="font-medium">{% translate "Due" %}:</span>
+                                        {{ current_loan.due_date|date:"M j, Y" }}
+                                        {% if current_loan.is_overdue %}
+                                            <span class="text-warning"> ({{ current_loan.days_overdue }} {% translate "days overdue" %})</span>
+                                        {% else %}
+                                            <span class="text-success"> ({{ current_loan.days_until_due }} {% translate "days left" %})</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                 {% if user != item.owner and user != current_loan.borrower %}
+                                     {% if existing_item_conversation %}
+                                         <a href="{% url 'messaging:conversation_detail' existing_item_conversation.id %}" class="btn btn-outline btn-sm">
+                                             {% translate "Open Conversation" %}
+                                         </a>
+                                     {% else %}
+                                         <a href="{% url 'messaging:start_conversation_item' item.owner.username item.id %}" class="btn btn-outline btn-sm">
+                                             {% translate "Message Owner" %}
+                                         </a>
+                                     {% endif %}
+                                 {% endif %}
+                            </div>
+                            {% if current_loan.extension_requested %}
+                                <div class="badge badge-warning mb-sm">
+                                    {% translate "Extension Requested" %}: +{{ current_loan.extension_days }} {% translate "days" %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap gap-sm">
+                    {% if user.is_authenticated %}
+                        {% if item.owner == user %}
+                            <a href="{% url 'item_edit' item.identifier %}" class="btn btn-primary btn-lg">{% translate "Edit Item" %}</a>
+                            <a href="{% url 'item_delete' item.identifier %}" class="btn btn-danger btn-lg">{% translate "Delete" %}</a>
+                        {% elif item.is_available and can_borrow %}
+                            <a href="{% url 'loans:request' item.identifier %}" class="btn btn-primary btn-lg btn-block">{% translate "Request to Borrow" %}</a>
+                        {% elif current_loan and current_loan.borrower == user %}
+                            <!-- Borrower actions -->
+                            {% if current_loan.status in 'approved,active' %}
+                                <a href="{% url 'loans:loan_detail' current_loan.id %}" class="btn btn-primary btn-lg">{% translate "View Loan Details" %}</a>
+                                {% if not current_loan.extension_requested %}
+                                    <a href="{% url 'loans:request_extension' current_loan.id %}" class="btn btn-outline btn-lg">{% translate "Request Extension" %}</a>
+                                {% endif %}
+                            {% elif current_loan.status == 'approved' %}
+                                <a href="{% url 'loans:return' current_loan.id %}" class="btn btn-success btn-lg">{% translate "Mark as Returned" %}</a>
+                            {% endif %}
+                        {% elif current_loan and current_loan.lender == user %}
+                            <!-- Lender actions -->
+                            {% if current_loan.status == 'requested' %}
+                                <div class="flex gap-sm">
+                                    <a href="{% url 'loans:approve' current_loan.id %}" class="btn btn-success btn-lg">{% translate "Approve" %}</a>
+                                    <a href="{% url 'loans:reject' current_loan.id %}" class="btn btn-outline btn-lg">{% translate "Reject" %}</a>
+                                </div>
+                            {% elif current_loan.status == 'returned' %}
+                                <a href="{% url 'loans:loan_detail' current_loan.id %}" class="btn btn-primary btn-lg">{% translate "Confirm Return" %}</a>
+                            {% endif %}
+                        {% else %}
+                            <button class="btn btn-secondary btn-lg btn-block" disabled>{% translate "Currently Borrowed" %}</button>
+                            {% if item.allow_reservations %}
+                                <a href="{% url 'item_wishlist_add' item.identifier %}" class="btn btn-outline btn-lg">{% translate "Add to Wishlist" %}</a>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn btn-primary btn-lg btn-block">{% translate "Login to Borrow" %}</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    {% if item.reviews.exists %}
+        <div class="mt-2xl">
+            <h2 class="mb-lg">{% translate "Reviews" %}</h2>
+            <div class="grid grid-cols-1 grid-md-2 gap-lg">
+                {% for review in item.reviews.all %}
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="flex items-center justify-between mb-md">
+                                <div class="flex items-center gap-sm">
+                                    <div class="avatar avatar-sm">
+                                        {% if review.reviewer.avatar %}
+                                            <img src="{{ review.reviewer.avatar.avatar_small.url }}" alt="{{ review.reviewer.username }}">
+                                        {% else %}
+                                            <div style="background: var(--secondary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.75rem; width: 100%; height: 100%;">
+                                                {{ review.reviewer.username|first|upper }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <p class="font-semibold mb-0">{{ review.reviewer.first_name|default:review.reviewer.username }}</p>
+                                </div>
+                                <div class="rating">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= review.rating %}
+                                            ★
+                                        {% else %}
+                                            ☆
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% if review.comment %}
+                                <p class="text-secondary">{{ review.comment }}</p>
+                            {% endif %}
+                            <p class="text-xs text-muted mb-0">{{ review.created_at|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+
+    .cover-source-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.7rem;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-left: 0.5rem;
+        border: 2px solid;
+    }
+
+    .cover-source-openlibrary {
+        background: var(--success-color);
+        color: white;
+        border-color: var(--success-color);
+    }
+
+    .cover-source-generated {
+        background: var(--secondary-color);
+        color: white;
+        border-color: var(--secondary-color);
+    }
+
+    .cover-source-uploaded {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+
+    /* Ensure: status badge and cover source badge don't overlap */
+    .main-image {
+        position: relative;
+    }
+
+    .status-badge {
+        top: var(--space-md);
+        right: var(--space-md);
+    }
+
+    .cover-source-badge {
+        top: 60px;
+        right: var(--space-md);
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function changeImage(imageUrl) {
+        const mainImage = document.getElementById('mainImage');
+        mainImage.style.opacity = '0';
+        setTimeout(() => {
+            mainImage.src = imageUrl;
+            mainImage.style.transition = 'opacity 0.3s ease';
+            mainImage.style.opacity = '1';
+        }, 150);
+    }
+</script>
+{% endblock %}

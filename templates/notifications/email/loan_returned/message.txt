@@ -1,0 +1,16 @@
+{% translate "LOAN RETURNED
+
+Loan completed successfully" %}!
+
+{{ borrower.get_display_name }} {% translate "has returned" %} {{ item.title }} {% translate "to" %} {{ lender.get_display_name }}.
+
+{% if returned_at %}
+{% translate "Return Details:
+Returned on" %}: {{ returned_at|date:"F j, Y, H:i" }}
+{% if condition_at_return %}
+{% translate "Condition" %}: {{ condition_at_return }}
+{% endif %}
+{% endif %}
+
+{% translate "Leave a Review for" %} {{ borrower.get_display_name }}: {{ loan_url }}
+{% translate "View Item Details" %}: {{ item_url }}

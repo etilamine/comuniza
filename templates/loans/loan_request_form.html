@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load thumbnail %}
+{% block title %}{% translate "Request Loan" %} - {{ item.title }} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container container-sm">
+    <div class="mb-xl">
+        <h1 class="mb-sm">{% translate "Request to Borrow" %}</h1>
+        <p class="text-secondary">
+            {% translate "You're requesting to borrow" %} "{{ item.title }}" {% translate "from" %} {{ item.owner.get_display_name }}
+        </p>
+    </div>
+
+    <!-- Item Preview -->
+    <div class="card mb-xl">
+        <div class="card-body">
+            <div class="flex gap-lg">
+                {% if item.primary_image %}
+                    <img src="{{ item.primary_image.item_list.url }}" alt="{{ item.title }}" class="w-32 h-32 object-cover rounded">
+                {% endif %}
+                <div class="flex-1">
+                    <h3 class="mb-xs">{{ item.title }}</h3>
+                    <p class="text-sm text-secondary mb-xs">{{ item.description|truncatewords:30 }}</p>
+                    <div class="flex gap-md text-sm">
+                        <span class="badge badge-info">{{ item.get_category_display }}</span>
+                        <span>{% translate "Owner" %}: {{ item.owner.get_display_name }}</span>
+                        <span>{% translate "Max loan" %}: {{ item.max_loan_days }} {% translate "days" %}</span>
+                    </div>
+                    {% if item.owner.loan_settings %}
+                        <div class="text-sm text-secondary mt-xs">
+                            <p>• {% translate "Extensions" %} {% if item.owner.loan_settings.allow_extensions %}{% translate "allowed" %}{% else %}{% translate "not allowed" %}{% endif %}</p>
+                            {% if item.owner.loan_settings.allow_extensions %}
+                                <p>• {% if item.owner.loan_settings.require_approval_for_extensions %}{% translate "Approval required" %}{% else %}{% translate "Automatic" %}{% endif %} {% translate "for extensions" %}</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loan Request Form -->
+    <div class="card">
+        <div class="card-body">
+            <h3 class="mb-md">{% translate "Loan Request Details" %}</h3>
+            <form method="post" class="space-y-lg">
+                {% csrf_token %}
+
+                {{ form.non_field_errors }}
+
+                <!-- Group Selection -->
+                <div>
+                    <label class="form-label">{{ form.group.label }}</label>
+                    {{ form.group }}
+                    {% if form.group.help_text %}
+                        <p class="form-help">{{ form.group.help_text }}</p>
+                    {% endif %}
+                    {{ form.group.errors }}
+                </div>
+
+                <!-- Message -->
+                <div>
+                    <label class="form-label">{{ form.request_message.label }}</label>
+                    {{ form.request_message }}
+                    {% if form.request_message.help_text %}
+                        <p class="form-help">{{ form.request_message.help_text }}</p>
+                    {% endif %}
+                    {{ form.request_message.errors }}
+                </div>
+
+                <!-- Your Loan Settings -->
+                <div class="p-md bg-secondary rounded">
+                    <h4 class="mb-sm">{% translate "Your Default Loan Settings" %}</h4>
+                    <div class="space-y-xs text-sm">
+                        <div class="flex justify-between">
+                            <span>{% translate "Default loan duration" %}:</span>
+                            <span class="font-medium">{{ user.loan_settings.default_loan_days }} {% translate "days" %}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>{% translate "Allow extensions" %}:</span>
+                            <span class="font-medium">{% if user.loan_settings.allow_extensions %}{% translate "Yes" %}{% else %}{% translate "No" %}{% endif %}</span>
+                        </div>
+                        {% if user.loan_settings.allow_extensions %}
+                            <div class="flex justify-between">
+                                <span>{% translate "Max extension days" %}:</span>
+                                <span class="font-medium">{{ user.loan_settings.max_extension_days }} {% translate "days" %}</span>
+                            </div>
+                        {% endif %}
+                        <div class="flex justify-between">
+                            <span>{% translate "Default privacy" %}:</span>
+                            <span class="font-medium">{{ user.loan_settings.get_default_loan_privacy_display }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div class="p-md border rounded">
+                    <h4 class="mb-sm">{% translate "Loan Terms" %}</h4>
+                    <ul class="space-y-xs text-sm text-secondary">
+                        <li>• {% translate "You are responsible for the item while borrowed" %}</li>
+                        <li>• {% translate "Return the item by the due date in good condition" %}</li>
+                        <li>• {% translate "The lender may require a deposit" %}</li>
+                        <li>• {% translate "Reviews will be exchanged after the loan is completed" %}</li>
+                        {% if item.owner.loan_settings.allow_extensions %}
+                            <li>• {% translate "Extensions may be requested if needed" %}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <!-- Submit -->
+                <div class="flex gap-sm">
+                    <button type="submit" class="btn btn-primary">
+                        {% translate "Send Loan Request" %}
+                    </button>
+                    <a href="{% url 'item_detail' item.identifier %}" class="btn btn-outline">
+                        {% translate "Cancel" %}
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    background: white;
+    font-size: 1rem;
+}
+
+.form-help {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+.errorlist {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.space-y-lg > * + * {
+    margin-top: 1.5rem;
+}
+
+.space-y-md > * + * {
+    margin-top: 1rem;
+}
+
+.space-y-sm > * + * {
+    margin-top: 0.5rem;
+}
+
+.space-y-xs > * + * {
+    margin-top: 0.25rem;
+}
+
+.flex {
+    display: flex;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.gap-sm {
+    gap: 0.5rem;
+}
+
+.gap-md {
+    gap: 1rem;
+}
+
+.gap-lg {
+    gap: 1.5rem;
+}
+
+.w-32 {
+    width: 8rem;
+}
+
+.h-32 {
+    height: 8rem;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.object-cover {
+    object-fit: cover;
+}
+
+.rounded {
+    border-radius: 0.375rem;
+}
+
+.badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.badge-info {
+    background: #17a2b8;
+    color: white;
+}
+</style>
+{% endblock %}

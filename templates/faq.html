@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% translate "FAQ" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="mb-xl">
+        <h1 class="mb-sm">{% translate "Frequently Asked Questions" %}</h1>
+        <p class="text-secondary">{% translate "Find answers to common questions about using Comuniza" %}</p>
+    </div>
+
+    <div class="faq-list">
+        <div class="card mb-lg">
+             <div class="card-header">
+                 <h3 class="mb-0">{% translate "Getting Started" %}</h3>
+             </div>
+            <div class="card-body">
+                 <div class="faq-item mb-md">
+                     <h4>{% translate "How do I create an account?" %}</h4>
+                     <p>{% translate "You can sign up using your email address. We'll send you a confirmation email to verify your account." %}</p>
+                 </div>
+
+                 <div class="faq-item mb-md">
+                     <h4>{% translate "How do I add my first item?" %}</h4>
+                     <p>{% translate 'Click on \"Add Item\" from your profile or the quick actions menu. Fill in the details about your item and choose its visibility settings.' %}</p>
+                 </div>
+
+                 <div class="faq-item">
+                     <h4>{% translate "What are groups?" %}</h4>
+                     <p>{% translate "Groups are communities where people share items. You can join existing groups or create your own. Items shared within groups can be borrowed by group members." %}</p>
+                 </div>
+            </div>
+        </div>
+
+        <div class="card mb-lg">
+             <div class="card-header">
+                 <h3 class="mb-0">{% translate "Borrowing & Lending" %}</h3>
+             </div>
+            <div class="card-body">
+                 <div class="faq-item mb-md">
+                     <h4>{% translate "How do I borrow an item?" %}</h4>
+                     <p>{% translate 'Find an available item you want to borrow and click "Request to Borrow". The lender will be notified and can approve or reject your request.' %}</p>
+                 </div>
+
+                 <div class="faq-item mb-md">
+                     <h4>{% translate "What if an item is damaged or lost?" %}</h4>
+                     <p>{% translate "Please communicate with the lender immediately. Comuniza encourages honest communication between users. Check the item's condition notes before borrowing." %}</p>
+                 </div>
+
+                 <div class="faq-item">
+                     <h4>{% translate "How do I set loan terms?" %}</h4>
+                     <p>{% translate "As a lender, you can set maximum loan duration and deposit requirements when creating or editing your item." %}</p>
+                 </div>
+            </div>
+        </div>
+
+        <div class="card mb-lg">
+             <div class="card-header">
+                 <h3 class="mb-0">{% translate "Privacy & Safety" %}</h3>
+             </div>
+            <div class="card-body">
+                 <div class="faq-item mb-md">
+                     <h4>{% translate "How does privacy work?" %}</h4>
+                     <p>{% translate "You control who can see your profile, items, and groups through privacy settings. Items can be public, private, or restricted to group members." %}</p>
+                 </div>
+
+                 <div class="faq-item mb-md">
+                     <h4>{% translate "Is my information safe?" %}</h4>
+                     <p>{% translate "We take privacy seriously. Your email and other personal information is protected, and you control who can see your profile and activity. There's currently email and password hashing, encrypted messaging and database encryption. We try to follow the highest/latest security standards even in development. The security mechanisms will be open and detailed in the future." %}</p>
+                 </div>
+
+                 <div class="faq-item">
+                     <h4>{% translate "What should I do if I have concerns about another user?" %}</h4>
+                     <p>{% translate "Contact us through at" %} <a href="mailto:support@comuniza.org">{% translate "support@comuniza.org" %}</a> {% translate "explaining the situation, or anonymously through the" %} <a href="{% url 'report_bug' %}">{% translate "bug report form" %}</a>. {% translate "This will be currently reviewed by the administrator, but in the future more decentralized and democratic community safety mechanisms will be implemented." %}</p>
+                 </div>
+            </div>
+        </div>
+
+        <div class="card mb-lg">
+             <div class="card-header">
+                 <h3 class="mb-0">{% translate "Technical Questions" %}</h3>
+             </div>
+            <div class="card-body">
+                 <div class="faq-item mb-md">
+                     <h4>{% translate "How do I upload photos of my items?" %}</h4>
+                     <p>{% translate "When adding or editing an item, you can upload multiple photos. The first photo will be the primary image shown in listings." %}</p>
+                 </div>
+
+                 <div class="faq-item mb-md">
+                     <h4>{% translate "Can I edit my item after posting?" %}</h4>
+                     <p>{% translate 'Yes, you can edit any item you own. Go to "My Items" and click the edit button on your item.' %}</p>
+                 </div>
+
+                 <div class="faq-item">
+                     <h4>{% translate "How do I search for items?" %}</h4>
+                     <p>{% translate "Use the search bar to find items by name, description, or author. You can also filter by category, status, and group." %}</p>
+                 </div>
+            </div>
+        </div>
+        <div class="card mb-lg">
+             <div class="card-header">
+                 <h3 class="mb-0">{% translate "Platforms costs and development" %}</h3>
+             </div>
+            <div class="card-body">
+                 <div class="faq-item mb-md">
+                     <h4>{% translate "Who's developing?" %}</h4>
+                     <p>{% translate "This is currently a one-person-project, being developed by Animalite. I'm not a professional developer, although I've been writing code since I was a kid. This intersection between code, community and politics is really important to me." %}</p>
+                 </div>
+                 <div class="faq-item mb-md">
+                     <h4>{% translate "Why is there a donation button" %}</h4>
+                     <p>{% translate "Because of financial reasons as well as the old internet infrastructure in Germany, I cannot host this site at home, so donations are essential to pay the monthly VPS rent as well as some small developing tools. Hopefully in the future, this platform can also serve to share server infrastructure!" %}</p>
+                 </div>
+                 <div class="faq-item mb-md">
+                     <h4>{% translate "I have ideas and want to help" %}</h4>
+                     <p>{% translate "That's great! You can contact me at" %} <a href="mailto:support@comuniza.org">{% translate "support@comuniza.org" %}</a>. {% translate "It's currently needed either help with development, localization, web and graphic design, feature suggestions, security and privacy reviews, legal advice, community support and integration and so on and so on." %}</p>
+                 </div>
+        </div>
+        </div>
+        <div class="card">
+             <div class="card-header">
+                 <h3 class="mb-0">{% translate "Still Need Help?" %}</h3>
+             </div>
+             <div class="card-body">
+                 <p>{% translate "If you can't find the answer you're looking for, please" %} <a href="{% url 'report_bug' %}">{% translate "contact us" %}</a> {% translate "with your question." %}</p>
+             </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.faq-list .card-header {
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.faq-item h4 {
+    color: var(--primary);
+    margin-bottom: var(--space-sm);
+    font-size: 1.1rem;
+}
+
+.faq-item p {
+    margin-bottom: 0;
+    line-height: 1.6;
+}
+</style>
+{% endblock %}

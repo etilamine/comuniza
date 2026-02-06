@@ -1,0 +1,1 @@
+{% translate "Extension Request" %}: {{ item.title }} ({{ extension_days }} {% translate "days" %})

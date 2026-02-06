@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{% translate "Report Bug" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container container-md">
+    <div class="py-2xl">
+        <div class="text-center mb-xl">
+            <h1 class="mb-md">{% translate "Report a Bug" %}</h1>
+            <p class="text-secondary mb-lg">{% translate "Help us improve Comuniza by reporting bugs, issues, or suggestions" %}</p>
+        </div>
+
+        <div class="card" style="max-width: 800px; margin: 0 auto;">
+            <div class="card-body">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} mb-lg">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post" action="{% url 'bug_report_page' %}">
+                    {% csrf_token %}
+
+                    <div class="form-group mb-lg">
+                        <label for="id_category" class="form-label">{% translate "Category" %}</label>
+                        <select name="category" id="id_category" class="form-control" required>
+                            <option value="">{% translate "Select a category" %}</option>
+                            <option value="ui">{% translate "User Interface" %}</option>
+                            <option value="functionality">{% translate "Functionality" %}</option>
+                            <option value="performance">{% translate "Performance" %}</option>
+                            <option value="security">{% translate "Security" %}</option>
+                            <option value="feature">{% translate "Feature Request" %}</option>
+                            <option value="other">{% translate "Other" %}</option>
+                        </select>
+                        <small class="form-help">{% translate "What type of issue are you reporting" %}?</small>
+                    </div>
+
+                    <div class="form-group mb-lg">
+                        <label for="id_severity" class="form-label">{% translate "Severity" %}</label>
+                        <select name="severity" id="id_severity" class="form-control" required>
+                            <option value="">{% translate "Select severity" %}</option>
+                            <option value="low">{% translate "Low - Minor inconvenience" %}</option>
+                            <option value="medium">{% translate "Medium - Affects usability" %}</option>
+                            <option value="high">{% translate "High - Major functionality broken" %}</option>
+                            <option value="critical">{% translate "Critical - Site unusable" %}</option>
+                        </select>
+                        <small class="form-help">{% translate "How severe is this issue" %}?</small>
+                    </div>
+
+                    <div class="form-group mb-lg">
+                        <label for="id_description" class="form-label">{% translate "Description" %}</label>
+                        <textarea
+                            name="description"
+                            id="id_description"
+                            class="form-control"
+                            rows="6"
+                            placeholder="{% translate 'Please describe the bug, issue, or suggestion in detail...' %}"
+                            maxlength="1000"
+                            required
+                        ></textarea>
+                        <small class="form-help">{% translate "Maximum 1000 characters. Please include steps to reproduce if possible" %}.</small>
+                        <div class="text-right mt-sm">
+                            <small class="text-muted">
+                                <span id="char-count">0</span>/{% translate "1000 characters" %}
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-lg">
+                        <label for="id_user_email" class="form-label">{% translate "Your Email" %}</label>
+                        <input
+                            type="email"
+                            name="user_email"
+                            id="id_user_email"
+                            class="form-control"
+                            placeholder="{% translate 'your@email.com' %}"
+                            value="{% if user.is_authenticated %}{{ user.email }}{% endif %}"
+                        >
+                        <small class="form-help">{% translate "Optional. We'll use this to follow up if needed" %}.</small>
+                    </div>
+
+                    <!-- Hidden fields for technical info -->
+                    <input type="hidden" name="current_url" value="{{ request.build_absolute_uri }}">
+                    <input type="hidden" name="user_agent" value="{{ request.META.HTTP_USER_AGENT }}">
+                    <input type="hidden" name="referrer" value="{{ request.META.HTTP_REFERER }}">
+
+                    <div class="flex justify-between items-center">
+                        <div class="text-muted">
+                            <small>{% translate "Reports are sent to our development team" %}</small>
+                        </div>
+                        <div class="flex gap-sm">
+                            <button type="submit" class="btn btn-primary" id="submit-bug-report">
+                                {% translate "Send Report" %}
+                            </button>
+                            <a href="{% url 'home' %}" class="btn btn-outline">
+                                {% translate "Cancel" %}
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="text-center mt-xl">
+            <p class="text-sm text-muted">
+                {% translate "For urgent security issues, please contact us directly at" %}
+                <a href="mailto:security@comuniza.org" class="text-primary">{% translate "security@comuniza.org" %}</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Character counter for description
+    const textarea = document.getElementById('id_description');
+    const charCount = document.getElementById('char-count');
+
+    textarea.addEventListener('input', function() {
+        charCount.textContent = this.value.length;
+        if (this.value.length > 900) {
+            charCount.style.color = '#dc3545'; // red
+        } else if (this.value.length > 800) {
+            charCount.style.color = '#ffc107'; // yellow
+        } else {
+            charCount.style.color = ''; // default
+        }
+    });
+
+    // Form submission feedback
+    const form = document.querySelector('form');
+    const submitBtn = document.getElementById('submit-bug-report');
+
+    form.addEventListener('submit', function(e) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+
+        // Re-enable after 10 seconds in case of error
+        setTimeout(() => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Send Report';
+        }, 10000);
+    });
+});
+</script>
+{% endblock %}

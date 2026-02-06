@@ -1,0 +1,44 @@
+{% extends "notifications/email/base_email.html" %}
+
+{% block header_title %}{% translate "LOAN REQUEST" %}{% endblock %}
+
+{% block email_content %}
+<h2>{{ borrower.get_display_name }} {% translate "Wants To Borrow Your Item" %}</h2>
+<p><strong>{{ item.title }}</strong></p>
+
+{% if request_message %}
+    <div class="data-box">
+        <h3>{% translate "Message From Borrower" %}:</h3>
+        <p>{{ request_message }}</p>
+    </div>
+{% endif %}
+
+<div class="data-box">
+    <h3>{% translate "Request Details" %}:</h3>
+    <table class="data-table">
+        <tr>
+            <td>{% translate "Item" %}:</td>
+            <td>{{ item.title }}</td>
+        </tr>
+        <tr>
+            <td>{% translate "Borrower" %}:</td>
+            <td>{{ borrower.get_display_name }} ({{ borrower.email }})</td>
+        </tr>
+        <tr>
+            <td>{% translate "Requested" %}:</td>
+            <td>{{ requested_at|date:"F j, Y, H:i" }}</td>
+        </tr>
+        {% if group %}
+            <tr>
+                <td>{% translate "Group" %}:</td>
+                <td>{{ group.name }}</td>
+            </tr>
+        {% endif %}
+    </table>
+</div>
+
+<div class="btn-container">
+    <a href="{{ messages_url }}" class="btn btn-secondary">{% translate "Message Borrower" %}</a>
+    <a href="{{ loan_url }}" class="btn">{% translate "Manage Loan" %}</a>
+</div>
+{% endblock %}

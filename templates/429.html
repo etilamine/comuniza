@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}{% translate "Too Many Requests" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container container-sm">
+    <div class="py-2xl">
+        <div class="text-center">
+
+            <!-- Error Message -->
+            <h1 class="mb-lg" style="font-size: 3rem; font-weight: 700;">429</h1>
+            <h2 class="mb-md text-secondary">{% translate "Too Many Requests" %}</h2>
+            <p class="mb-xl text-muted" style="max-width: 500px; margin: 0 auto; line-height: 1.6;">
+                {% blocktranslate %}You've made too many requests in a short period.<br>
+                Please wait a moment before trying again to ensure fair usage for everyone.{% endblocktranslate %}
+            </p>
+
+            <!-- Actions -->
+            <div class="flex justify-center gap-md mb-xl">
+                <a href="{% url 'home' %}" class="btn btn-primary btn-lg">
+                    {% translate "Go Home" %}
+                </a>
+                <button onclick="location.reload()" class="btn btn-outline btn-lg">
+                    🔄 {% translate "Try Again" %}
+                </button>
+                <a href="{% url 'bug_report_page' %}" class="btn btn-outline btn-lg">
+                    {% translate "Report a Bug" %}
+                </a>
+            </div>
+
+            <!-- Additional Help -->
+            <div class="card" style="max-width: 600px; margin: 0 auto;">
+                <div class="card-body">
+                    <h3 class="mb-md">{% translate "Why did this happen" %}?</h3>
+                    <div class="text-left space-y-sm">
+                        <p>{% translate "This rate limit helps us" %}:</p>
+                        <ul style="padding-left: 1.5rem;">
+                            <li>{% translate "Maintain system performance" %}</li>
+                            <li>{% translate "Prevent abuse and automated attacks" %}</li>
+                            <li>{% translate "Ensure fair access for all users" %}</li>
+                            <li>{% translate "Protect our servers from overload" %}</li>
+                        </ul>
+                        <p class="mt-md">{% translate "Wait a few minutes and try again. If you continue to see this error, contact support" %}.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

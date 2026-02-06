@@ -1,0 +1,260 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load badges_tags %}
+{% load i18n %}
+{% load thumbnail %}
+{% block title %}{% translate "Profile" %} - {{ SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="mb-xl">
+        <h1 class="mb-sm">{% translate "My Profile" %}</h1>
+        <p class="text-secondary">{% translate "Manage your account and reputation" %}</p>
+    </div>
+
+    <div class="grid grid-cols-1 grid-md-3 gap-lg">
+        <!-- Profile Info -->
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="avatar avatar-xl" style="margin: 0 auto var(--space-md);">
+                    {% if user.avatar %}
+                        <img src="{{ user.avatar.avatar_large.url }}" alt="{{ user.username }}">
+                    {% else %}
+                        <div class="avatar-placeholder">
+                            {{ user.username|first|upper }}
+                        </div>
+                    {% endif %}
+                </div>
+                <h3 class="mb-sm">{{ user.first_name|default:user.username }}</h3>
+                <p class="text-secondary text-sm mb-md">@{{ user.username }}</p>
+
+                {% if user.reputation %}
+                    <div class="rating mb-md">
+                        {% with rating=user.reputation.overall_rating %}
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= rating %}
+                                    [*]
+                                {% else %}
+                                    [ ]
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                        <span class="rating-count">({{ user.reputation.total_reviews }})</span>
+                    </div>
+                {% endif %}
+
+                 <div class="flex gap-sm">
+                     <a href="{% url 'users:edit_profile' %}" class="btn btn-outline btn-sm">{% translate "Edit Profile" %}</a>
+                     <a href="{% url 'users:privacy_settings' %}" class="btn btn-outline btn-sm">{% translate "Privacy Settings" %}</a>
+                 </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">{% translate "Activity" %}</h4>
+            </div>
+            <div class="card-body">
+                <div class="mb-lg">
+                    <p class="text-sm text-muted mb-xs">{% translate "Items Shared" %}</p>
+                    <p class="text-2xl font-bold text-primary mb-0">{{ user.owned_items.count }}</p>
+                </div>
+                <div class="mb-lg">
+                    <p class="text-sm text-muted mb-xs">{% translate "Times Lent" %}</p>
+                    <p class="text-2xl font-bold text-success mb-0">
+                        {% if user.reputation %}{{ user.reputation.items_lent }}{% else %}0{% endif %}
+                    </p>
+                </div>
+                <div>
+                    <p class="text-sm text-muted mb-xs">{% translate "Times Borrowed" %}</p>
+                    <p class="text-2xl font-bold text-info mb-0">
+                        {% if user.reputation %}{{ user.reputation.items_borrowed }}{% else %}0{% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reputation -->
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">{% translate "Reputation" %}</h4>
+            </div>
+            <div class="card-body">
+                {% if user.reputation %}
+                    <div class="mb-md">
+                        <p class="text-sm text-muted mb-xs">{% translate "Trust Score" %}</p>
+                        <div class="flex items-center gap-sm">
+                            <div style="flex: 1; height: 8px; background: var(--gray-200); border-radius: var(--radius-full); overflow: hidden;">
+                                <div style="width: {{ user.reputation.trust_score }}%; height: 100%; background: var(--success);"></div>
+                            </div>
+                            <span class="font-bold">{{ user.reputation.trust_score }}</span>
+                        </div>
+                    </div>
+
+                    {% if user.reputation.top_lender or user.reputation.reliable_borrower %}
+                        <div>
+                            <p class="text-sm text-muted mb-sm">{% translate "Recent Badges" %}</p>
+                            <div class="user-badges-mini">
+                                {% with user_badges=user|get_user_badges %}
+                                    {% if user_badges %}
+                                        {% for user_badge in user_badges|slice:":3" %}
+                                            <div class="mini-badge {{ user_badge.badge.badge_type }}-border" title="{{ user_badge.badge.name }}">
+                                                <i class="{{ user_badge.badge.icon }}"></i>
+                                            </div>
+                                        {% endfor %}
+                                        {% if user_badges.count > 3 %}
+                                            <a href="{% url 'badges:my_badges' %}" class="mini-badge-more">
+                                                +{{ user_badges.count|add:"-3" }}
+                                            </a>
+                                        {% endif %}
+                                    {% else %}
+                                        <p class="text-xs text-secondary">{% translate "No badges earned yet" %}</p>
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
+                            <div class="mt-sm">
+                                <a href="{% url 'badges:my_badges' %}" class="btn btn-outline btn-sm">{% translate "View All Badges" %}</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <p class="text-secondary text-sm">{% translate "Start lending and borrowing to build your reputation" %}!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+     <!-- Quick Actions -->
+     <div class="mt-xl">
+         <h2 class="mb-lg">{% translate "Quick Actions" %}</h2>
+         <div class="grid grid-cols-1 grid-md-3 gap-md">
+             <a href="{% url 'items:create' %}" class="card" style="text-decoration: none;">
+                 <div class="card-body text-center">
+                     <div style="font-size: 3rem; margin-bottom: var(--space-sm);">[   ]</div>
+                     <h4>{% translate "Add Item" %}</h4>
+                     <p class="text-secondary text-sm mb-0">{% translate "Share something with your community" %}</p>
+                 </div>
+             </a>
+             <a href="{% url 'items:my_items' %}" class="card" style="text-decoration: none;">
+                 <div class="card-body text-center">
+                     <div style="font-size: 3rem; margin-bottom: var(--space-sm);">[ ]</div>
+                     <h4>{% translate "My Items" %}</h4>
+                     <p class="text-secondary text-sm mb-0">{% translate "Manage your shared items" %}</p>
+                 </div>
+             </a>
+             <a href="{% url 'groups:list' %}" class="card" style="text-decoration: none;">
+                 <div class="card-body text-center">
+                     <div style="font-size: 3rem; margin-bottom: var(--space-sm);">[ * ]</div>
+                     <h4>{% translate "My Groups" %}</h4>
+                     <p class="text-secondary text-sm mb-0">{% translate "Join or create groups" %}</p>
+                 </div>
+             </a>
+         </div>
+     </div>
+
+     <!-- My Public Items -->
+     {% if public_items %}
+     <div class="mt-xl">
+         <div class="flex justify-between items-center mb-lg">
+             <h2 class="mb-0">{% translate "My Public Items" %}</h2>
+             <a href="{% url 'items:my_items' %}" class="btn btn-outline btn-sm">{% translate "View All" %}</a>
+         </div>
+         <div class="grid grid-cols-1 grid-md-2 grid-lg-3 gap-md">
+             {% for item in public_items %}
+             <div class="card">
+                 <div class="card-body">
+                     <h4 class="mb-sm"><a href="{{ item.get_absolute_url }}" class="text-decoration-none">{{ item.title }}</a></h4>
+                     <p class="text-secondary text-sm mb-sm">{{ item.description|truncatechars:100 }}</p>
+                     <div class="flex justify-between items-center">
+                          <span class="badge badge-secondary">{% if item.category %}{{ item.category.name }}{% else %}{% translate "Uncategorized" %}{% endif %}</span>
+                         <small class="text-muted">{{ item.created_at|date:"M j, Y" }}</small>
+                     </div>
+                 </div>
+             </div>
+             {% endfor %}
+         </div>
+     </div>
+     {% endif %}
+
+     <!-- My Public Groups -->
+     {% if public_groups %}
+     <div class="mt-xl">
+         <div class="flex justify-between items-center mb-lg">
+             <h2 class="mb-0">{% translate "My Groups" %}</h2>
+             <a href="{% url 'groups:list' %}" class="btn btn-outline btn-sm">{% translate "View All" %}</a>
+         </div>
+         <div class="grid grid-cols-1 grid-md-2 grid-lg-3 gap-md">
+             {% for group in public_groups %}
+             <div class="card">
+                 <div class="card-body">
+                     <h4 class="mb-sm"><a href="{% url 'groups:detail' group.slug %}" class="text-decoration-none">{{ group.name }}</a></h4>
+                     <p class="text-secondary text-sm mb-sm">{{ group.description|truncatechars:100 }}</p>
+                     <div class="flex justify-between items-center">
+                          <span class="badge badge-info">{{ group.member_count }} {% translate "members" %}</span>
+                         <small class="text-muted">{{ group.created_at|date:"M j, Y" }}</small>
+                     </div>
+                 </div>
+             </div>
+             {% endfor %}
+         </div>
+     </div>
+     {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.user-badges-mini {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.mini-badge {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    border: 2px solid;
+    color: var(--text-color);
+    background: var(--bg-color);
+    transition: all 0.3s ease;
+}
+
+.mini-badge:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.mini-badge-more {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: bold;
+    background: var(--accent-color);
+    color: var(--bg-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.mini-badge-more:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px var(--accent-color);
+}
+
+.bronze-border { border-color: #CD7F32; color: #CD7F32; }
+.silver-border { border-color: #C0C0C0; color: #C0C0C0; }
+.gold-border { border-color: #FFD700; color: #FFD700; }
+.platinum-border { border-color: #E5E4E2; color: #E5E4E2; }
+.special-border { border-color: #FF1493; color: #FF1493; }
+</style>
+{% endblock %}

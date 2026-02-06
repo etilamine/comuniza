@@ -1,0 +1,616 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load i18n %}
+{% load thumbnail %}
+{% block title %}{% translate "Manage" %} {{ group.name }} - {{ SITE_NAME }}{% endblock %}
+
+{% block extra_css %}
+<style>
+@media (max-width: 768px) {
+    .flex.flex-wrap.gap-sm {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .flex.flex-wrap.gap-sm .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-outline {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: var(--bg-main);
+    border: var(--border-width) solid var(--border-color);
+    border-radius: 4px;
+    min-width: 160px;
+    z-index: 1000;
+    box-shadow: var(--shadow-brutal);
+}
+
+.dropdown-item {
+    display: block;
+    padding: var(--space-sm) var(--space-md);
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    transition: var(--transition);
+}
+
+.dropdown-item:hover {
+    background: var(--bg-secondary);
+}
+
+.dropdown-item.text-danger:hover {
+    background: rgba(220, 53, 69, 0.1);
+    color: var(--danger-color);
+}
+
+/* Autocomplete styles */
+.autocomplete-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 9999;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.autocomplete-item {
+    padding: var(--space-sm) var(--space-md);
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.autocomplete-item:hover,
+.autocomplete-item.selected {
+    background: var(--bg-secondary);
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: var(--space-sm);
+}
+
+.autocomplete-info {
+    display: flex;
+    align-items: center;
+}
+
+.autocomplete-details {
+    flex: 1;
+}
+
+.autocomplete-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.autocomplete-email {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.autocomplete-loading {
+    padding: var(--space-sm) var(--space-md);
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.autocomplete-empty {
+    padding: var(--space-sm) var(--space-md);
+    color: var(--text-secondary);
+    font-style: italic;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header -->
+    <div class="mb-xl">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="mb-sm">{% translate "Manage" %} {{ group.name }}</h1>
+                <p class="text-secondary">{% translate "Manage members and group settings" %}</p>
+            </div>
+            <div class="flex flex-wrap gap-sm">
+                <a href="{% url 'groups:detail' group.slug %}" class="btn btn-outline flex-shrink">{% translate "Back to Group" %}</a>
+                <a href="{% url 'groups:settings' group.slug %}" class="btn btn-outline flex-shrink">{% translate "Group Settings" %}</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-2 grid-md-4 gap-md mb-xl">
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="mb-xs">{{ member_count }}</h3>
+                <p class="text-sm text-secondary">{% translate "Active Members" %}</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="mb-xs">{{ pending_count }}</h3>
+                <p class="text-sm text-secondary">{% translate "Pending Members" %}</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="mb-xs">{{ invitation_count }}</h3>
+                <p class="text-sm text-secondary">{% translate "Pending Invitations" %}</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="mb-xs">{{ group.item_count }}</h3>
+                <p class="text-sm text-secondary">{% translate "Items Shared" %}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Members Management -->
+    <div class="card mb-xl">
+        <div class="card-header">
+            <h3>{% translate "Members" %} ({{ member_count }})</h3>
+        </div>
+        <div class="card-body">
+            {% if members %}
+                <div class="space-y-md">
+                    {% for membership in members %}
+                        <div class="flex items-center justify-between py-sm border-bottom">
+                             <div class="flex items-center gap-md">
+<div class="avatar avatar-sm">
+                                      {% if membership.user.avatar %}
+                                           <img src="{{ membership.user.avatar.avatar_small.url }}" alt="{{ membership.user.username }}">
+                                       {% else %}
+                                           <div class="avatar-placeholder">
+                                               {{ membership.user.username|first|upper }}
+                                           </div>
+                                       {% endif %}
+                                   </div>
+                                 <div>
+                                     <h4 class="mb-xs">{{ membership.user.get_display_name }}</h4>
+                                     <p class="text-sm text-secondary">@{{ membership.user.username }}</p>
+                                     <p class="text-xs text-secondary">{% translate "Joined" %} {{ membership.joined_at|date:"M j, Y" }}</p>
+                                 </div>
+                            </div>
+                            <div class="flex items-center gap-sm">
+                                {% if membership.role == 'admin' %}
+                                    <span class="badge badge-primary">{% translate "Admin" %}</span>
+                                {% else %}
+                                    <span class="badge badge-secondary">{% translate "Member" %}</span>
+                                {% endif %}
+                                {% if membership.user != group.owner %}
+                                    <div class="dropdown">
+                                        <button class="btn btn-ghost btn-sm" onclick="toggleDropdown('member-{{ membership.id }}')">
+                                            [⋮]
+                                        </button>
+                                        <div id="member-{{ membership.id }}" class="dropdown-menu" style="display: none;">
+                                            {% if membership.role == 'member' %}
+                                                <form method="post" style="display: inline;">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="make_admin" value="{{ membership.user.id }}">
+                                                    <button type="submit" class="dropdown-item" style="background: none; border: none; padding: 0; color: inherit; text-decoration: none; cursor: pointer; width: 100%; text-align: left;">{% translate "Make Admin" %}</button>
+                                                </form>
+                                            {% else %}
+                                                <form method="post" style="display: inline;">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="remove_admin" value="{{ membership.user.id }}">
+                                                    <button type="submit" class="dropdown-item" style="background: none; border: none; padding: 0; color: inherit; text-decoration: none; cursor: pointer; width: 100%; text-align: left;">{% translate "Remove Admin" %}</button>
+                                                </form>
+                                            {% endif %}
+                                            {% if membership.user != group.owner %}
+                                                <form method="post" style="display: inline;">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="remove_member" value="{{ membership.user.id }}">
+                                                    <button type="submit" class="dropdown-item text-danger" style="background: none; border: none; padding: 0; color: inherit; text-decoration: none; cursor: pointer; width: 100%; text-align: left;">{% translate "Remove from Group" %}</button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <span class="text-xs text-secondary">{% translate "Owner" %}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-secondary">{% translate "No members yet" %}.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Invite Members -->
+    <div class="card mb-xl">
+        <div class="card-header">
+            <h3>{% translate "Invite New Members" %}</h3>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="invite_user" value="1">
+
+                <div class="grid grid-cols-1 grid-md-2 gap-md mb-md">
+                <div class="form-group" style="position: relative;">
+                    <label for="{{ invitation_form.recipient.id_for_label }}" class="form-label">{{ invitation_form.recipient.label }}</label>
+                    {{ invitation_form.recipient }}
+                    {{ invitation_form.recipient_type }}
+                    <div id="autocomplete-results" class="autocomplete-results" style="display: none;">
+                        <!-- Autocomplete suggestions will appear here -->
+                    </div>
+                    {% if invitation_form.recipient.errors %}
+                        <div class="form-error">{{ invitation_form.recipient.errors.0 }}</div>
+                    {% endif %}
+                    <small class="form-help">{% translate "Enter a username or email address to invite" %}</small>
+                </div>
+                    <div class="form-group">
+                        <label for="{{ invitation_form.message.id_for_label }}" class="form-label">{{ invitation_form.message.label }}</label>
+                        {{ invitation_form.message }}
+                        {% if invitation_form.message.errors %}
+                            <div class="form-error">{{ invitation_form.message.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">{% translate "Send Invitation" %}</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Pending Invitations -->
+    {% if pending_invitations %}
+        <div class="card mb-xl">
+            <div class="card-header">
+                <h3>{% translate "Pending Invitations" %} ({{ invitation_count }})</h3>
+            </div>
+            <div class="card-body">
+                <div class="space-y-md">
+                    {% for invitation in pending_invitations %}
+                        <div class="flex items-center justify-between py-sm border-bottom">
+                            <div>
+                                <h4 class="mb-xs">{{ invitation.email }}</h4>
+                                <p class="text-sm text-secondary">{% translate "Invited" %} {{ invitation.created_at|naturaltime }}</p>
+                                {% if invitation.message %}
+                                    <p class="text-sm text-secondary">"{{ invitation.message|truncatewords:20 }}"</p>
+                                {% endif %}
+                                <p class="text-xs text-secondary">{% translate "Expires" %} {{ invitation.expires_at|date:"M j, Y" }}</p>
+                            </div>
+                            <div class="flex gap-sm">
+                                <form method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="cancel_invitation" value="1">
+                                    <input type="hidden" name="invitation_id" value="{{ invitation.id }}">
+                                    <button type="submit" class="btn btn-outline btn-sm">{% translate "Cancel" %}</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Pending Members -->
+    {% if pending_members %}
+        <div class="card mb-xl">
+            <div class="card-header">
+                <h3>{% translate "Pending Members" %} ({{ pending_count }})</h3>
+            </div>
+            <div class="card-body">
+                <div class="space-y-md">
+                    {% for membership in pending_members %}
+                        <div class="flex items-center justify-between py-sm border-bottom">
+                            <div class="flex items-center gap-md">
+                                <div class="avatar avatar-sm">
+                                    {% if membership.user.avatar %}
+                                        <img src="{{ membership.user.avatar.avatar_small.url }}" alt="{{ membership.user.username }}">
+                                    {% else %}
+                                        <div class="avatar-placeholder">
+                                            {{ membership.user.username|first|upper }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <h4 class="mb-xs">{{ membership.user.get_display_name }}</h4>
+                                    <p class="text-sm text-secondary">@{{ membership.user.username }}</p>
+                                    <p class="text-xs text-secondary">{% translate "Requested" %} {{ membership.joined_at|date:"M j, Y" }}</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-sm">
+                                <form method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="approve_member" value="{{ membership.user.id }}">
+                                    <button type="submit" class="btn btn-success btn-sm">{% translate "Approve" %}</button>
+                                </form>
+                                <form method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="reject_member" value="{{ membership.user.id }}">
+                                    <button type="submit" class="btn btn-outline btn-sm">{% translate "Reject" %}</button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Recent Activity -->
+    <div class="card">
+        <div class="card-header">
+            <h3>{% translate "Recent Activity" %}</h3>
+        </div>
+        <div class="card-body">
+            <div class="space-y-md">
+                <!-- This would show recent group activity -->
+                <div class="flex items-center gap-md py-sm border-bottom">
+                    <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-xs">
+                        [+]
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm">{% translate "New member joined the group" %}</p>
+                        <p class="text-xs text-secondary">{% translate "2 hours ago" %}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-md py-sm border-bottom">
+                    <div class="w-8 h-8 bg-success rounded-full flex items-center justify-center text-white text-xs">
+                        [📦]
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm">{% translate "New item added to the group" %}</p>
+                        <p class="text-xs text-secondary">{% translate "1 day ago" %}</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-md py-sm">
+                    <div class="w-8 h-8 bg-warning rounded-full flex items-center justify-center text-white text-xs">
+                        [💬]
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm">{% translate "Loan request approved" %}</p>
+                        <p class="text-xs text-secondary">{% translate "2 days ago" %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let autocompleteTimeout;
+let selectedIndex = -1;
+
+// Autocomplete functionality functions
+function searchUsers(query, resultsContainer) {
+    if (!query || query.length < 2) {
+        resultsContainer.style.display = 'none';
+        return;
+    }
+
+    resultsContainer.innerHTML = '<div class="autocomplete-loading">[ SEARCHING... ]</div>';
+    resultsContainer.style.display = 'block';
+    selectedIndex = -1;
+
+    fetch(`/users/api/search/?q=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayUserResults(data.users, resultsContainer);
+            } else {
+                resultsContainer.innerHTML = '<div class="autocomplete-empty">[ NO USERS FOUND ]</div>';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            resultsContainer.innerHTML = '<div class="autocomplete-empty">[ ERROR SEARCHING ]</div>';
+        });
+}
+
+function displayUserResults(users, resultsContainer) {
+    if (users.length === 0) {
+        resultsContainer.innerHTML = '<div class="autocomplete-empty">[ NO USERS FOUND ]</div>';
+        return;
+    }
+
+    resultsContainer.innerHTML = users.slice(0, 8).map(user => `
+        <div class="autocomplete-item" data-username="${user.username}" data-type="user" onclick="selectUser(this)" role="option">
+            <div class="autocomplete-avatar">
+                ${user.avatar ?
+                    `<img src="${user.avatar}" alt="${user.display_name}">` :
+                    `<div class="autocomplete-avatar-placeholder">${user.display_name.charAt(0).toUpperCase()}</div>`
+                }
+            </div>
+            <div class="autocomplete-info">
+                <div class="autocomplete-details">
+                    <div class="autocomplete-name">${user.display_name}</div>
+                    <div class="autocomplete-email">@${user.username}</div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function selectUser(item) {
+    const username = item.dataset.username;
+    const type = item.dataset.type;
+
+    // Find the recipient input
+    let recipientInput = document.querySelector('input[name="recipient"]');
+    if (!recipientInput) {
+        recipientInput = document.getElementById('id_recipient');
+    }
+
+    // Find the recipient type input
+    let recipientTypeInput = document.querySelector('input[name="recipient_type"]');
+    if (!recipientTypeInput) {
+        recipientTypeInput = document.getElementById('id_recipient_type');
+    }
+
+    if (recipientInput && recipientTypeInput) {
+        recipientInput.value = username;
+        recipientTypeInput.value = type;
+
+        // Hide results
+        const resultsContainer = document.getElementById('autocomplete-results');
+        if (resultsContainer) {
+            resultsContainer.style.display = 'none';
+        }
+        selectedIndex = -1;
+
+        // Focus on message field
+        const messageField = document.getElementById('id_message');
+        if (messageField) {
+            messageField.focus();
+        }
+    }
+}
+
+function updateSelection(items) {
+    // Remove previous selection
+    items.forEach(item => item.classList.remove('selected'));
+
+    // Add new selection
+    if (selectedIndex >= 0) {
+        items[selectedIndex].classList.add('selected');
+    }
+}
+
+function toggleDropdown(id) {
+    const menu = document.getElementById(id);
+    const isVisible = menu.style.display !== 'none';
+
+    // Hide all dropdowns first
+    document.querySelectorAll('.dropdown-menu').forEach(m => {
+        m.style.display = 'none';
+    });
+
+    // Show this one if it was hidden
+    if (!isVisible) {
+        menu.style.display = 'block';
+    }
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown-menu').forEach(menu => {
+            menu.style.display = 'none';
+        });
+    }
+});
+
+// Autocomplete functionality
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Autocomplete JavaScript loaded');
+
+    // Try multiple ways to find the input
+    let recipientInput = document.querySelector('input[name="recipient"]');
+    if (!recipientInput) {
+        recipientInput = document.getElementById('{{ invitation_form.recipient.id_for_label }}');
+    }
+    if (!recipientInput) {
+        recipientInput = document.getElementById('id_recipient');
+    }
+
+    const resultsContainer = document.getElementById('autocomplete-results');
+
+    // Try multiple ways to find the type input
+    let recipientTypeInput = document.querySelector('input[name="recipient_type"]');
+    if (!recipientTypeInput) {
+        recipientTypeInput = document.getElementById('{{ invitation_form.recipient_type.id_for_label }}');
+    }
+    if (!recipientTypeInput) {
+        recipientTypeInput = document.getElementById('id_recipient_type');
+    }
+
+    console.log('Recipient input element:', recipientInput);
+    console.log('Results container element:', resultsContainer);
+    console.log('Recipient type input element:', recipientTypeInput);
+    console.log('All inputs with name recipient:', document.querySelectorAll('input[name="recipient"]'));
+    console.log('All inputs with name recipient_type:', document.querySelectorAll('input[name="recipient_type"]'));
+
+    if (recipientInput && resultsContainer) {
+        console.log('Elements found, setting up event listeners');
+        recipientInput.addEventListener('input', function(e) {
+            const query = e.target.value.trim();
+
+            // Clear previous timeout
+            if (autocompleteTimeout) {
+                clearTimeout(autocompleteTimeout);
+            }
+
+            // Hide results if query is too short
+            if (query.length < 2) {
+                resultsContainer.style.display = 'none';
+                recipientTypeInput.value = '';
+                return;
+            }
+
+            // Debounce the search
+            autocompleteTimeout = setTimeout(() => {
+                searchUsers(query, resultsContainer);
+            }, 300);
+        });
+
+        recipientInput.addEventListener('keydown', function(e) {
+            const items = resultsContainer.querySelectorAll('.autocomplete-item');
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+                updateSelection(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedIndex = Math.max(selectedIndex - 1, -1);
+                updateSelection(items);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (selectedIndex >= 0 && items[selectedIndex]) {
+                    selectUser(items[selectedIndex]);
+                }
+            } else if (e.key === 'Escape') {
+                resultsContainer.style.display = 'none';
+                selectedIndex = -1;
+            }
+        });
+
+        // Hide results when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!recipientInput.contains(e.target) && !resultsContainer.contains(e.target)) {
+                resultsContainer.style.display = 'none';
+                selectedIndex = -1;
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

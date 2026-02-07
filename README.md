@@ -2,13 +2,13 @@
 
 ## Project Overview
 
-**Comuniza** is a Django-based web platform designed to facilitate community sharing of items, books, tools, and equipment within private groups. The platform enables users to create communities, share items, manage loans, and build reputation through a trusted borrowing system.
+**Comuniza** is a Django-based web platform designed to facilitate community sharing of different items (e.g. books, tools, and equipment) within private groups. The platform enables users to create groups, share items, manage loans, and build reputation through a trusted borrowing system. It is in continuous development.
 
 ## Core Architecture
 
 ### Technology Stack
-- **Backend**: Django 4.2.11 with Django REST Framework
-- **Database**: MySQL/MariaDB with optimized indexing
+- **Backend**: Django with Django REST Framework 
+- **Database**: PostgreSQL/MariaDB
 - **Cache**: Redis with multi-layer caching strategy
 - **Task Queue**: Celery for background processing
 - **Frontend**: Django templates with HTMX for dynamic interactions
@@ -21,8 +21,8 @@
 - **Privacy-focused authentication** with email-based login
 - **Auto-generated usernames** (Reddit-style) for anonymity
 - **Granular privacy controls** for profile, email, and activity visibility
-- **Hashed contact information** for enhanced privacy
 - **Social authentication** via Google and GitHub
+- **Encrypted messaging** between users
 
 #### 2. Community Groups
 - **Private/public groups** with location-based organization
@@ -34,8 +34,6 @@
 - **Comprehensive item catalog** with categories, conditions, and metadata
 - **Book-specific features** including ISBN lookup and automatic cover fetching
 - **Multi-image support** with primary image selection
-- **Wishlist functionality** for tracking desired items
-- **Item reviews and ratings** system
 
 #### 4. Loan System
 - **Complete loan lifecycle** from request to return
@@ -59,11 +57,11 @@
 ## Database Schema
 
 ### Core Models
-- **User**: Custom user model with privacy features (`apps/users/models.py:24`)
-- **Group**: Community management with location data (`apps/groups/models.py:12`)
-- **Item**: Detailed item catalog with book-specific metadata (`apps/items/models.py:53`)
-- **Loan**: Complete loan transaction tracking (`apps/loans/models.py:14`)
-- **UserReputation**: Aggregated trust scoring (`apps/loans/models.py:361`)
+- **User**: Custom user model with privacy features (`apps/users/models.py`)
+- **Group**: Community management with location data (`apps/groups/models.py`)
+- **Item**: Detailed item catalog with book-specific metadata (`apps/items/models.py`)
+- **Loan**: Complete loan transaction tracking (`apps/loans/models.py`)
+- **UserReputation**: Aggregated trust scoring (`apps/loans/models.py`)
 
 ### Key Relationships
 - Users can own multiple items and participate in multiple groups
@@ -159,7 +157,7 @@
 ## Project Structure
 
 ```
-comuniza-dev/src/
+src/
 ├── apps/                    # Django applications
 │   ├── users/              # User management and privacy
 │   ├── groups/             # Community groups
@@ -213,28 +211,6 @@ make migrate-prod
 # Collect static files
 make collectstatic-prod
 ```
-
-## Code Quality & Recent Improvements
-
-Recent optimizations to ensure production-ready, maintainable codebase:
-
-### Code Cleanup
-- Removed all DEBUG logging statements from production code
-- Cleaned up TODO comments with clear implementation notes
-- Optimized `.gitignore` for better maintainability and security
-- Removed non-existent entries and duplicate configurations
-
-### Development Experience
-- Improved code maintainability and professional presentation
-- Enhanced logging for production environments while maintaining development support
-- Documented features not yet implemented with clear notes
-- Collaborated on improving existing codebase structure and organization
-
-### Security & Best Practices
-- Environment variable configuration for all sensitive data
-- No hardcoded credentials or API keys in codebase
-- Proper error handling and exception logging
-- Followed Django and Python best practices throughout
 
 ## Future Extensibility
 
